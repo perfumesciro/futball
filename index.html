@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Fútbol Ahora</title>
 
 <style>
@@ -13,44 +12,227 @@
     padding:0;
 }
 
-:root{
-    --bg:#0b0d10;
-    --panel:#12161b;
-    --panel2:#181d23;
-    --border:#252b33;
-    --text:#f5f7fa;
-    --muted:#929aa5;
-    --green:#19c37d;
-    --red:#ff4d5a;
-}
-
 body{
     font-family:Arial,Helvetica,sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    min-height:100vh;
+    background:#0b0e12;
+    color:#f5f5f5;
 }
 
-button{
+button,input{
     font-family:inherit;
 }
 
-.app{
-    max-width:1400px;
-    margin:auto;
-    min-height:100vh;
+button{
+    cursor:pointer;
 }
 
-/* HEADER */
+/* =========================
+   PANTALLA DE CONFIGURACIÓN
+========================= */
 
-header{
-    height:70px;
-    border-bottom:1px solid var(--border);
+.setup{
+    min-height:100vh;
+    background:#0b0e12;
+    display:flex;
+    justify-content:center;
+    padding:35px 18px;
+}
+
+.setupBox{
+    width:100%;
+    max-width:900px;
+}
+
+.setupTop{
+    text-align:center;
+    margin-bottom:28px;
+}
+
+.setupLogo{
+    width:55px;
+    height:55px;
+    background:#19c37d;
+    border-radius:14px;
+    display:grid;
+    place-items:center;
+    margin:0 auto 15px;
+    font-size:27px;
+}
+
+.setupTop h1{
+    font-size:28px;
+    margin-bottom:8px;
+}
+
+.setupTop p{
+    color:#8d96a1;
+    font-size:14px;
+}
+
+.searchBox{
+    position:relative;
+    margin-bottom:18px;
+}
+
+.searchBox input{
+    width:100%;
+    height:48px;
+    border:1px solid #252b33;
+    background:#14181d;
+    color:white;
+    border-radius:9px;
+    padding:0 17px;
+    outline:none;
+    font-size:14px;
+}
+
+.searchBox input:focus{
+    border-color:#19c37d;
+}
+
+.countryFilters{
+    display:flex;
+    gap:7px;
+    overflow-x:auto;
+    padding-bottom:7px;
+    margin-bottom:20px;
+}
+
+.countryBtn{
+    flex:none;
+    background:#14181d;
+    border:1px solid #292f37;
+    color:#9da5ae;
+    padding:9px 13px;
+    border-radius:7px;
+}
+
+.countryBtn.active{
+    background:#19c37d;
+    border-color:#19c37d;
+    color:#06140e;
+    font-weight:bold;
+}
+
+.selectedCounter{
+    background:#14181d;
+    border:1px solid #252b33;
+    border-radius:9px;
+    padding:13px 15px;
+    margin-bottom:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.selectedCounter span{
+    color:#19c37d;
+    font-weight:bold;
+}
+
+.league{
+    margin-bottom:25px;
+}
+
+.leagueTitle{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:9px;
+    color:#cbd0d6;
+}
+
+.leagueTitle small{
+    color:#68717d;
+}
+
+.team{
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:0 25px;
-    background:#0d1014;
+    background:#12161b;
+    border:1px solid #222831;
+    min-height:64px;
+    padding:8px 13px;
+    margin-bottom:6px;
+    border-radius:8px;
+    transition:.15s;
+}
+
+.team:hover{
+    background:#171c22;
+}
+
+.teamLeft{
+    display:flex;
+    align-items:center;
+    gap:13px;
+}
+
+.teamLogo{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    object-fit:contain;
+    background:#222830;
+    padding:5px;
+}
+
+.teamName{
+    font-size:14px;
+    font-weight:bold;
+}
+
+.teamCountry{
+    color:#727b86;
+    font-size:11px;
+    margin-top:3px;
+}
+
+.followButton{
+    min-width:85px;
+    height:34px;
+    border-radius:6px;
+    border:1px solid #343b44;
+    background:#1a1f25;
+    color:#aeb5bd;
+    font-size:12px;
+}
+
+.followButton.following{
+    background:#193c2f;
+    border-color:#246d4f;
+    color:#48df9d;
+}
+
+.continueButton{
+    width:100%;
+    height:48px;
+    border:none;
+    border-radius:8px;
+    background:#19c37d;
+    color:#06140e;
+    font-weight:bold;
+    margin-top:5px;
+}
+
+/* =========================
+   APP
+========================= */
+
+.app{
+    display:none;
+    min-height:100vh;
+}
+
+header{
+    height:68px;
+    background:#0e1115;
+    border-bottom:1px solid #242a31;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 24px;
     position:sticky;
     top:0;
     z-index:50;
@@ -60,107 +242,85 @@ header{
     display:flex;
     align-items:center;
     gap:10px;
-    font-size:21px;
-    font-weight:800;
+    font-weight:bold;
 }
 
-.logoBall{
+.logoIcon{
     width:34px;
     height:34px;
-    border-radius:10px;
-    background:var(--green);
+    border-radius:9px;
+    background:#19c37d;
+    color:#06140e;
     display:grid;
     place-items:center;
-    color:#06140e;
-    font-size:18px;
 }
 
 .headerSearch{
     width:330px;
-    position:relative;
 }
 
 .headerSearch input{
     width:100%;
-    height:40px;
+    height:38px;
+    border:1px solid #282e36;
     background:#171b20;
-    border:1px solid var(--border);
-    border-radius:8px;
-    padding:0 15px;
     color:white;
+    border-radius:7px;
+    padding:0 13px;
     outline:none;
 }
 
-.headerSearch input:focus{
-    border-color:#3c4651;
-}
-
-.profile{
-    width:38px;
-    height:38px;
+.user{
+    width:35px;
+    height:35px;
     border-radius:50%;
-    background:#242a31;
+    background:#252b32;
     display:grid;
     place-items:center;
-    cursor:pointer;
 }
-
-/* LAYOUT */
 
 .layout{
     display:grid;
-    grid-template-columns:230px 1fr;
-    min-height:calc(100vh - 70px);
+    grid-template-columns:220px 1fr;
+    min-height:calc(100vh - 68px);
 }
-
-/* SIDEBAR */
 
 .sidebar{
-    border-right:1px solid var(--border);
-    padding:22px 14px;
-    background:#0d1014;
+    border-right:1px solid #242a31;
+    padding:20px 13px;
+    background:#0e1115;
 }
 
-.navTitle{
-    font-size:11px;
-    color:#68717d;
+.menuTitle{
+    color:#626b76;
+    font-size:10px;
     text-transform:uppercase;
-    margin:15px 12px 8px;
     letter-spacing:1px;
+    margin:13px 10px 8px;
 }
 
-.navBtn{
+.menuBtn{
     width:100%;
-    height:44px;
-    border:none;
+    height:43px;
+    border:0;
     background:transparent;
-    color:#aeb5bd;
+    color:#9ba3ad;
     text-align:left;
-    padding:0 12px;
-    border-radius:8px;
-    cursor:pointer;
+    border-radius:7px;
+    padding:0 11px;
     margin-bottom:4px;
-    font-size:14px;
-    display:flex;
-    gap:12px;
-    align-items:center;
 }
 
-.navBtn:hover{
-    background:#171b20;
-    color:white;
+.menuBtn:hover,
+.menuBtn.active{
+    background:#18261f;
+    color:#19c37d;
 }
-
-.navBtn.active{
-    background:#19241f;
-    color:var(--green);
-}
-
-/* CONTENT */
 
 main{
-    padding:28px;
-    overflow:hidden;
+    padding:27px;
+    max-width:1200px;
+    width:100%;
 }
 
 .page{
@@ -172,10 +332,7 @@ main{
 }
 
 .pageTitle{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:22px;
+    margin-bottom:20px;
 }
 
 .pageTitle h1{
@@ -183,140 +340,129 @@ main{
 }
 
 .pageTitle p{
-    color:var(--muted);
+    color:#858e99;
     margin-top:5px;
     font-size:13px;
 }
 
-/* TABS */
+/* =========================
+   PARTIDOS
+========================= */
 
-.tabs{
+.dateTabs{
     display:flex;
-    gap:7px;
+    gap:6px;
     margin-bottom:20px;
-    overflow:auto;
 }
 
-.tab{
-    white-space:nowrap;
-    border:1px solid var(--border);
-    background:#11151a;
-    color:#9da5ae;
+.dateTab{
+    border:1px solid #292f37;
+    background:#13171c;
+    color:#9098a2;
     padding:9px 15px;
     border-radius:7px;
-    cursor:pointer;
 }
 
-.tab.active{
+.dateTab.active{
     background:#f1f3f5;
-    color:#0c0f12;
+    color:#0b0e12;
 }
 
-/* LIVE */
-
-.liveBox{
-    background:linear-gradient(120deg,#151b20,#101418);
-    border:1px solid var(--border);
-    border-radius:12px;
+.live{
+    background:#12171a;
+    border:1px solid #26342e;
+    border-radius:10px;
     padding:18px;
     margin-bottom:25px;
 }
 
-.liveHead{
+.liveHeader{
     display:flex;
     justify-content:space-between;
-    align-items:center;
-    margin-bottom:18px;
+    margin-bottom:20px;
+    font-size:12px;
 }
 
-.liveLabel{
-    display:flex;
-    gap:8px;
-    align-items:center;
-    font-size:12px;
+.liveStatus{
+    color:#ff5863;
     font-weight:bold;
 }
 
-.liveDot{
-    width:8px;
-    height:8px;
-    border-radius:50%;
-    background:var(--red);
-    box-shadow:0 0 10px var(--red);
-}
-
-.liveCompetition{
-    color:var(--muted);
-    font-size:12px;
+.competition{
+    color:#737d88;
 }
 
 .liveMatch{
     display:grid;
-    grid-template-columns:1fr 150px 1fr;
-    align-items:center;
+    grid-template-columns:1fr 130px 1fr;
     text-align:center;
+    align-items:center;
 }
 
-.teamName{
-    font-size:17px;
+.crestLarge{
+    width:60px;
+    height:60px;
+    object-fit:contain;
+    margin:auto auto 8px;
+    background:#20262d;
+    border-radius:50%;
+    padding:7px;
+}
+
+.liveTeam{
     font-weight:bold;
 }
 
-.crest{
-    width:54px;
-    height:54px;
-    border-radius:50%;
-    margin:auto auto 10px;
-    background:#242a31;
-    display:grid;
-    place-items:center;
-    font-size:24px;
-}
-
-.score{
-    font-size:34px;
-    font-weight:800;
+.liveScore{
+    font-size:33px;
+    font-weight:900;
 }
 
 .minute{
-    color:var(--red);
+    color:#ff5863;
     font-size:12px;
     margin-top:5px;
 }
 
-/* MATCH CARDS */
-
-.sectionTitle{
-    font-size:17px;
-    margin:25px 0 13px;
+.watchButton{
+    width:100%;
+    height:43px;
+    margin-top:22px;
+    border:0;
+    border-radius:7px;
+    background:#19c37d;
+    color:#06140e;
+    font-weight:bold;
 }
+
+/* =========================
+   MATCH CARDS
+========================= */
 
 .matches{
     display:grid;
-    gap:8px;
+    gap:7px;
 }
 
 .matchCard{
-    min-height:88px;
-    border:1px solid var(--border);
-    background:var(--panel);
-    border-radius:10px;
     display:grid;
-    grid-template-columns:150px 1fr 110px;
+    grid-template-columns:170px 1fr 100px;
     align-items:center;
-    padding:12px 18px;
+    min-height:85px;
+    background:#12161b;
+    border:1px solid #252b33;
+    border-radius:9px;
+    padding:11px 16px;
     cursor:pointer;
-    transition:.15s;
 }
 
 .matchCard:hover{
     background:#171c22;
-    border-color:#343c46;
 }
 
-.comp{
-    color:var(--muted);
-    font-size:12px;
+.compName{
+    color:#7b8490;
+    font-size:11px;
 }
 
 .matchTeams{
@@ -327,19 +473,18 @@ main{
     display:flex;
     justify-content:center;
     align-items:center;
-    gap:10px;
-    margin:4px;
+    gap:9px;
+    margin:3px 0;
     font-size:14px;
 }
 
-.miniCrest{
-    width:24px;
-    height:24px;
+.miniLogo{
+    width:27px;
+    height:27px;
     border-radius:50%;
-    background:#252b32;
-    display:grid;
-    place-items:center;
-    font-size:12px;
+    object-fit:contain;
+    background:#242a31;
+    padding:3px;
 }
 
 .matchTime{
@@ -347,265 +492,227 @@ main{
 }
 
 .time{
-    font-size:16px;
     font-weight:bold;
 }
 
 .status{
-    color:var(--muted);
+    color:#747d87;
     font-size:11px;
     margin-top:4px;
 }
 
-.status.live{
-    color:var(--red);
-}
+/* =========================
+   FAVORITOS
+========================= */
 
-/* FAVORITES */
-
-.favoriteCard{
-    border:1px solid var(--border);
-    background:var(--panel);
-    border-radius:10px;
-    padding:18px;
-    margin-bottom:8px;
+.favorite{
     display:flex;
-    justify-content:space-between;
     align-items:center;
+    justify-content:space-between;
+    background:#12161b;
+    border:1px solid #252b33;
+    border-radius:9px;
+    padding:13px 15px;
+    margin-bottom:7px;
 }
 
-.star{
-    color:#ffd54a;
+.favoriteLeft{
+    display:flex;
+    align-items:center;
+    gap:12px;
 }
 
-/* MATCH VIEW */
+.favorite img{
+    width:43px;
+    height:43px;
+    object-fit:contain;
+    background:#232930;
+    border-radius:50%;
+    padding:5px;
+}
 
-.matchView{
+.remove{
+    background:none;
+    border:0;
+    color:#ff5964;
+    font-size:12px;
+}
+
+/* =========================
+   PARTIDO
+========================= */
+
+.matchPage{
     display:none;
 }
 
-.matchView.active{
+.matchPage.active{
     display:block;
 }
 
-.backBtn{
-    border:0;
+.back{
     background:none;
-    color:#aeb5bd;
-    cursor:pointer;
-    margin-bottom:18px;
-    font-size:14px;
+    border:0;
+    color:#9099a4;
+    margin-bottom:17px;
 }
 
-.backBtn:hover{
-    color:white;
-}
-
-/* VIDEO */
-
-.videoBox{
+.video{
     width:100%;
     aspect-ratio:16/9;
     background:#050607;
-    border:1px solid #272d34;
-    border-radius:12px;
-    overflow:hidden;
+    border-radius:10px;
+    border:1px solid #282e35;
     position:relative;
+    overflow:hidden;
 }
 
-.videoPlaceholder{
+.videoCenter{
     position:absolute;
     inset:0;
     display:flex;
     flex-direction:column;
-    justify-content:center;
     align-items:center;
+    justify-content:center;
+    background:radial-gradient(circle,#18201c,#060809 65%);
     text-align:center;
-    background:
-        radial-gradient(circle at center,#172019 0%,#090b0d 65%);
 }
 
-.videoIcon{
-    width:72px;
-    height:72px;
+.play{
+    width:68px;
+    height:68px;
     border-radius:50%;
-    background:var(--green);
-    color:#07150e;
-    display:grid;
-    place-items:center;
-    font-size:27px;
-    margin-bottom:15px;
-    cursor:pointer;
+    border:0;
+    background:#19c37d;
+    color:#06140e;
+    font-size:25px;
+    margin-bottom:13px;
 }
 
-.videoPlaceholder h2{
-    font-size:20px;
+.videoCenter p{
+    color:#77818c;
+    font-size:12px;
+    margin-top:6px;
 }
 
-.videoPlaceholder p{
-    color:#858d97;
-    margin-top:7px;
-    font-size:13px;
-}
-
-.videoControls{
+.controls{
     position:absolute;
     bottom:0;
     left:0;
     right:0;
-    padding:18px;
-    background:linear-gradient(transparent,rgba(0,0,0,.9));
+    padding:17px;
     display:flex;
     align-items:center;
-    gap:15px;
+    gap:13px;
+    background:linear-gradient(transparent,rgba(0,0,0,.9));
 }
 
 .progress{
-    flex:1;
     height:4px;
-    background:#454b52;
-    border-radius:10px;
+    background:#4b535d;
+    flex:1;
+    border-radius:5px;
 }
 
 .livePill{
-    background:var(--red);
-    padding:4px 8px;
+    background:#ff4e59;
+    padding:4px 7px;
     border-radius:4px;
-    font-size:10px;
+    font-size:9px;
     font-weight:bold;
 }
 
-/* MATCH HEADER */
-
-.matchHeader{
-    background:var(--panel);
-    border:1px solid var(--border);
-    border-radius:12px;
-    padding:30px;
+.scoreHeader{
+    background:#12161b;
+    border:1px solid #252b33;
+    border-radius:10px;
+    padding:28px;
     text-align:center;
     margin-top:15px;
 }
 
-.matchHeaderTeams{
+.scoreTeams{
     display:grid;
-    grid-template-columns:1fr 160px 1fr;
+    grid-template-columns:1fr 130px 1fr;
     align-items:center;
 }
 
-.bigCrest{
-    width:75px;
-    height:75px;
-    background:#252b32;
+.scoreLogo{
+    width:70px;
+    height:70px;
+    object-fit:contain;
+    background:#242a31;
     border-radius:50%;
-    display:grid;
-    place-items:center;
-    font-size:34px;
-    margin:0 auto 10px;
+    padding:7px;
+    margin:auto auto 10px;
 }
 
-.bigTeam{
-    font-size:20px;
+.scoreTeamName{
     font-weight:bold;
 }
 
 .bigScore{
-    font-size:42px;
+    font-size:40px;
     font-weight:900;
 }
 
-.matchStatus{
-    color:var(--red);
-    font-size:13px;
+.liveMinute{
+    color:#ff5863;
+    font-size:12px;
     margin-top:5px;
 }
 
-/* MATCH TABS */
-
-.matchTabs{
+.subTabs{
     display:flex;
+    border-bottom:1px solid #252b33;
     margin-top:15px;
-    border-bottom:1px solid var(--border);
 }
 
-.matchTab{
-    padding:13px 20px;
-    background:none;
+.subTab{
+    padding:13px 18px;
     border:0;
-    color:#858d97;
-    cursor:pointer;
+    background:none;
+    color:#7d8792;
 }
 
-.matchTab.active{
+.subTab.active{
     color:white;
-    border-bottom:2px solid var(--green);
+    border-bottom:2px solid #19c37d;
 }
 
-.matchPanel{
+.subPanel{
     display:none;
     padding-top:20px;
 }
 
-.matchPanel.active{
+.subPanel.active{
     display:block;
 }
 
 .event{
     display:flex;
-    gap:15px;
-    padding:13px 0;
-    border-bottom:1px solid #1e2329;
+    gap:13px;
+    padding:12px 0;
+    border-bottom:1px solid #1e242b;
 }
 
 .eventTime{
-    color:#8c949e;
     width:35px;
+    color:#7e8792;
 }
 
-.eventIcon{
-    width:25px;
-}
-
-.statRow{
-    display:grid;
-    grid-template-columns:70px 1fr 70px;
-    align-items:center;
-    margin:17px 0;
-    gap:15px;
-}
-
-.statValue{
-    text-align:center;
-    font-weight:bold;
-}
-
-.statBar{
-    height:7px;
-    background:#252b31;
-    border-radius:10px;
-    overflow:hidden;
-    display:flex;
-}
-
-.statBar span:first-child{
-    background:var(--green);
-}
-
-.statBar span:last-child{
-    background:#59616c;
-}
-
-/* MOBILE NAV */
+/* =========================
+   MOBILE
+========================= */
 
 .mobileNav{
     display:none;
 }
 
-/* RESPONSIVE */
-
 @media(max-width:850px){
 
     header{
-        padding:0 15px;
+        padding:0 14px;
     }
 
     .headerSearch{
@@ -621,45 +728,44 @@ main{
     }
 
     main{
-        padding:18px 14px 85px;
+        padding:18px 14px 80px;
     }
 
     .mobileNav{
         position:fixed;
+        display:flex;
         bottom:0;
         left:0;
         right:0;
-        height:65px;
+        height:64px;
         background:#101419;
-        border-top:1px solid var(--border);
-        display:flex;
-        justify-content:space-around;
+        border-top:1px solid #252b33;
         z-index:100;
+        justify-content:space-around;
     }
 
     .mobileNav button{
         background:none;
         border:0;
-        color:#7e8792;
-        font-size:11px;
-        cursor:pointer;
+        color:#737d88;
+        font-size:10px;
     }
 
     .mobileNav button.active{
-        color:var(--green);
+        color:#19c37d;
     }
 
     .mobileNav span{
         display:block;
-        font-size:20px;
+        font-size:19px;
         margin-bottom:3px;
     }
 
     .matchCard{
-        grid-template-columns:1fr 80px;
+        grid-template-columns:1fr 75px;
     }
 
-    .comp{
+    .compName{
         display:none;
     }
 
@@ -671,33 +777,12 @@ main{
         justify-content:flex-start;
     }
 
-    .matchTime{
-        text-align:right;
-    }
-
     .liveMatch{
-        grid-template-columns:1fr 100px 1fr;
+        grid-template-columns:1fr 90px 1fr;
     }
 
-    .teamName{
-        font-size:14px;
-    }
-
-    .matchHeaderTeams{
-        grid-template-columns:1fr 100px 1fr;
-    }
-
-    .bigTeam{
-        font-size:15px;
-    }
-
-    .bigScore{
-        font-size:34px;
-    }
-
-    .bigCrest{
-        width:60px;
-        height:60px;
+    .scoreTeams{
+        grid-template-columns:1fr 90px 1fr;
     }
 }
 </style>
@@ -705,297 +790,365 @@ main{
 
 <body>
 
-<div class="app">
+<!-- ==================================================
+     CONFIGURACIÓN INICIAL
+================================================== -->
+
+<section id="setup" class="setup">
+
+<div class="setupBox">
+
+    <div class="setupTop">
+
+        <div class="setupLogo">⚽</div>
+
+        <h1>Elegí tus equipos</h1>
+
+        <p>
+            Seleccioná los equipos que querés seguir.
+            Después te mostraremos sus partidos y avisos.
+        </p>
+
+    </div>
+
+
+    <div class="searchBox">
+
+        <input
+            id="teamSearch"
+            type="text"
+            placeholder="🔎 Buscar equipo..."
+            oninput="filterTeams()"
+        >
+
+    </div>
+
+
+    <div class="countryFilters">
+
+        <button class="countryBtn active"
+            onclick="filterCountry('todos',this)">
+            Todos
+        </button>
+
+        <button class="countryBtn"
+            onclick="filterCountry('argentina',this)">
+            🇦🇷 Argentina
+        </button>
+
+        <button class="countryBtn"
+            onclick="filterCountry('españa',this)">
+            🇪🇸 España
+        </button>
+
+        <button class="countryBtn"
+            onclick="filterCountry('inglaterra',this)">
+            🏴 Inglaterra
+        </button>
+
+        <button class="countryBtn"
+            onclick="filterCountry('italia',this)">
+            🇮🇹 Italia
+        </button>
+
+        <button class="countryBtn"
+            onclick="filterCountry('alemania',this)">
+            🇩🇪 Alemania
+        </button>
+
+        <button class="countryBtn"
+            onclick="filterCountry('francia',this)">
+            🇫🇷 Francia
+        </button>
+
+    </div>
+
+
+    <div class="selectedCounter">
+
+        <span>Equipos seleccionados</span>
+
+        <span id="selectedNumber">0</span>
+
+    </div>
+
+
+    <div id="teamList"></div>
+
+
+    <button
+        class="continueButton"
+        onclick="finishSetup()"
+    >
+        CONTINUAR
+    </button>
+
+</div>
+
+</section>
+
+
+<!-- ==================================================
+     APP
+================================================== -->
+
+<div id="app" class="app">
 
 <header>
 
     <div class="logo">
-        <div class="logoBall">⚽</div>
+
+        <div class="logoIcon">⚽</div>
+
         Fútbol Ahora
+
     </div>
+
 
     <div class="headerSearch">
+
         <input
-            id="search"
-            type="text"
-            placeholder="Buscar equipo o competición..."
-            oninput="searchMatches()"
+            placeholder="Buscar equipo..."
         >
+
     </div>
 
-    <div class="profile">👤</div>
+
+    <div class="user">
+        👤
+    </div>
 
 </header>
+
 
 <div class="layout">
 
 <aside class="sidebar">
 
-    <div class="navTitle">Menú</div>
+    <div class="menuTitle">Principal</div>
 
-    <button class="navBtn active" onclick="showPage('home',this)">
+    <button class="menuBtn active"
+        onclick="showPage('home',this)">
         🏠 Inicio
     </button>
 
-    <button class="navBtn" onclick="showPage('matches',this)">
+    <button class="menuBtn"
+        onclick="showPage('matches',this)">
         ⚽ Partidos
     </button>
 
-    <button class="navBtn" onclick="showPage('favorites',this)">
-        ⭐ Favoritos
+    <button class="menuBtn"
+        onclick="showPage('favorites',this)">
+        ⭐ Mis equipos
     </button>
 
-    <button class="navBtn" onclick="showPage('competitions',this)">
-        🏆 Competiciones
-    </button>
-
-    <div class="navTitle">Preferencias</div>
-
-    <button class="navBtn" onclick="toggleTheme()">
-        🌙 Tema
+    <button class="menuBtn"
+        onclick="showPage('alerts',this)">
+        🔔 Avisos
     </button>
 
 </aside>
 
+
 <main>
 
-<!-- HOME -->
+<!-- ================= HOME ================= -->
 
 <section id="home" class="page active">
 
     <div class="pageTitle">
-        <div>
-            <h1>Partidos</h1>
-            <p>Todo el fútbol en un solo lugar</p>
-        </div>
+
+        <h1>Partidos</h1>
+
+        <p>
+            Los partidos de tus equipos
+        </p>
+
     </div>
 
-    <div class="tabs">
-        <button class="tab active">Hoy</button>
-        <button class="tab" onclick="alert('Mañana estará disponible al conectar la API')">Mañana</button>
-        <button class="tab" onclick="alert('Calendario completo disponible con la API')">Próximos</button>
-    </div>
 
-    <div class="liveBox">
+    <div class="dateTabs">
 
-        <div class="liveHead">
+        <button class="dateTab active">
+            Hoy
+        </button>
 
-            <div class="liveLabel">
-                <span class="liveDot"></span>
-                EN VIVO
-            </div>
+        <button class="dateTab">
+            Mañana
+        </button>
 
-            <div class="liveCompetition">
-                Liga Profesional
-            </div>
-
-        </div>
-
-        <div class="liveMatch">
-
-            <div>
-                <div class="crest">⚪</div>
-                <div class="teamName">River Plate</div>
-            </div>
-
-            <div>
-                <div class="score">2 - 1</div>
-                <div class="minute">78'</div>
-            </div>
-
-            <div>
-                <div class="crest">🔵</div>
-                <div class="teamName">Boca Juniors</div>
-            </div>
-
-        </div>
-
-        <button
-            onclick="openMatch()"
-            style="
-            margin-top:22px;
-            width:100%;
-            height:43px;
-            border:0;
-            border-radius:7px;
-            background:var(--green);
-            color:#06140e;
-            font-weight:bold;
-            cursor:pointer;
-            "
-        >
-            ▶ Ver partido
+        <button class="dateTab">
+            Próximos
         </button>
 
     </div>
 
-    <h2 class="sectionTitle">Próximos partidos</h2>
 
-    <div class="matches" id="homeMatches">
+    <div class="live">
 
-        <div class="matchCard" data-search="real madrid barcelona laliga">
+        <div class="liveHeader">
 
-            <div>
-                <div class="comp">LaLiga</div>
-            </div>
+            <span class="liveStatus">
+                🔴 EN VIVO
+            </span>
 
-            <div class="matchTeams">
-
-                <div class="teamLine">
-                    <div class="miniCrest">⚪</div>
-                    Real Madrid
-                </div>
-
-                <div class="teamLine">
-                    <div class="miniCrest">🔵</div>
-                    Barcelona
-                </div>
-
-            </div>
-
-            <div class="matchTime">
-                <div class="time">16:00</div>
-                <div class="status">Hoy</div>
-            </div>
+            <span class="competition">
+                Liga Profesional
+            </span>
 
         </div>
 
-        <div class="matchCard" data-search="manchester city arsenal premier league">
+
+        <div class="liveMatch">
 
             <div>
-                <div class="comp">Premier League</div>
-            </div>
 
-            <div class="matchTeams">
+                <img
+                    class="crestLarge"
+                    src="https://media.api-sports.io/football/teams/4356.png"
+                >
 
-                <div class="teamLine">
-                    <div class="miniCrest">🔵</div>
-                    Manchester City
-                </div>
-
-                <div class="teamLine">
-                    <div class="miniCrest">🔴</div>
-                    Arsenal
-                </div>
-
-            </div>
-
-            <div class="matchTime">
-                <div class="time">18:30</div>
-                <div class="status">Hoy</div>
-            </div>
-
-        </div>
-
-        <div class="matchCard" data-search="inter milan juventus serie a">
-
-            <div>
-                <div class="comp">Serie A</div>
-            </div>
-
-            <div class="matchTeams">
-
-                <div class="teamLine">
-                    <div class="miniCrest">⚫</div>
-                    Inter
-                </div>
-
-                <div class="teamLine">
-                    <div class="miniCrest">⚪</div>
-                    Juventus
-                </div>
-
-            </div>
-
-            <div class="matchTime">
-                <div class="time">21:00</div>
-                <div class="status">Hoy</div>
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- PARTIDOS -->
-
-<section id="matches" class="page">
-
-    <div class="pageTitle">
-
-        <div>
-            <h1>Todos los partidos</h1>
-            <p>Calendario de fútbol</p>
-        </div>
-
-    </div>
-
-    <div class="tabs">
-
-        <button class="tab active">Todos</button>
-        <button class="tab">En vivo</button>
-        <button class="tab">Finalizados</button>
-        <button class="tab">Próximos</button>
-
-    </div>
-
-    <div class="matches">
-
-        <div class="matchCard" onclick="openMatch()">
-
-            <div>
-                <div class="comp">🇦🇷 Liga Profesional</div>
-            </div>
-
-            <div class="matchTeams">
-
-                <div class="teamLine">
-                    <div class="miniCrest">⚪</div>
+                <div class="liveTeam">
                     River Plate
                 </div>
 
-                <div class="teamLine">
-                    <div class="miniCrest">🔵</div>
+            </div>
+
+
+            <div>
+
+                <div class="liveScore">
+                    2 - 1
+                </div>
+
+                <div class="minute">
+                    78'
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <img
+                    class="crestLarge"
+                    src="https://media.api-sports.io/football/teams/451.png"
+                >
+
+                <div class="liveTeam">
                     Boca Juniors
                 </div>
 
             </div>
 
-            <div class="matchTime">
-
-                <div class="time">EN VIVO</div>
-                <div class="status live">78'</div>
-
-            </div>
-
         </div>
+
+
+        <button
+            class="watchButton"
+            onclick="openMatch()"
+        >
+            ▶ VER PARTIDO
+        </button>
+
+    </div>
+
+
+    <h2 style="font-size:17px;margin-bottom:12px">
+        Próximos partidos
+    </h2>
+
+
+    <div class="matches">
 
         <div class="matchCard">
 
-            <div>
-                <div class="comp">🇪🇸 LaLiga</div>
+            <div class="compName">
+                LaLiga
             </div>
 
             <div class="matchTeams">
 
                 <div class="teamLine">
-                    <div class="miniCrest">⚪</div>
+
+                    <img
+                        class="miniLogo"
+                        src="https://media.api-sports.io/football/teams/541.png"
+                    >
+
                     Real Madrid
+
                 </div>
 
                 <div class="teamLine">
-                    <div class="miniCrest">🔵</div>
+
+                    <img
+                        class="miniLogo"
+                        src="https://media.api-sports.io/football/teams/529.png"
+                    >
+
                     Barcelona
+
                 </div>
 
             </div>
 
             <div class="matchTime">
 
-                <div class="time">16:00</div>
-                <div class="status">Hoy</div>
+                <div class="time">
+                    16:00
+                </div>
+
+                <div class="status">
+                    Hoy
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="matchCard">
+
+            <div class="compName">
+                Premier League
+            </div>
+
+            <div class="matchTeams">
+
+                <div class="teamLine">
+
+                    <img
+                        class="miniLogo"
+                        src="https://media.api-sports.io/football/teams/50.png"
+                    >
+
+                    Manchester City
+
+                </div>
+
+                <div class="teamLine">
+
+                    <img
+                        class="miniLogo"
+                        src="https://media.api-sports.io/football/teams/42.png"
+                    >
+
+                    Arsenal
+
+                </div>
+
+            </div>
+
+            <div class="matchTime">
+
+                <div class="time">
+                    18:30
+                </div>
+
+                <div class="status">
+                    Hoy
+                </div>
 
             </div>
 
@@ -1006,127 +1159,187 @@ main{
 </section>
 
 
-<!-- FAVORITOS -->
+<!-- ================= PARTIDOS ================= -->
+
+<section id="matches" class="page">
+
+    <div class="pageTitle">
+
+        <h1>Partidos</h1>
+
+        <p>
+            Todos los partidos disponibles
+        </p>
+
+    </div>
+
+
+    <div class="matches">
+
+        <div
+            class="matchCard"
+            onclick="openMatch()"
+        >
+
+            <div class="compName">
+                Liga Profesional
+            </div>
+
+            <div class="matchTeams">
+
+                <div class="teamLine">
+
+                    <img
+                        class="miniLogo"
+                        src="https://media.api-sports.io/football/teams/4356.png"
+                    >
+
+                    River Plate
+
+                </div>
+
+                <div class="teamLine">
+
+                    <img
+                        class="miniLogo"
+                        src="https://media.api-sports.io/football/teams/451.png"
+                    >
+
+                    Boca Juniors
+
+                </div>
+
+            </div>
+
+            <div class="matchTime">
+
+                <div class="time">
+                    EN VIVO
+                </div>
+
+                <div class="status">
+                    78'
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FAVORITOS ================= -->
 
 <section id="favorites" class="page">
 
     <div class="pageTitle">
 
-        <div>
-            <h1>Favoritos</h1>
-            <p>Seguí de cerca tus equipos</p>
-        </div>
+        <h1>Mis equipos</h1>
+
+        <p>
+            Los equipos que elegiste seguir
+        </p>
 
     </div>
 
-    <div class="favoriteCard">
 
-        <div>
-            <div class="star">★ River Plate</div>
-            <small style="color:#858d97">Próximo partido: River vs Boca</small>
-        </div>
-
-        <button
-            onclick="this.closest('.favoriteCard').remove()"
-            style="
-            background:none;
-            border:0;
-            color:#ff5964;
-            cursor:pointer;
-            "
-        >
-            Quitar
-        </button>
-
-    </div>
-
-    <div class="favoriteCard">
-
-        <div>
-            <div class="star">★ Real Madrid</div>
-            <small style="color:#858d97">Próximo partido: Real Madrid vs Barcelona</small>
-        </div>
-
-        <button
-            onclick="this.closest('.favoriteCard').remove()"
-            style="
-            background:none;
-            border:0;
-            color:#ff5964;
-            cursor:pointer;
-            "
-        >
-            Quitar
-        </button>
-
-    </div>
+    <div id="favoriteList"></div>
 
 </section>
 
 
-<!-- COMPETICIONES -->
+<!-- ================= AVISOS ================= -->
 
-<section id="competitions" class="page">
+<section id="alerts" class="page">
 
     <div class="pageTitle">
 
-        <div>
-            <h1>Competiciones</h1>
-            <p>Elegí una competición</p>
-        </div>
+        <h1>🔔 Avisos</h1>
+
+        <p>
+            Configurá cuándo querés recibir alertas
+        </p>
 
     </div>
 
-    <div class="matches">
 
-        <div class="favoriteCard">
-            🇦🇷 Liga Profesional
-            <span>→</span>
+    <div class="favorite">
+
+        <div>
+            <b>⏰ Comienzo del partido</b>
+            <p style="color:#747d87;font-size:12px;margin-top:5px">
+                Avisarte cuando empiece un partido de tus equipos.
+            </p>
         </div>
 
-        <div class="favoriteCard">
-            🇪🇺 Champions League
-            <span>→</span>
+        <input
+            type="checkbox"
+            checked
+            onchange="saveAlerts()"
+        >
+
+    </div>
+
+
+    <div class="favorite">
+
+        <div>
+            <b>⚽ Goles</b>
+            <p style="color:#747d87;font-size:12px;margin-top:5px">
+                Avisarte cada vez que haya un gol.
+            </p>
         </div>
 
-        <div class="favoriteCard">
-            🇪🇸 LaLiga
-            <span>→</span>
+        <input
+            type="checkbox"
+            checked
+            onchange="saveAlerts()"
+        >
+
+    </div>
+
+
+    <div class="favorite">
+
+        <div>
+            <b>🏁 Final del partido</b>
+            <p style="color:#747d87;font-size:12px;margin-top:5px">
+                Avisarte cuando termine.
+            </p>
         </div>
 
-        <div class="favoriteCard">
-            🏴 Premier League
-            <span>→</span>
-        </div>
-
-        <div class="favoriteCard">
-            🇮🇹 Serie A
-            <span>→</span>
-        </div>
+        <input
+            type="checkbox"
+            checked
+            onchange="saveAlerts()"
+        >
 
     </div>
 
 </section>
 
 
-<!-- PARTIDO -->
+<!-- ================= PARTIDO ================= -->
 
-<section id="matchView" class="matchView">
+<section id="matchPage" class="matchPage">
 
-    <button class="backBtn" onclick="closeMatch()">
-        ← Volver a partidos
+    <button class="back" onclick="closeMatch()">
+        ← Volver
     </button>
 
-    <div class="videoBox">
 
-        <div class="videoPlaceholder">
+    <div class="video">
 
-            <div
-                class="videoIcon"
-                onclick="startDemo()"
+        <div class="videoCenter">
+
+            <button
+                class="play"
+                onclick="startPlayer()"
             >
                 ▶
-            </div>
+            </button>
 
             <h2>Transmisión del partido</h2>
 
@@ -1136,38 +1349,45 @@ main{
 
         </div>
 
-        <div class="videoControls">
 
-            <span>▶</span>
+        <div class="controls">
+
+            ▶
 
             <div class="progress"></div>
 
-            <span>🔊</span>
+            🔊
 
-            <span>⚙️</span>
+            ⚙️
 
-            <span>⛶</span>
+            ⛶
 
-            <span class="livePill">EN VIVO</span>
+            <span class="livePill">
+                EN VIVO
+            </span>
 
         </div>
 
     </div>
 
 
-    <div class="matchHeader">
+    <div class="scoreHeader">
 
-        <div class="matchHeaderTeams">
+        <div class="scoreTeams">
 
             <div>
 
-                <div class="bigCrest">⚪</div>
+                <img
+                    class="scoreLogo"
+                    src="https://media.api-sports.io/football/teams/4356.png"
+                >
 
-                <div class="bigTeam">
+                <div class="scoreTeamName">
                     River Plate
                 </div>
 
             </div>
+
 
             <div>
 
@@ -1175,17 +1395,21 @@ main{
                     2 - 1
                 </div>
 
-                <div class="matchStatus">
-                    EN VIVO · 78'
+                <div class="liveMinute">
+                    78' · EN VIVO
                 </div>
 
             </div>
 
+
             <div>
 
-                <div class="bigCrest">🔵</div>
+                <img
+                    class="scoreLogo"
+                    src="https://media.api-sports.io/football/teams/451.png"
+                >
 
-                <div class="bigTeam">
+                <div class="scoreTeamName">
                     Boca Juniors
                 </div>
 
@@ -1196,25 +1420,25 @@ main{
     </div>
 
 
-    <div class="matchTabs">
+    <div class="subTabs">
 
         <button
-            class="matchTab active"
-            onclick="matchPanel('events',this)"
+            class="subTab active"
+            onclick="showSub('events',this)"
         >
             Eventos
         </button>
 
         <button
-            class="matchTab"
-            onclick="matchPanel('stats',this)"
+            class="subTab"
+            onclick="showSub('stats',this)"
         >
             Estadísticas
         </button>
 
         <button
-            class="matchTab"
-            onclick="matchPanel('lineups',this)"
+            class="subTab"
+            onclick="showSub('lineups',this)"
         >
             Alineaciones
         </button>
@@ -1222,28 +1446,34 @@ main{
     </div>
 
 
-    <div id="events" class="matchPanel active">
+    <div id="events" class="subPanel active">
 
         <div class="event">
 
-            <div class="eventTime">76'</div>
+            <div class="eventTime">
+                76'
+            </div>
 
-            <div class="eventIcon">⚽</div>
+            <div>
+                ⚽
+            </div>
 
             <div>
                 <b>Gol de River Plate</b>
-                <p style="color:#858d97;font-size:12px">
-                    River vuelve a ponerse arriba.
-                </p>
             </div>
 
         </div>
 
+
         <div class="event">
 
-            <div class="eventTime">52'</div>
+            <div class="eventTime">
+                52'
+            </div>
 
-            <div class="eventIcon">⚽</div>
+            <div>
+                ⚽
+            </div>
 
             <div>
                 <b>Gol de Boca Juniors</b>
@@ -1251,11 +1481,16 @@ main{
 
         </div>
 
+
         <div class="event">
 
-            <div class="eventTime">41'</div>
+            <div class="eventTime">
+                41'
+            </div>
 
-            <div class="eventIcon">🟨</div>
+            <div>
+                🟨
+            </div>
 
             <div>
                 <b>Tarjeta amarilla</b>
@@ -1263,85 +1498,37 @@ main{
 
         </div>
 
-        <div class="event">
+    </div>
 
-            <div class="eventTime">23'</div>
 
-            <div class="eventIcon">⚽</div>
+    <div id="stats" class="subPanel">
 
-            <div>
-                <b>Gol de River Plate</b>
-            </div>
+        <div class="favorite">
+            <span>Posesión</span>
+            <b>54% - 46%</b>
+        </div>
 
+        <div class="favorite">
+            <span>Tiros</span>
+            <b>8 - 5</b>
+        </div>
+
+        <div class="favorite">
+            <span>Corners</span>
+            <b>6 - 3</b>
         </div>
 
     </div>
 
 
-    <div id="stats" class="matchPanel">
+    <div id="lineups" class="subPanel">
 
-        <div class="statRow">
-
-            <div class="statValue">54%</div>
-
-            <div>
-                <div style="
-                    display:flex;
-                    height:7px;
-                    border-radius:10px;
-                    overflow:hidden;
-                ">
-                    <span style="
-                        width:54%;
-                        background:var(--green);
-                    "></span>
-
-                    <span style="
-                        width:46%;
-                        background:#59616c;
-                    "></span>
-                </div>
-            </div>
-
-            <div class="statValue">46%</div>
-
-        </div>
-
-        <p style="text-align:center;color:#858d97;font-size:12px">
-            Posesión
-        </p>
-
-        <div class="statRow">
-
-            <div class="statValue">8</div>
-
-            <div class="statValue">Tiros</div>
-
-            <div class="statValue">5</div>
-
-        </div>
-
-        <div class="statRow">
-
-            <div class="statValue">6</div>
-
-            <div class="statValue">Corners</div>
-
-            <div class="statValue">3</div>
-
-        </div>
-
-    </div>
-
-
-    <div id="lineups" class="matchPanel">
-
-        <div class="favoriteCard">
+        <div class="favorite">
             <b>River Plate</b>
             <span>11 jugadores</span>
         </div>
 
-        <div class="favoriteCard">
+        <div class="favorite">
             <b>Boca Juniors</b>
             <span>11 jugadores</span>
         </div>
@@ -1354,8 +1541,10 @@ main{
 
 </div>
 
+</div>
 
-<!-- MOBILE NAV -->
+
+<!-- MOBILE -->
 
 <nav class="mobileNav">
 
@@ -1371,155 +1560,741 @@ main{
 
     <button onclick="showPage('favorites',this)">
         <span>⭐</span>
-        Favoritos
+        Equipos
     </button>
 
-    <button onclick="showPage('competitions',this)">
-        <span>🏆</span>
-        Ligas
+    <button onclick="showPage('alerts',this)">
+        <span>🔔</span>
+        Avisos
     </button>
 
 </nav>
 
-</div>
-
 
 <script>
 
-/* NAVEGACIÓN */
+/* =========================================
+   EQUIPOS
+========================================= */
+
+const teams = [
+
+/* ARGENTINA */
+
+{
+    name:"River Plate",
+    country:"argentina",
+    league:"Argentina",
+    logo:"https://media.api-sports.io/football/teams/4356.png"
+},
+
+{
+    name:"Boca Juniors",
+    country:"argentina",
+    league:"Argentina",
+    logo:"https://media.api-sports.io/football/teams/451.png"
+},
+
+{
+    name:"Racing Club",
+    country:"argentina",
+    league:"Argentina",
+    logo:"https://media.api-sports.io/football/teams/4360.png"
+},
+
+{
+    name:"Independiente",
+    country:"argentina",
+    league:"Argentina",
+    logo:"https://media.api-sports.io/football/teams/4358.png"
+},
+
+{
+    name:"San Lorenzo",
+    country:"argentina",
+    league:"Argentina",
+    logo:"https://media.api-sports.io/football/teams/4364.png"
+},
+
+{
+    name:"Rosario Central",
+    country:"argentina",
+    league:"Argentina",
+    logo:"https://media.api-sports.io/football/teams/4359.png"
+},
+
+{
+    name:"Estudiantes",
+    country:"argentina",
+    league:"Argentina",
+    logo:"https://media.api-sports.io/football/teams/4348.png"
+},
+
+{
+    name:"Newells Old Boys",
+    country:"argentina",
+    league:"Argentina",
+    logo:"https://media.api-sports.io/football/teams/4361.png"
+},
+
+/* ESPAÑA */
+
+{
+    name:"Real Madrid",
+    country:"españa",
+    league:"LaLiga",
+    logo:"https://media.api-sports.io/football/teams/541.png"
+},
+
+{
+    name:"Barcelona",
+    country:"españa",
+    league:"LaLiga",
+    logo:"https://media.api-sports.io/football/teams/529.png"
+},
+
+{
+    name:"Atlético de Madrid",
+    country:"españa",
+    league:"LaLiga",
+    logo:"https://media.api-sports.io/football/teams/530.png"
+},
+
+{
+    name:"Sevilla",
+    country:"españa",
+    league:"LaLiga",
+    logo:"https://media.api-sports.io/football/teams/536.png"
+},
+
+{
+    name:"Valencia",
+    country:"españa",
+    league:"LaLiga",
+    logo:"https://media.api-sports.io/football/teams/532.png"
+},
+
+{
+    name:"Athletic Club",
+    country:"españa",
+    league:"LaLiga",
+    logo:"https://media.api-sports.io/football/teams/531.png"
+},
+
+/* INGLATERRA */
+
+{
+    name:"Manchester City",
+    country:"inglaterra",
+    league:"Premier League",
+    logo:"https://media.api-sports.io/football/teams/50.png"
+},
+
+{
+    name:"Manchester United",
+    country:"inglaterra",
+    league:"Premier League",
+    logo:"https://media.api-sports.io/football/teams/33.png"
+},
+
+{
+    name:"Liverpool",
+    country:"inglaterra",
+    league:"Premier League",
+    logo:"https://media.api-sports.io/football/teams/40.png"
+},
+
+{
+    name:"Arsenal",
+    country:"inglaterra",
+    league:"Premier League",
+    logo:"https://media.api-sports.io/football/teams/42.png"
+},
+
+{
+    name:"Chelsea",
+    country:"inglaterra",
+    league:"Premier League",
+    logo:"https://media.api-sports.io/football/teams/49.png"
+},
+
+{
+    name:"Tottenham",
+    country:"inglaterra",
+    league:"Premier League",
+    logo:"https://media.api-sports.io/football/teams/47.png"
+},
+
+/* ITALIA */
+
+{
+    name:"Inter",
+    country:"italia",
+    league:"Serie A",
+    logo:"https://media.api-sports.io/football/teams/505.png"
+},
+
+{
+    name:"Milan",
+    country:"italia",
+    league:"Serie A",
+    logo:"https://media.api-sports.io/football/teams/489.png"
+},
+
+{
+    name:"Juventus",
+    country:"italia",
+    league:"Serie A",
+    logo:"https://media.api-sports.io/football/teams/496.png"
+},
+
+{
+    name:"Napoli",
+    country:"italia",
+    league:"Serie A",
+    logo:"https://media.api-sports.io/football/teams/492.png"
+},
+
+{
+    name:"Roma",
+    country:"italia",
+    league:"Serie A",
+    logo:"https://media.api-sports.io/football/teams/497.png"
+},
+
+/* ALEMANIA */
+
+{
+    name:"Bayern Munich",
+    country:"alemania",
+    league:"Bundesliga",
+    logo:"https://media.api-sports.io/football/teams/157.png"
+},
+
+{
+    name:"Borussia Dortmund",
+    country:"alemania",
+    league:"Bundesliga",
+    logo:"https://media.api-sports.io/football/teams/165.png"
+},
+
+{
+    name:"Bayer Leverkusen",
+    country:"alemania",
+    league:"Bundesliga",
+    logo:"https://media.api-sports.io/football/teams/168.png"
+},
+
+{
+    name:"RB Leipzig",
+    country:"alemania",
+    league:"Bundesliga",
+    logo:"https://media.api-sports.io/football/teams/173.png"
+},
+
+/* FRANCIA */
+
+{
+    name:"PSG",
+    country:"francia",
+    league:"Ligue 1",
+    logo:"https://media.api-sports.io/football/teams/85.png"
+},
+
+{
+    name:"Olympique de Marseille",
+    country:"francia",
+    league:"Ligue 1",
+    logo:"https://media.api-sports.io/football/teams/81.png"
+},
+
+{
+    name:"Lyon",
+    country:"francia",
+    league:"Ligue 1",
+    logo:"https://media.api-sports.io/football/teams/80.png"
+}
+
+];
+
+
+let selectedTeams =
+    JSON.parse(localStorage.getItem("selectedTeams")) || [];
+
+let currentCountry = "todos";
+
+
+/* =========================================
+   MOSTRAR EQUIPOS
+========================================= */
+
+function renderTeams(){
+
+    const list =
+        document.getElementById("teamList");
+
+    list.innerHTML="";
+
+    const search =
+        document.getElementById("teamSearch")
+        .value
+        .toLowerCase();
+
+    const filtered =
+        teams.filter(team=>{
+
+            const countryOk =
+                currentCountry === "todos" ||
+                team.country === currentCountry;
+
+            const searchOk =
+                team.name
+                .toLowerCase()
+                .includes(search);
+
+            return countryOk && searchOk;
+
+        });
+
+
+    const leagues = {};
+
+    filtered.forEach(team=>{
+
+        if(!leagues[team.league]){
+            leagues[team.league]=[];
+        }
+
+        leagues[team.league].push(team);
+
+    });
+
+
+    Object.keys(leagues).forEach(league=>{
+
+        const leagueBox =
+            document.createElement("div");
+
+        leagueBox.className="league";
+
+        leagueBox.innerHTML=`
+
+            <div class="leagueTitle">
+
+                <b>${league}</b>
+
+                <small>
+                    ${leagues[league].length} equipos
+                </small>
+
+            </div>
+
+        `;
+
+
+        leagues[league].forEach(team=>{
+
+            const following =
+                selectedTeams.includes(team.name);
+
+
+            const row =
+                document.createElement("div");
+
+            row.className="team";
+
+            row.innerHTML=`
+
+                <div class="teamLeft">
+
+                    <img
+                        class="teamLogo"
+                        src="${team.logo}"
+                        onerror="this.src='https://via.placeholder.com/100'"
+                    >
+
+                    <div>
+
+                        <div class="teamName">
+                            ${team.name}
+                        </div>
+
+                        <div class="teamCountry">
+                            ${team.country}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    class="followButton ${following ? "following":""}"
+                    onclick="toggleTeam('${team.name.replace(/'/g,"\\'")}')"
+                >
+
+                    ${following ? "✓ Siguiendo" : "Seguir"}
+
+                </button>
+
+            `;
+
+            leagueBox.appendChild(row);
+
+        });
+
+
+        list.appendChild(leagueBox);
+
+    });
+
+}
+
+
+function toggleTeam(name){
+
+    if(selectedTeams.includes(name)){
+
+        selectedTeams =
+            selectedTeams.filter(
+                team=>team!==name
+            );
+
+    }else{
+
+        selectedTeams.push(name);
+
+    }
+
+    localStorage.setItem(
+        "selectedTeams",
+        JSON.stringify(selectedTeams)
+    );
+
+    updateCounter();
+
+    renderTeams();
+
+}
+
+
+function updateCounter(){
+
+    document.getElementById(
+        "selectedNumber"
+    ).textContent =
+        selectedTeams.length;
+
+}
+
+
+function filterTeams(){
+
+    renderTeams();
+
+}
+
+
+function filterCountry(country,button){
+
+    currentCountry=country;
+
+    document
+        .querySelectorAll(".countryBtn")
+        .forEach(btn=>{
+            btn.classList.remove("active");
+        });
+
+    button.classList.add("active");
+
+    renderTeams();
+
+}
+
+
+/* =========================================
+   FINALIZAR CONFIGURACIÓN
+========================================= */
+
+function finishSetup(){
+
+    if(selectedTeams.length===0){
+
+        alert(
+            "Elegí al menos un equipo para continuar."
+        );
+
+        return;
+    }
+
+    localStorage.setItem(
+        "setupComplete",
+        "true"
+    );
+
+    document.getElementById(
+        "setup"
+    ).style.display="none";
+
+    document.getElementById(
+        "app"
+    ).style.display="block";
+
+    renderFavorites();
+
+}
+
+
+/* =========================================
+   FAVORITOS
+========================================= */
+
+function renderFavorites(){
+
+    const box =
+        document.getElementById(
+            "favoriteList"
+        );
+
+    box.innerHTML="";
+
+    selectedTeams.forEach(name=>{
+
+        const team =
+            teams.find(t=>t.name===name);
+
+        if(!team) return;
+
+        const row =
+            document.createElement("div");
+
+        row.className="favorite";
+
+        row.innerHTML=`
+
+            <div class="favoriteLeft">
+
+                <img
+                    src="${team.logo}"
+                    onerror="this.src='https://via.placeholder.com/100'"
+                >
+
+                <div>
+
+                    <b>${team.name}</b>
+
+                    <p style="
+                        color:#737d88;
+                        font-size:11px;
+                        margin-top:3px;
+                    ">
+                        ${team.league}
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <button
+                class="remove"
+                onclick="toggleTeamFromApp('${team.name.replace(/'/g,"\\'")}')"
+            >
+                Dejar de seguir
+            </button>
+
+        `;
+
+        box.appendChild(row);
+
+    });
+
+}
+
+
+function toggleTeamFromApp(name){
+
+    selectedTeams =
+        selectedTeams.filter(
+            team=>team!==name
+        );
+
+    localStorage.setItem(
+        "selectedTeams",
+        JSON.stringify(selectedTeams)
+    );
+
+    renderFavorites();
+
+}
+
+
+/* =========================================
+   NAVEGACIÓN
+========================================= */
 
 function showPage(page,button){
 
-    document.querySelectorAll('.page').forEach(p=>{
-        p.classList.remove('active');
-    });
+    document
+        .querySelectorAll(".page")
+        .forEach(p=>{
+            p.classList.remove("active");
+        });
 
-    document.getElementById(page).classList.add('active');
+    document
+        .getElementById(page)
+        .classList.add("active");
 
-    document.querySelectorAll('.navBtn').forEach(b=>{
-        b.classList.remove('active');
-    });
-
-    document.querySelectorAll('.mobileNav button').forEach(b=>{
-        b.classList.remove('active');
-    });
+    document
+        .querySelectorAll(".menuBtn")
+        .forEach(btn=>{
+            btn.classList.remove("active");
+        });
 
     if(button){
-        button.classList.add('active');
+        button.classList.add("active");
+    }
+
+    if(page==="favorites"){
+        renderFavorites();
     }
 
     window.scrollTo({
         top:0,
-        behavior:'smooth'
+        behavior:"smooth"
     });
+
 }
 
 
-/* PARTIDO */
+/* =========================================
+   PARTIDO
+========================================= */
 
 function openMatch(){
 
-    document.querySelectorAll('.page').forEach(p=>{
-        p.classList.remove('active');
-    });
+    document
+        .querySelectorAll(".page")
+        .forEach(p=>{
+            p.classList.remove("active");
+        });
 
-    document.getElementById('matchView').classList.add('active');
+    document
+        .getElementById("matchPage")
+        .classList.add("active");
 
     window.scrollTo({
         top:0,
-        behavior:'smooth'
+        behavior:"smooth"
     });
+
 }
 
 
 function closeMatch(){
 
-    document.getElementById('matchView').classList.remove('active');
+    document
+        .getElementById("matchPage")
+        .classList.remove("active");
 
-    document.getElementById('home').classList.add('active');
+    document
+        .getElementById("home")
+        .classList.add("active");
 
-    window.scrollTo({
-        top:0,
-        behavior:'smooth'
-    });
 }
 
 
-/* PESTAÑAS DEL PARTIDO */
+/* =========================================
+   SUBPESTAÑAS
+========================================= */
 
-function matchPanel(panel,button){
+function showSub(panel,button){
 
-    document.querySelectorAll('.matchPanel').forEach(p=>{
-        p.classList.remove('active');
-    });
+    document
+        .querySelectorAll(".subPanel")
+        .forEach(p=>{
+            p.classList.remove("active");
+        });
 
-    document.getElementById(panel).classList.add('active');
+    document
+        .getElementById(panel)
+        .classList.add("active");
 
-    document.querySelectorAll('.matchTab').forEach(b=>{
-        b.classList.remove('active');
-    });
+    document
+        .querySelectorAll(".subTab")
+        .forEach(b=>{
+            b.classList.remove("active");
+        });
 
-    button.classList.add('active');
+    button.classList.add("active");
+
 }
 
 
-/* BÚSQUEDA */
+/* =========================================
+   REPRODUCTOR
+========================================= */
 
-function searchMatches(){
+function startPlayer(){
 
-    const text =
-        document.getElementById('search')
-        .value
-        .toLowerCase();
+    alert(
+        "El reproductor está preparado para conectarse a una transmisión oficial o autorizada."
+    );
 
-    document.querySelectorAll('.matchCard').forEach(card=>{
-
-        const data =
-            card.dataset.search || card.innerText;
-
-        if(data.toLowerCase().includes(text)){
-            card.style.display='';
-        }else{
-            card.style.display='none';
-        }
-
-    });
 }
 
 
-/* TEMA */
+/* =========================================
+   AVISOS
+========================================= */
 
-function toggleTheme(){
+function saveAlerts(){
 
-    const root =
-        document.documentElement;
+    console.log(
+        "Preferencias de avisos guardadas."
+    );
 
-    if(root.style.getPropertyValue('--bg') === '#f4f5f7'){
+}
 
-        root.style.setProperty('--bg','#0b0d10');
-        root.style.setProperty('--panel','#12161b');
-        root.style.setProperty('--text','#f5f7fa');
+
+/* =========================================
+   INICIO
+========================================= */
+
+function startApp(){
+
+    renderTeams();
+    updateCounter();
+
+    const complete =
+        localStorage.getItem(
+            "setupComplete"
+        );
+
+    if(complete==="true" &&
+       selectedTeams.length>0){
+
+        document.getElementById(
+            "setup"
+        ).style.display="none";
+
+        document.getElementById(
+            "app"
+        ).style.display="block";
+
+        renderFavorites();
 
     }else{
 
-        root.style.setProperty('--bg','#f4f5f7');
-        root.style.setProperty('--panel','#ffffff');
-        root.style.setProperty('--text','#111318');
+        document.getElementById(
+            "setup"
+        ).style.display="flex";
 
     }
 
 }
 
-
-/* REPRODUCTOR DEMO */
-
-function startDemo(){
-
-    alert(
-        "El reproductor está preparado. Para mostrar un partido real necesitamos conectar una transmisión oficial/autorizada."
-    );
-
-}
+startApp();
 
 </script>
 
