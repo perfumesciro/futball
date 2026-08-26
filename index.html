@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Fútbol Ahora</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+:root{
+    --bg:#0b0d10;
+    --panel:#12161b;
+    --panel2:#181d23;
+    --border:#252b33;
+    --text:#f5f7fa;
+    --muted:#929aa5;
+    --green:#19c37d;
+    --red:#ff4d5a;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+}
+
+button{
+    font-family:inherit;
+}
+
+.app{
+    max-width:1400px;
+    margin:auto;
+    min-height:100vh;
+}
+
+/* HEADER */
+
+header{
+    height:70px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 25px;
+    background:#0d1014;
+    position:sticky;
+    top:0;
+    z-index:50;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:21px;
+    font-weight:800;
+}
+
+.logoBall{
+    width:34px;
+    height:34px;
+    border-radius:10px;
+    background:var(--green);
+    display:grid;
+    place-items:center;
+    color:#06140e;
+    font-size:18px;
+}
+
+.headerSearch{
+    width:330px;
+    position:relative;
+}
+
+.headerSearch input{
+    width:100%;
+    height:40px;
+    background:#171b20;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:0 15px;
+    color:white;
+    outline:none;
+}
+
+.headerSearch input:focus{
+    border-color:#3c4651;
+}
+
+.profile{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:#242a31;
+    display:grid;
+    place-items:center;
+    cursor:pointer;
+}
+
+/* LAYOUT */
+
+.layout{
+    display:grid;
+    grid-template-columns:230px 1fr;
+    min-height:calc(100vh - 70px);
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    border-right:1px solid var(--border);
+    padding:22px 14px;
+    background:#0d1014;
+}
+
+.navTitle{
+    font-size:11px;
+    color:#68717d;
+    text-transform:uppercase;
+    margin:15px 12px 8px;
+    letter-spacing:1px;
+}
+
+.navBtn{
+    width:100%;
+    height:44px;
+    border:none;
+    background:transparent;
+    color:#aeb5bd;
+    text-align:left;
+    padding:0 12px;
+    border-radius:8px;
+    cursor:pointer;
+    margin-bottom:4px;
+    font-size:14px;
+    display:flex;
+    gap:12px;
+    align-items:center;
+}
+
+.navBtn:hover{
+    background:#171b20;
+    color:white;
+}
+
+.navBtn.active{
+    background:#19241f;
+    color:var(--green);
+}
+
+/* CONTENT */
+
+main{
+    padding:28px;
+    overflow:hidden;
+}
+
+.page{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+.pageTitle{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:22px;
+}
+
+.pageTitle h1{
+    font-size:27px;
+}
+
+.pageTitle p{
+    color:var(--muted);
+    margin-top:5px;
+    font-size:13px;
+}
+
+/* TABS */
+
+.tabs{
+    display:flex;
+    gap:7px;
+    margin-bottom:20px;
+    overflow:auto;
+}
+
+.tab{
+    white-space:nowrap;
+    border:1px solid var(--border);
+    background:#11151a;
+    color:#9da5ae;
+    padding:9px 15px;
+    border-radius:7px;
+    cursor:pointer;
+}
+
+.tab.active{
+    background:#f1f3f5;
+    color:#0c0f12;
+}
+
+/* LIVE */
+
+.liveBox{
+    background:linear-gradient(120deg,#151b20,#101418);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:18px;
+    margin-bottom:25px;
+}
+
+.liveHead{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:18px;
+}
+
+.liveLabel{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.liveDot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:var(--red);
+    box-shadow:0 0 10px var(--red);
+}
+
+.liveCompetition{
+    color:var(--muted);
+    font-size:12px;
+}
+
+.liveMatch{
+    display:grid;
+    grid-template-columns:1fr 150px 1fr;
+    align-items:center;
+    text-align:center;
+}
+
+.teamName{
+    font-size:17px;
+    font-weight:bold;
+}
+
+.crest{
+    width:54px;
+    height:54px;
+    border-radius:50%;
+    margin:auto auto 10px;
+    background:#242a31;
+    display:grid;
+    place-items:center;
+    font-size:24px;
+}
+
+.score{
+    font-size:34px;
+    font-weight:800;
+}
+
+.minute{
+    color:var(--red);
+    font-size:12px;
+    margin-top:5px;
+}
+
+/* MATCH CARDS */
+
+.sectionTitle{
+    font-size:17px;
+    margin:25px 0 13px;
+}
+
+.matches{
+    display:grid;
+    gap:8px;
+}
+
+.matchCard{
+    min-height:88px;
+    border:1px solid var(--border);
+    background:var(--panel);
+    border-radius:10px;
+    display:grid;
+    grid-template-columns:150px 1fr 110px;
+    align-items:center;
+    padding:12px 18px;
+    cursor:pointer;
+    transition:.15s;
+}
+
+.matchCard:hover{
+    background:#171c22;
+    border-color:#343c46;
+}
+
+.comp{
+    color:var(--muted);
+    font-size:12px;
+}
+
+.matchTeams{
+    text-align:center;
+}
+
+.teamLine{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    margin:4px;
+    font-size:14px;
+}
+
+.miniCrest{
+    width:24px;
+    height:24px;
+    border-radius:50%;
+    background:#252b32;
+    display:grid;
+    place-items:center;
+    font-size:12px;
+}
+
+.matchTime{
+    text-align:right;
+}
+
+.time{
+    font-size:16px;
+    font-weight:bold;
+}
+
+.status{
+    color:var(--muted);
+    font-size:11px;
+    margin-top:4px;
+}
+
+.status.live{
+    color:var(--red);
+}
+
+/* FAVORITES */
+
+.favoriteCard{
+    border:1px solid var(--border);
+    background:var(--panel);
+    border-radius:10px;
+    padding:18px;
+    margin-bottom:8px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.star{
+    color:#ffd54a;
+}
+
+/* MATCH VIEW */
+
+.matchView{
+    display:none;
+}
+
+.matchView.active{
+    display:block;
+}
+
+.backBtn{
+    border:0;
+    background:none;
+    color:#aeb5bd;
+    cursor:pointer;
+    margin-bottom:18px;
+    font-size:14px;
+}
+
+.backBtn:hover{
+    color:white;
+}
+
+/* VIDEO */
+
+.videoBox{
+    width:100%;
+    aspect-ratio:16/9;
+    background:#050607;
+    border:1px solid #272d34;
+    border-radius:12px;
+    overflow:hidden;
+    position:relative;
+}
+
+.videoPlaceholder{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    background:
+        radial-gradient(circle at center,#172019 0%,#090b0d 65%);
+}
+
+.videoIcon{
+    width:72px;
+    height:72px;
+    border-radius:50%;
+    background:var(--green);
+    color:#07150e;
+    display:grid;
+    place-items:center;
+    font-size:27px;
+    margin-bottom:15px;
+    cursor:pointer;
+}
+
+.videoPlaceholder h2{
+    font-size:20px;
+}
+
+.videoPlaceholder p{
+    color:#858d97;
+    margin-top:7px;
+    font-size:13px;
+}
+
+.videoControls{
+    position:absolute;
+    bottom:0;
+    left:0;
+    right:0;
+    padding:18px;
+    background:linear-gradient(transparent,rgba(0,0,0,.9));
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.progress{
+    flex:1;
+    height:4px;
+    background:#454b52;
+    border-radius:10px;
+}
+
+.livePill{
+    background:var(--red);
+    padding:4px 8px;
+    border-radius:4px;
+    font-size:10px;
+    font-weight:bold;
+}
+
+/* MATCH HEADER */
+
+.matchHeader{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:30px;
+    text-align:center;
+    margin-top:15px;
+}
+
+.matchHeaderTeams{
+    display:grid;
+    grid-template-columns:1fr 160px 1fr;
+    align-items:center;
+}
+
+.bigCrest{
+    width:75px;
+    height:75px;
+    background:#252b32;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    font-size:34px;
+    margin:0 auto 10px;
+}
+
+.bigTeam{
+    font-size:20px;
+    font-weight:bold;
+}
+
+.bigScore{
+    font-size:42px;
+    font-weight:900;
+}
+
+.matchStatus{
+    color:var(--red);
+    font-size:13px;
+    margin-top:5px;
+}
+
+/* MATCH TABS */
+
+.matchTabs{
+    display:flex;
+    margin-top:15px;
+    border-bottom:1px solid var(--border);
+}
+
+.matchTab{
+    padding:13px 20px;
+    background:none;
+    border:0;
+    color:#858d97;
+    cursor:pointer;
+}
+
+.matchTab.active{
+    color:white;
+    border-bottom:2px solid var(--green);
+}
+
+.matchPanel{
+    display:none;
+    padding-top:20px;
+}
+
+.matchPanel.active{
+    display:block;
+}
+
+.event{
+    display:flex;
+    gap:15px;
+    padding:13px 0;
+    border-bottom:1px solid #1e2329;
+}
+
+.eventTime{
+    color:#8c949e;
+    width:35px;
+}
+
+.eventIcon{
+    width:25px;
+}
+
+.statRow{
+    display:grid;
+    grid-template-columns:70px 1fr 70px;
+    align-items:center;
+    margin:17px 0;
+    gap:15px;
+}
+
+.statValue{
+    text-align:center;
+    font-weight:bold;
+}
+
+.statBar{
+    height:7px;
+    background:#252b31;
+    border-radius:10px;
+    overflow:hidden;
+    display:flex;
+}
+
+.statBar span:first-child{
+    background:var(--green);
+}
+
+.statBar span:last-child{
+    background:#59616c;
+}
+
+/* MOBILE NAV */
+
+.mobileNav{
+    display:none;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:850px){
+
+    header{
+        padding:0 15px;
+    }
+
+    .headerSearch{
+        display:none;
+    }
+
+    .layout{
+        display:block;
+    }
+
+    .sidebar{
+        display:none;
+    }
+
+    main{
+        padding:18px 14px 85px;
+    }
+
+    .mobileNav{
+        position:fixed;
+        bottom:0;
+        left:0;
+        right:0;
+        height:65px;
+        background:#101419;
+        border-top:1px solid var(--border);
+        display:flex;
+        justify-content:space-around;
+        z-index:100;
+    }
+
+    .mobileNav button{
+        background:none;
+        border:0;
+        color:#7e8792;
+        font-size:11px;
+        cursor:pointer;
+    }
+
+    .mobileNav button.active{
+        color:var(--green);
+    }
+
+    .mobileNav span{
+        display:block;
+        font-size:20px;
+        margin-bottom:3px;
+    }
+
+    .matchCard{
+        grid-template-columns:1fr 80px;
+    }
+
+    .comp{
+        display:none;
+    }
+
+    .matchTeams{
+        text-align:left;
+    }
+
+    .teamLine{
+        justify-content:flex-start;
+    }
+
+    .matchTime{
+        text-align:right;
+    }
+
+    .liveMatch{
+        grid-template-columns:1fr 100px 1fr;
+    }
+
+    .teamName{
+        font-size:14px;
+    }
+
+    .matchHeaderTeams{
+        grid-template-columns:1fr 100px 1fr;
+    }
+
+    .bigTeam{
+        font-size:15px;
+    }
+
+    .bigScore{
+        font-size:34px;
+    }
+
+    .bigCrest{
+        width:60px;
+        height:60px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+
+    <div class="logo">
+        <div class="logoBall">⚽</div>
+        Fútbol Ahora
+    </div>
+
+    <div class="headerSearch">
+        <input
+            id="search"
+            type="text"
+            placeholder="Buscar equipo o competición..."
+            oninput="searchMatches()"
+        >
+    </div>
+
+    <div class="profile">👤</div>
+
+</header>
+
+<div class="layout">
+
+<aside class="sidebar">
+
+    <div class="navTitle">Menú</div>
+
+    <button class="navBtn active" onclick="showPage('home',this)">
+        🏠 Inicio
+    </button>
+
+    <button class="navBtn" onclick="showPage('matches',this)">
+        ⚽ Partidos
+    </button>
+
+    <button class="navBtn" onclick="showPage('favorites',this)">
+        ⭐ Favoritos
+    </button>
+
+    <button class="navBtn" onclick="showPage('competitions',this)">
+        🏆 Competiciones
+    </button>
+
+    <div class="navTitle">Preferencias</div>
+
+    <button class="navBtn" onclick="toggleTheme()">
+        🌙 Tema
+    </button>
+
+</aside>
+
+<main>
+
+<!-- HOME -->
+
+<section id="home" class="page active">
+
+    <div class="pageTitle">
+        <div>
+            <h1>Partidos</h1>
+            <p>Todo el fútbol en un solo lugar</p>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active">Hoy</button>
+        <button class="tab" onclick="alert('Mañana estará disponible al conectar la API')">Mañana</button>
+        <button class="tab" onclick="alert('Calendario completo disponible con la API')">Próximos</button>
+    </div>
+
+    <div class="liveBox">
+
+        <div class="liveHead">
+
+            <div class="liveLabel">
+                <span class="liveDot"></span>
+                EN VIVO
+            </div>
+
+            <div class="liveCompetition">
+                Liga Profesional
+            </div>
+
+        </div>
+
+        <div class="liveMatch">
+
+            <div>
+                <div class="crest">⚪</div>
+                <div class="teamName">River Plate</div>
+            </div>
+
+            <div>
+                <div class="score">2 - 1</div>
+                <div class="minute">78'</div>
+            </div>
+
+            <div>
+                <div class="crest">🔵</div>
+                <div class="teamName">Boca Juniors</div>
+            </div>
+
+        </div>
+
+        <button
+            onclick="openMatch()"
+            style="
+            margin-top:22px;
+            width:100%;
+            height:43px;
+            border:0;
+            border-radius:7px;
+            background:var(--green);
+            color:#06140e;
+            font-weight:bold;
+            cursor:pointer;
+            "
+        >
+            ▶ Ver partido
+        </button>
+
+    </div>
+
+    <h2 class="sectionTitle">Próximos partidos</h2>
+
+    <div class="matches" id="homeMatches">
+
+        <div class="matchCard" data-search="real madrid barcelona laliga">
+
+            <div>
+                <div class="comp">LaLiga</div>
+            </div>
+
+            <div class="matchTeams">
+
+                <div class="teamLine">
+                    <div class="miniCrest">⚪</div>
+                    Real Madrid
+                </div>
+
+                <div class="teamLine">
+                    <div class="miniCrest">🔵</div>
+                    Barcelona
+                </div>
+
+            </div>
+
+            <div class="matchTime">
+                <div class="time">16:00</div>
+                <div class="status">Hoy</div>
+            </div>
+
+        </div>
+
+        <div class="matchCard" data-search="manchester city arsenal premier league">
+
+            <div>
+                <div class="comp">Premier League</div>
+            </div>
+
+            <div class="matchTeams">
+
+                <div class="teamLine">
+                    <div class="miniCrest">🔵</div>
+                    Manchester City
+                </div>
+
+                <div class="teamLine">
+                    <div class="miniCrest">🔴</div>
+                    Arsenal
+                </div>
+
+            </div>
+
+            <div class="matchTime">
+                <div class="time">18:30</div>
+                <div class="status">Hoy</div>
+            </div>
+
+        </div>
+
+        <div class="matchCard" data-search="inter milan juventus serie a">
+
+            <div>
+                <div class="comp">Serie A</div>
+            </div>
+
+            <div class="matchTeams">
+
+                <div class="teamLine">
+                    <div class="miniCrest">⚫</div>
+                    Inter
+                </div>
+
+                <div class="teamLine">
+                    <div class="miniCrest">⚪</div>
+                    Juventus
+                </div>
+
+            </div>
+
+            <div class="matchTime">
+                <div class="time">21:00</div>
+                <div class="status">Hoy</div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- PARTIDOS -->
+
+<section id="matches" class="page">
+
+    <div class="pageTitle">
+
+        <div>
+            <h1>Todos los partidos</h1>
+            <p>Calendario de fútbol</p>
+        </div>
+
+    </div>
+
+    <div class="tabs">
+
+        <button class="tab active">Todos</button>
+        <button class="tab">En vivo</button>
+        <button class="tab">Finalizados</button>
+        <button class="tab">Próximos</button>
+
+    </div>
+
+    <div class="matches">
+
+        <div class="matchCard" onclick="openMatch()">
+
+            <div>
+                <div class="comp">🇦🇷 Liga Profesional</div>
+            </div>
+
+            <div class="matchTeams">
+
+                <div class="teamLine">
+                    <div class="miniCrest">⚪</div>
+                    River Plate
+                </div>
+
+                <div class="teamLine">
+                    <div class="miniCrest">🔵</div>
+                    Boca Juniors
+                </div>
+
+            </div>
+
+            <div class="matchTime">
+
+                <div class="time">EN VIVO</div>
+                <div class="status live">78'</div>
+
+            </div>
+
+        </div>
+
+        <div class="matchCard">
+
+            <div>
+                <div class="comp">🇪🇸 LaLiga</div>
+            </div>
+
+            <div class="matchTeams">
+
+                <div class="teamLine">
+                    <div class="miniCrest">⚪</div>
+                    Real Madrid
+                </div>
+
+                <div class="teamLine">
+                    <div class="miniCrest">🔵</div>
+                    Barcelona
+                </div>
+
+            </div>
+
+            <div class="matchTime">
+
+                <div class="time">16:00</div>
+                <div class="status">Hoy</div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FAVORITOS -->
+
+<section id="favorites" class="page">
+
+    <div class="pageTitle">
+
+        <div>
+            <h1>Favoritos</h1>
+            <p>Seguí de cerca tus equipos</p>
+        </div>
+
+    </div>
+
+    <div class="favoriteCard">
+
+        <div>
+            <div class="star">★ River Plate</div>
+            <small style="color:#858d97">Próximo partido: River vs Boca</small>
+        </div>
+
+        <button
+            onclick="this.closest('.favoriteCard').remove()"
+            style="
+            background:none;
+            border:0;
+            color:#ff5964;
+            cursor:pointer;
+            "
+        >
+            Quitar
+        </button>
+
+    </div>
+
+    <div class="favoriteCard">
+
+        <div>
+            <div class="star">★ Real Madrid</div>
+            <small style="color:#858d97">Próximo partido: Real Madrid vs Barcelona</small>
+        </div>
+
+        <button
+            onclick="this.closest('.favoriteCard').remove()"
+            style="
+            background:none;
+            border:0;
+            color:#ff5964;
+            cursor:pointer;
+            "
+        >
+            Quitar
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- COMPETICIONES -->
+
+<section id="competitions" class="page">
+
+    <div class="pageTitle">
+
+        <div>
+            <h1>Competiciones</h1>
+            <p>Elegí una competición</p>
+        </div>
+
+    </div>
+
+    <div class="matches">
+
+        <div class="favoriteCard">
+            🇦🇷 Liga Profesional
+            <span>→</span>
+        </div>
+
+        <div class="favoriteCard">
+            🇪🇺 Champions League
+            <span>→</span>
+        </div>
+
+        <div class="favoriteCard">
+            🇪🇸 LaLiga
+            <span>→</span>
+        </div>
+
+        <div class="favoriteCard">
+            🏴 Premier League
+            <span>→</span>
+        </div>
+
+        <div class="favoriteCard">
+            🇮🇹 Serie A
+            <span>→</span>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- PARTIDO -->
+
+<section id="matchView" class="matchView">
+
+    <button class="backBtn" onclick="closeMatch()">
+        ← Volver a partidos
+    </button>
+
+    <div class="videoBox">
+
+        <div class="videoPlaceholder">
+
+            <div
+                class="videoIcon"
+                onclick="startDemo()"
+            >
+                ▶
+            </div>
+
+            <h2>Transmisión del partido</h2>
+
+            <p>
+                Reproductor preparado para una transmisión autorizada
+            </p>
+
+        </div>
+
+        <div class="videoControls">
+
+            <span>▶</span>
+
+            <div class="progress"></div>
+
+            <span>🔊</span>
+
+            <span>⚙️</span>
+
+            <span>⛶</span>
+
+            <span class="livePill">EN VIVO</span>
+
+        </div>
+
+    </div>
+
+
+    <div class="matchHeader">
+
+        <div class="matchHeaderTeams">
+
+            <div>
+
+                <div class="bigCrest">⚪</div>
+
+                <div class="bigTeam">
+                    River Plate
+                </div>
+
+            </div>
+
+            <div>
+
+                <div class="bigScore">
+                    2 - 1
+                </div>
+
+                <div class="matchStatus">
+                    EN VIVO · 78'
+                </div>
+
+            </div>
+
+            <div>
+
+                <div class="bigCrest">🔵</div>
+
+                <div class="bigTeam">
+                    Boca Juniors
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="matchTabs">
+
+        <button
+            class="matchTab active"
+            onclick="matchPanel('events',this)"
+        >
+            Eventos
+        </button>
+
+        <button
+            class="matchTab"
+            onclick="matchPanel('stats',this)"
+        >
+            Estadísticas
+        </button>
+
+        <button
+            class="matchTab"
+            onclick="matchPanel('lineups',this)"
+        >
+            Alineaciones
+        </button>
+
+    </div>
+
+
+    <div id="events" class="matchPanel active">
+
+        <div class="event">
+
+            <div class="eventTime">76'</div>
+
+            <div class="eventIcon">⚽</div>
+
+            <div>
+                <b>Gol de River Plate</b>
+                <p style="color:#858d97;font-size:12px">
+                    River vuelve a ponerse arriba.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="event">
+
+            <div class="eventTime">52'</div>
+
+            <div class="eventIcon">⚽</div>
+
+            <div>
+                <b>Gol de Boca Juniors</b>
+            </div>
+
+        </div>
+
+        <div class="event">
+
+            <div class="eventTime">41'</div>
+
+            <div class="eventIcon">🟨</div>
+
+            <div>
+                <b>Tarjeta amarilla</b>
+            </div>
+
+        </div>
+
+        <div class="event">
+
+            <div class="eventTime">23'</div>
+
+            <div class="eventIcon">⚽</div>
+
+            <div>
+                <b>Gol de River Plate</b>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div id="stats" class="matchPanel">
+
+        <div class="statRow">
+
+            <div class="statValue">54%</div>
+
+            <div>
+                <div style="
+                    display:flex;
+                    height:7px;
+                    border-radius:10px;
+                    overflow:hidden;
+                ">
+                    <span style="
+                        width:54%;
+                        background:var(--green);
+                    "></span>
+
+                    <span style="
+                        width:46%;
+                        background:#59616c;
+                    "></span>
+                </div>
+            </div>
+
+            <div class="statValue">46%</div>
+
+        </div>
+
+        <p style="text-align:center;color:#858d97;font-size:12px">
+            Posesión
+        </p>
+
+        <div class="statRow">
+
+            <div class="statValue">8</div>
+
+            <div class="statValue">Tiros</div>
+
+            <div class="statValue">5</div>
+
+        </div>
+
+        <div class="statRow">
+
+            <div class="statValue">6</div>
+
+            <div class="statValue">Corners</div>
+
+            <div class="statValue">3</div>
+
+        </div>
+
+    </div>
+
+
+    <div id="lineups" class="matchPanel">
+
+        <div class="favoriteCard">
+            <b>River Plate</b>
+            <span>11 jugadores</span>
+        </div>
+
+        <div class="favoriteCard">
+            <b>Boca Juniors</b>
+            <span>11 jugadores</span>
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+</div>
+
+
+<!-- MOBILE NAV -->
+
+<nav class="mobileNav">
+
+    <button class="active" onclick="showPage('home',this)">
+        <span>🏠</span>
+        Inicio
+    </button>
+
+    <button onclick="showPage('matches',this)">
+        <span>⚽</span>
+        Partidos
+    </button>
+
+    <button onclick="showPage('favorites',this)">
+        <span>⭐</span>
+        Favoritos
+    </button>
+
+    <button onclick="showPage('competitions',this)">
+        <span>🏆</span>
+        Ligas
+    </button>
+
+</nav>
+
+</div>
+
+
+<script>
+
+/* NAVEGACIÓN */
+
+function showPage(page,button){
+
+    document.querySelectorAll('.page').forEach(p=>{
+        p.classList.remove('active');
+    });
+
+    document.getElementById(page).classList.add('active');
+
+    document.querySelectorAll('.navBtn').forEach(b=>{
+        b.classList.remove('active');
+    });
+
+    document.querySelectorAll('.mobileNav button').forEach(b=>{
+        b.classList.remove('active');
+    });
+
+    if(button){
+        button.classList.add('active');
+    }
+
+    window.scrollTo({
+        top:0,
+        behavior:'smooth'
+    });
+}
+
+
+/* PARTIDO */
+
+function openMatch(){
+
+    document.querySelectorAll('.page').forEach(p=>{
+        p.classList.remove('active');
+    });
+
+    document.getElementById('matchView').classList.add('active');
+
+    window.scrollTo({
+        top:0,
+        behavior:'smooth'
+    });
+}
+
+
+function closeMatch(){
+
+    document.getElementById('matchView').classList.remove('active');
+
+    document.getElementById('home').classList.add('active');
+
+    window.scrollTo({
+        top:0,
+        behavior:'smooth'
+    });
+}
+
+
+/* PESTAÑAS DEL PARTIDO */
+
+function matchPanel(panel,button){
+
+    document.querySelectorAll('.matchPanel').forEach(p=>{
+        p.classList.remove('active');
+    });
+
+    document.getElementById(panel).classList.add('active');
+
+    document.querySelectorAll('.matchTab').forEach(b=>{
+        b.classList.remove('active');
+    });
+
+    button.classList.add('active');
+}
+
+
+/* BÚSQUEDA */
+
+function searchMatches(){
+
+    const text =
+        document.getElementById('search')
+        .value
+        .toLowerCase();
+
+    document.querySelectorAll('.matchCard').forEach(card=>{
+
+        const data =
+            card.dataset.search || card.innerText;
+
+        if(data.toLowerCase().includes(text)){
+            card.style.display='';
+        }else{
+            card.style.display='none';
+        }
+
+    });
+}
+
+
+/* TEMA */
+
+function toggleTheme(){
+
+    const root =
+        document.documentElement;
+
+    if(root.style.getPropertyValue('--bg') === '#f4f5f7'){
+
+        root.style.setProperty('--bg','#0b0d10');
+        root.style.setProperty('--panel','#12161b');
+        root.style.setProperty('--text','#f5f7fa');
+
+    }else{
+
+        root.style.setProperty('--bg','#f4f5f7');
+        root.style.setProperty('--panel','#ffffff');
+        root.style.setProperty('--text','#111318');
+
+    }
+
+}
+
+
+/* REPRODUCTOR DEMO */
+
+function startDemo(){
+
+    alert(
+        "El reproductor está preparado. Para mostrar un partido real necesitamos conectar una transmisión oficial/autorizada."
+    );
+
+}
+
+</script>
+
+</body>
+</html>
