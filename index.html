@@ -1,1047 +1,607 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Football Progress</title>
+    <title>Calculadora Escolar</title>
 
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-:root{
-    --bg:#07110b;
-    --card:#101c14;
-    --card2:#142319;
-    --green:#35d26b;
-    --green2:#1fa653;
-    --text:#f4fff6;
-    --muted:#9eb2a3;
-    --border:rgba(255,255,255,.08);
-}
-
-body{
-    font-family:Arial,Helvetica,sans-serif;
-    background:
-        radial-gradient(circle at top right, rgba(53,210,107,.12), transparent 30%),
-        var(--bg);
-    color:var(--text);
-    min-height:100vh;
-}
-
-button,input,select{
-    font:inherit;
-}
-
-button{
-    cursor:pointer;
-}
-
-.app{
-    width:100%;
-    max-width:1100px;
-    margin:auto;
-    padding:20px;
-}
-
-/* =========================
-   PANTALLA INICIAL
-========================= */
-
-.setup-screen{
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-.setup-box{
-    width:100%;
-    max-width:620px;
-    background:rgba(16,28,20,.96);
-    border:1px solid var(--border);
-    border-radius:24px;
-    padding:30px;
-    box-shadow:0 20px 70px rgba(0,0,0,.35);
-}
-
-.logo{
-    width:55px;
-    height:55px;
-    display:grid;
-    place-items:center;
-    background:var(--green);
-    color:#06200d;
-    border-radius:18px;
-    font-size:28px;
-    margin-bottom:18px;
-}
-
-.setup-box h1{
-    font-size:30px;
-    margin-bottom:8px;
-}
-
-.setup-box p{
-    color:var(--muted);
-    line-height:1.5;
-    margin-bottom:25px;
-}
-
-.form-grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:15px;
-}
-
-.field{
-    display:flex;
-    flex-direction:column;
-    gap:7px;
-}
-
-.field.full{
-    grid-column:1/-1;
-}
-
-label{
-    font-size:14px;
-    color:#d5e4d8;
-}
-
-input,select{
-    width:100%;
-    background:#09110c;
-    color:white;
-    border:1px solid var(--border);
-    border-radius:12px;
-    padding:13px;
-    outline:none;
-}
-
-input:focus,select:focus{
-    border-color:var(--green);
-}
-
-.start-btn{
-    width:100%;
-    margin-top:22px;
-    border:none;
-    padding:15px;
-    border-radius:14px;
-    font-weight:bold;
-    font-size:16px;
-    background:var(--green);
-    color:#06200d;
-    transition:.2s;
-}
-
-.start-btn:hover{
-    transform:translateY(-2px);
-    background:#50e882;
-}
-
-.note{
-    font-size:12px;
-    color:var(--muted);
-    margin-top:15px;
-    line-height:1.5;
-}
-
-/* =========================
-   APP PRINCIPAL
-========================= */
-
-.dashboard{
-    display:none;
-}
-
-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:20px;
-    padding:10px 0 25px;
-}
-
-.brand{
-    display:flex;
-    align-items:center;
-    gap:12px;
-}
-
-.brand-icon{
-    width:46px;
-    height:46px;
-    display:grid;
-    place-items:center;
-    border-radius:14px;
-    background:var(--green);
-    color:#06200d;
-    font-size:22px;
-}
-
-.brand h2{
-    font-size:20px;
-}
-
-.brand span{
-    font-size:13px;
-    color:var(--muted);
-}
-
-.reset-btn{
-    border:1px solid var(--border);
-    background:transparent;
-    color:var(--text);
-    padding:10px 14px;
-    border-radius:10px;
-}
-
-.top-grid{
-    display:grid;
-    grid-template-columns:1.4fr 1fr;
-    gap:18px;
-}
-
-.card{
-    background:rgba(16,28,20,.96);
-    border:1px solid var(--border);
-    border-radius:20px;
-    padding:22px;
-}
-
-.card h3{
-    margin-bottom:8px;
-}
-
-.muted{
-    color:var(--muted);
-    line-height:1.5;
-}
-
-.profile-name{
-    font-size:26px;
-    margin-bottom:5px;
-}
-
-.stats{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:10px;
-    margin-top:20px;
-}
-
-.stat{
-    background:#0a120d;
-    border-radius:14px;
-    padding:14px;
-}
-
-.stat small{
-    color:var(--muted);
-    display:block;
-    margin-bottom:5px;
-}
-
-.stat strong{
-    font-size:18px;
-}
-
-.progress-circle{
-    width:120px;
-    height:120px;
-    margin:15px auto;
-    border-radius:50%;
-    display:grid;
-    place-items:center;
-    background:conic-gradient(var(--green) 0deg, #243329 0deg);
-    position:relative;
-}
-
-.progress-circle::before{
-    content:"";
-    width:92px;
-    height:92px;
-    position:absolute;
-    border-radius:50%;
-    background:var(--card);
-}
-
-.progress-number{
-    position:relative;
-    font-size:22px;
-    font-weight:bold;
-}
-
-.progress-text{
-    text-align:center;
-    color:var(--muted);
-    font-size:13px;
-}
-
-/* =========================
-   PLAN
-========================= */
-
-.section-title{
-    margin:30px 0 15px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.week-plan{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:15px;
-}
-
-.day-card{
-    background:rgba(16,28,20,.96);
-    border:1px solid var(--border);
-    border-radius:18px;
-    padding:20px;
-    transition:.2s;
-}
-
-.day-card:hover{
-    transform:translateY(-3px);
-}
-
-.day-top{
-    display:flex;
-    justify-content:space-between;
-    gap:10px;
-    margin-bottom:12px;
-}
-
-.day{
-    color:var(--green);
-    font-size:13px;
-    font-weight:bold;
-    text-transform:uppercase;
-}
-
-.duration{
-    color:var(--muted);
-    font-size:13px;
-}
-
-.workout-title{
-    font-size:19px;
-    margin-bottom:12px;
-}
-
-.exercise-list{
-    list-style:none;
-    display:flex;
-    flex-direction:column;
-    gap:9px;
-    margin-bottom:18px;
-}
-
-.exercise-list li{
-    padding-left:18px;
-    position:relative;
-    color:#dce8df;
-    font-size:14px;
-    line-height:1.4;
-}
-
-.exercise-list li::before{
-    content:"";
-    position:absolute;
-    left:0;
-    top:7px;
-    width:7px;
-    height:7px;
-    border-radius:50%;
-    background:var(--green);
-}
-
-.complete-btn{
-    width:100%;
-    padding:11px;
-    border:none;
-    border-radius:10px;
-    background:#203126;
-    color:white;
-    font-weight:bold;
-}
-
-.complete-btn.completed{
-    background:var(--green);
-    color:#06200d;
-}
-
-/* =========================
-   RECOMENDACIONES
-========================= */
-
-.recommendations{
-    margin-top:18px;
-}
-
-.recommendations ul{
-    padding-left:18px;
-    color:#d7e2d9;
-    line-height:1.8;
-}
-
-.disclaimer{
-    margin-top:20px;
-    padding:16px;
-    background:rgba(53,210,107,.08);
-    border:1px solid rgba(53,210,107,.15);
-    border-radius:14px;
-    color:#cfe8d5;
-    font-size:13px;
-    line-height:1.6;
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media(max-width:700px){
-
-    .app{
-        padding:15px;
-    }
-
-    .form-grid,
-    .top-grid,
-    .week-plan{
-        grid-template-columns:1fr;
-    }
-
-    .field.full{
-        grid-column:auto;
-    }
-
-    .setup-box{
-        padding:22px;
-        border-radius:20px;
-    }
-
-    header{
-        align-items:flex-start;
-    }
-
-    .stats{
-        grid-template-columns:1fr;
-    }
-
-    .reset-btn{
-        font-size:12px;
-        padding:8px;
-    }
-}
-</style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<!-- =========================
-     CONFIGURACIÓN
-========================= -->
+<div class="app">
 
-<div class="setup-screen" id="setupScreen">
-    <div class="setup-box">
+    <aside class="sidebar">
 
-        <div class="logo">⚽</div>
-
-        <h1>Creá tu plan</h1>
-
-        <p>
-            Completá tus datos para generar un plan semanal orientado
-            a mejorar tu condición física y tu rendimiento en fútbol.
-        </p>
-
-        <div class="form-grid">
-
-            <div class="field">
-                <label>Tu edad</label>
-                <input type="number" id="age" min="5" max="100" placeholder="Ej: 13">
-            </div>
-
-            <div class="field">
-                <label>Tu peso (kg)</label>
-                <input type="number" id="weight" min="20" max="300" step="0.1" placeholder="Ej: 55">
-            </div>
-
-            <div class="field">
-                <label>Tu altura (cm)</label>
-                <input type="number" id="height" min="80" max="250" placeholder="Ej: 158">
-            </div>
-
-            <div class="field">
-                <label>Nivel actual</label>
-                <select id="level">
-                    <option value="principiante">Principiante</option>
-                    <option value="intermedio">Intermedio</option>
-                    <option value="avanzado">Avanzado</option>
-                </select>
-            </div>
-
-            <div class="field">
-                <label>Posición</label>
-                <select id="position">
-                    <option value="portero">Arquero</option>
-                    <option value="defensor">Defensor</option>
-                    <option value="mediocampista">Mediocampista</option>
-                    <option value="delantero">Delantero</option>
-                    <option value="varias">Juego en varias posiciones</option>
-                </select>
-            </div>
-
-            <div class="field">
-                <label>Días disponibles</label>
-                <select id="days">
-                    <option value="3">3 días</option>
-                    <option value="4">4 días</option>
-                    <option value="5" selected>5 días</option>
-                    <option value="6">6 días</option>
-                </select>
-            </div>
-
-            <div class="field full">
-                <label>Tiempo disponible por entrenamiento</label>
-                <select id="time">
-                    <option value="30">30 minutos</option>
-                    <option value="45">45 minutos</option>
-                    <option value="60" selected>60 minutos</option>
-                    <option value="75">75 minutos</option>
-                    <option value="90">90 minutos</option>
-                </select>
-            </div>
-
-        </div>
-
-        <button class="start-btn" onclick="createPlan()">
-            GENERAR MI PLAN
-        </button>
-
-        <div class="note">
-            Esta aplicación no puede predecir exactamente cuántos kilos perderá
-            una persona ni en qué fecha. Tus datos se usan para personalizar
-            el entrenamiento y registrar tu progreso.
-        </div>
-
-    </div>
-</div>
-
-
-<!-- =========================
-     DASHBOARD
-========================= -->
-
-<div class="dashboard app" id="dashboard">
-
-    <header>
         <div class="brand">
-            <div class="brand-icon">⚽</div>
-            <div>
-                <h2>Football Progress</h2>
-                <span>Tu entrenamiento semanal</span>
-            </div>
+            <span class="brand-icon">⌗</span>
+            <span>Calc School</span>
         </div>
 
-        <button class="reset-btn" onclick="resetApp()">
-            Cambiar perfil
+        <button class="menu-btn active" data-section="calculator">
+            🧮 Calculadora
         </button>
-    </header>
+
+        <button class="menu-btn" data-section="fractions">
+            ½ Fracciones
+        </button>
+
+        <button class="menu-btn" data-section="percentages">
+            % Porcentajes
+        </button>
+
+        <button class="menu-btn" data-section="equations">
+            𝑥 Ecuaciones
+        </button>
+
+        <button class="menu-btn" data-section="geometry">
+            △ Geometría
+        </button>
+
+        <button class="menu-btn" data-section="converter">
+            ⇄ Conversor
+        </button>
+
+        <button class="menu-btn" data-section="history">
+            🕘 Historial
+        </button>
+
+    </aside>
 
 
-    <div class="top-grid">
+    <main class="content">
 
-        <div class="card">
-            <div class="profile-name" id="profileTitle">
-                Tu perfil
-            </div>
+        <!-- ============================= -->
+        <!-- CALCULADORA -->
+        <!-- ============================= -->
 
-            <p class="muted" id="profileDescription"></p>
+        <section id="calculator" class="section active">
 
-            <div class="stats">
+            <div class="calculator-header">
 
-                <div class="stat">
-                    <small>Nivel</small>
-                    <strong id="statLevel">-</strong>
+                <div>
+                    <p class="small-title">CALCULADORA</p>
+                    <h1 id="calculatorModeTitle">Científica</h1>
                 </div>
 
-                <div class="stat">
-                    <small>Entrenamientos</small>
-                    <strong id="statWorkouts">0</strong>
+                <select id="calculatorMode">
+                    <option value="scientific">Científica</option>
+                    <option value="standard">Estándar</option>
+                </select>
+
+            </div>
+
+
+            <div class="screen">
+
+                <div id="operation" class="operation">
+                    0
                 </div>
 
-                <div class="stat">
-                    <small>Tiempo</small>
-                    <strong id="statTime">0 min</strong>
+                <div id="result" class="result">
+                    0
                 </div>
 
             </div>
-        </div>
 
 
-        <div class="card">
-            <h3>Progreso semanal</h3>
+            <div class="memory-row">
 
-            <div class="progress-circle" id="progressCircle">
-                <div class="progress-number" id="progressNumber">0%</div>
+                <button onclick="memoryClear()">MC</button>
+                <button onclick="memoryRecall()">MR</button>
+                <button onclick="memoryAdd()">M+</button>
+                <button onclick="memorySubtract()">M−</button>
+
             </div>
 
-            <div class="progress-text">
-                Completá tus entrenamientos para registrar tu progreso.
+
+            <div id="scientificButtons" class="scientific-grid">
+
+                <button onclick="insertFunction('sin(')">sin</button>
+                <button onclick="insertFunction('cos(')">cos</button>
+                <button onclick="insertFunction('tan(')">tan</button>
+
+                <button onclick="insertFunction('asin(')">sin⁻¹</button>
+                <button onclick="insertFunction('acos(')">cos⁻¹</button>
+                <button onclick="insertFunction('atan(')">tan⁻¹</button>
+
+                <button onclick="insertFunction('log(')">log</button>
+                <button onclick="insertFunction('ln(')">ln</button>
+
+                <button onclick="insertValue('π')">π</button>
+                <button onclick="insertValue('e')">e</button>
+
+                <button onclick="insertFunction('sqrt(')">√</button>
+
+                <button onclick="square()">x²</button>
+
+                <button onclick="cube()">x³</button>
+
+                <button onclick="insertValue('^')">xʸ</button>
+
+                <button onclick="factorialCurrent()">x!</button>
+
+                <button onclick="insertValue('(')">(</button>
+
+                <button onclick="insertValue(')')">)</button>
+
+                <button onclick="inverse()">1/x</button>
+
             </div>
-        </div>
-
-    </div>
 
 
-    <div class="section-title">
-        <h2>Plan de esta semana</h2>
-    </div>
+            <div class="main-grid">
 
-    <div class="week-plan" id="weekPlan"></div>
+                <button class="special" onclick="clearAll()">C</button>
+
+                <button class="special" onclick="clearEntry()">CE</button>
+
+                <button class="special" onclick="backspace()">⌫</button>
+
+                <button class="operator" onclick="insertValue('/')">÷</button>
 
 
-    <div class="card recommendations">
-        <h3>Recomendaciones</h3>
+                <button onclick="insertValue('7')">7</button>
+                <button onclick="insertValue('8')">8</button>
+                <button onclick="insertValue('9')">9</button>
 
-        <ul>
-            <li>Hacé una entrada en calor antes de cada entrenamiento.</li>
-            <li>Priorizá la técnica antes que hacer todo lo más rápido posible.</li>
-            <li>Si sentís dolor importante, frená y avisá a un adulto.</li>
-            <li>Dejá días de recuperación entre sesiones intensas.</li>
-            <li>Intentá dormir bien para recuperarte de los entrenamientos.</li>
-            <li>Después de 3 o 4 semanas, revisá tu progreso y ajustá la dificultad.</li>
-        </ul>
+                <button class="operator" onclick="insertValue('*')">×</button>
 
-        <div class="disclaimer">
-            <strong>Importante:</strong> el objetivo de este plan es mejorar
-            condición física y rendimiento futbolístico. Durante la adolescencia,
-            el peso puede cambiar como parte normal del crecimiento, por lo que
-            esta app no muestra una predicción de kilos perdidos.
-        </div>
-    </div>
+
+                <button onclick="insertValue('4')">4</button>
+                <button onclick="insertValue('5')">5</button>
+                <button onclick="insertValue('6')">6</button>
+
+                <button class="operator" onclick="insertValue('-')">−</button>
+
+
+                <button onclick="insertValue('1')">1</button>
+                <button onclick="insertValue('2')">2</button>
+                <button onclick="insertValue('3')">3</button>
+
+                <button class="operator" onclick="insertValue('+')">+</button>
+
+
+                <button onclick="changeSign()">±</button>
+
+                <button onclick="insertValue('0')">0</button>
+
+                <button onclick="insertValue('.')">,</button>
+
+                <button class="equals" onclick="calculate()">=</button>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ============================= -->
+        <!-- FRACCIONES -->
+        <!-- ============================= -->
+
+        <section id="fractions" class="section">
+
+            <div class="page-header">
+
+                <p class="small-title">HERRAMIENTAS</p>
+
+                <h1>Fracciones</h1>
+
+                <p>
+                    Sumá, restá, multiplicá o dividí fracciones.
+                </p>
+
+            </div>
+
+
+            <div class="tool-card">
+
+                <div class="fraction-layout">
+
+                    <div class="fraction-input">
+
+                        <input id="num1" type="number" placeholder="1">
+
+                        <div></div>
+
+                        <input id="den1" type="number" placeholder="2">
+
+                    </div>
+
+
+                    <select id="fractionOperation">
+
+                        <option value="+">+</option>
+                        <option value="-">−</option>
+                        <option value="*">×</option>
+                        <option value="/">÷</option>
+
+                    </select>
+
+
+                    <div class="fraction-input">
+
+                        <input id="num2" type="number" placeholder="1">
+
+                        <div></div>
+
+                        <input id="den2" type="number" placeholder="3">
+
+                    </div>
+
+                </div>
+
+
+                <button class="primary-action" onclick="calculateFraction()">
+                    Calcular fracción
+                </button>
+
+
+                <div id="fractionResult" class="tool-result">
+                    Resultado
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ============================= -->
+        <!-- PORCENTAJES -->
+        <!-- ============================= -->
+
+        <section id="percentages" class="section">
+
+            <div class="page-header">
+
+                <p class="small-title">HERRAMIENTAS</p>
+
+                <h1>Porcentajes</h1>
+
+            </div>
+
+
+            <div class="cards-grid">
+
+                <div class="tool-card">
+
+                    <h2>Porcentaje de un número</h2>
+
+                    <input id="percentageValue" type="number" placeholder="15">
+
+                    <input id="percentageNumber" type="number" placeholder="240">
+
+                    <button class="primary-action" onclick="calculatePercentage()">
+                        Calcular
+                    </button>
+
+                    <div id="percentageResult" class="tool-result">
+                        Resultado
+                    </div>
+
+                </div>
+
+
+                <div class="tool-card">
+
+                    <h2>Aumento porcentual</h2>
+
+                    <input id="increaseValue" type="number" placeholder="1000">
+
+                    <input id="increasePercent" type="number" placeholder="20">
+
+                    <button class="primary-action" onclick="calculateIncrease()">
+                        Calcular
+                    </button>
+
+                    <div id="increaseResult" class="tool-result">
+                        Resultado
+                    </div>
+
+                </div>
+
+
+                <div class="tool-card">
+
+                    <h2>Descuento</h2>
+
+                    <input id="discountPrice" type="number" placeholder="25000">
+
+                    <input id="discountPercent" type="number" placeholder="15">
+
+                    <button class="primary-action" onclick="calculateDiscount()">
+                        Calcular
+                    </button>
+
+                    <div id="discountResult" class="tool-result">
+                        Resultado
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ============================= -->
+        <!-- ECUACIONES -->
+        <!-- ============================= -->
+
+        <section id="equations" class="section">
+
+            <div class="page-header">
+
+                <p class="small-title">ÁLGEBRA</p>
+
+                <h1>Ecuaciones</h1>
+
+                <p>
+                    Resolvé ecuaciones simples del tipo ax + b = c.
+                </p>
+
+            </div>
+
+
+            <div class="tool-card">
+
+                <div class="equation-row">
+
+                    <input id="equationA" type="number" placeholder="2">
+
+                    <span>x +</span>
+
+                    <input id="equationB" type="number" placeholder="5">
+
+                    <span>=</span>
+
+                    <input id="equationC" type="number" placeholder="15">
+
+                </div>
+
+
+                <button class="primary-action" onclick="solveEquation()">
+                    Resolver ecuación
+                </button>
+
+
+                <div id="equationResult" class="tool-result large-result">
+
+                    x = ?
+
+                </div>
+
+
+                <div id="equationSteps" class="steps">
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ============================= -->
+        <!-- GEOMETRÍA -->
+        <!-- ============================= -->
+
+        <section id="geometry" class="section">
+
+            <div class="page-header">
+
+                <p class="small-title">GEOMETRÍA</p>
+
+                <h1>Figuras</h1>
+
+            </div>
+
+
+            <div class="cards-grid">
+
+                <div class="tool-card">
+
+                    <h2>Cuadrado</h2>
+
+                    <input id="squareSide" type="number" placeholder="Lado">
+
+                    <button class="primary-action" onclick="squareGeometry()">
+                        Calcular
+                    </button>
+
+                    <div id="squareResult" class="tool-result"></div>
+
+                </div>
+
+
+                <div class="tool-card">
+
+                    <h2>Rectángulo</h2>
+
+                    <input id="rectangleBase" type="number" placeholder="Base">
+
+                    <input id="rectangleHeight" type="number" placeholder="Altura">
+
+                    <button class="primary-action" onclick="rectangleGeometry()">
+                        Calcular
+                    </button>
+
+                    <div id="rectangleResult" class="tool-result"></div>
+
+                </div>
+
+
+                <div class="tool-card">
+
+                    <h2>Triángulo</h2>
+
+                    <input id="triangleBase" type="number" placeholder="Base">
+
+                    <input id="triangleHeight" type="number" placeholder="Altura">
+
+                    <button class="primary-action" onclick="triangleGeometry()">
+                        Calcular área
+                    </button>
+
+                    <div id="triangleResult" class="tool-result"></div>
+
+                </div>
+
+
+                <div class="tool-card">
+
+                    <h2>Círculo</h2>
+
+                    <input id="circleRadius" type="number" placeholder="Radio">
+
+                    <button class="primary-action" onclick="circleGeometry()">
+                        Calcular
+                    </button>
+
+                    <div id="circleResult" class="tool-result"></div>
+
+                </div>
+
+
+                <div class="tool-card">
+
+                    <h2>Cubo</h2>
+
+                    <input id="cubeSide" type="number" placeholder="Lado">
+
+                    <button class="primary-action" onclick="cubeGeometry()">
+                        Calcular volumen
+                    </button>
+
+                    <div id="cubeResult" class="tool-result"></div>
+
+                </div>
+
+
+                <div class="tool-card">
+
+                    <h2>Cilindro</h2>
+
+                    <input id="cylinderRadius" type="number" placeholder="Radio">
+
+                    <input id="cylinderHeight" type="number" placeholder="Altura">
+
+                    <button class="primary-action" onclick="cylinderGeometry()">
+                        Calcular volumen
+                    </button>
+
+                    <div id="cylinderResult" class="tool-result"></div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ============================= -->
+        <!-- CONVERSOR -->
+        <!-- ============================= -->
+
+        <section id="converter" class="section">
+
+            <div class="page-header">
+
+                <p class="small-title">CONVERSOR</p>
+
+                <h1>Unidades</h1>
+
+            </div>
+
+
+            <div class="tool-card">
+
+                <select id="converterType" onchange="updateConverterUnits()">
+
+                    <option value="length">Longitud</option>
+                    <option value="mass">Masa</option>
+                    <option value="temperature">Temperatura</option>
+
+                </select>
+
+
+                <input id="converterValue" type="number" placeholder="Valor">
+
+
+                <div class="converter-row">
+
+                    <select id="fromUnit"></select>
+
+                    <span>→</span>
+
+                    <select id="toUnit"></select>
+
+                </div>
+
+
+                <button class="primary-action" onclick="convertUnits()">
+                    Convertir
+                </button>
+
+
+                <div id="converterResult" class="tool-result large-result">
+                    Resultado
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ============================= -->
+        <!-- HISTORIAL -->
+        <!-- ============================= -->
+
+        <section id="history" class="section">
+
+            <div class="page-header">
+
+                <p class="small-title">CALCULADORA</p>
+
+                <h1>Historial</h1>
+
+            </div>
+
+
+            <div class="history-actions">
+
+                <button onclick="clearHistory()">
+                    Borrar historial
+                </button>
+
+            </div>
+
+
+            <div id="historyList" class="history-list">
+
+                <div class="empty-history">
+                    Todavía no hiciste ninguna operación.
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
 
 </div>
 
 
-<script>
-
-/* =========================
-   DATOS
-========================= */
-
-let userData = {};
-let completedWorkouts = [];
-
-
-/* =========================
-   CREAR PLAN
-========================= */
-
-function createPlan(){
-
-    const age = Number(document.getElementById("age").value);
-    const weight = Number(document.getElementById("weight").value);
-    const height = Number(document.getElementById("height").value);
-
-    const level = document.getElementById("level").value;
-    const position = document.getElementById("position").value;
-    const days = Number(document.getElementById("days").value);
-    const time = Number(document.getElementById("time").value);
-
-
-    if(!age || !weight || !height){
-        alert("Completá tu edad, peso y altura.");
-        return;
-    }
-
-
-    userData = {
-        age,
-        weight,
-        height,
-        level,
-        position,
-        days,
-        time
-    };
-
-    completedWorkouts = [];
-
-
-    localStorage.setItem("footballUser", JSON.stringify(userData));
-    localStorage.setItem("footballCompleted", JSON.stringify(completedWorkouts));
-
-
-    document.getElementById("setupScreen").style.display = "none";
-    document.getElementById("dashboard").style.display = "block";
-
-
-    renderDashboard();
-}
-
-
-/* =========================
-   PLAN BASE
-========================= */
-
-function getBasePlan(){
-
-    const plan = [
-
-        {
-            day:"Lunes",
-            title:"Velocidad + Técnica",
-            exercises:[
-                "Entrada en calor y movilidad — 10 min",
-                "Aceleraciones cortas — 6 repeticiones",
-                "Sprints de 10 a 20 metros — 5 repeticiones",
-                "Cambios de dirección — 4 series",
-                "Conducción con ambos pies — 5 minutos",
-                "Pases y controles — 10 minutos"
-            ]
-        },
-
-        {
-            day:"Martes",
-            title:"Fuerza + Coordinación",
-            exercises:[
-                "Entrada en calor — 8 min",
-                "Sentadillas — 3 series",
-                "Zancadas — 3 series",
-                "Puente de glúteos — 3 series",
-                "Elevaciones de talones — 3 series",
-                "Flexiones adaptadas a tu nivel — 3 series",
-                "Plancha — 3 series",
-                "Coordinación y pasos rápidos — 8 min"
-            ]
-        },
-
-        {
-            day:"Miércoles",
-            title:"Resistencia + Control",
-            exercises:[
-                "Entrada en calor — 10 min",
-                "Carrera por intervalos",
-                "Conducción de pelota — 5 bloques",
-                "Control orientado",
-                "Pases contra pared",
-                "Trabajo con pierna menos hábil"
-            ]
-        },
-
-        {
-            day:"Jueves",
-            title:"Recuperación",
-            exercises:[
-                "Caminata o movimiento suave — 15 a 20 min",
-                "Movilidad de tobillos y cadera",
-                "Estiramientos suaves",
-                "Descanso de entrenamiento intenso"
-            ]
-        },
-
-        {
-            day:"Viernes",
-            title:"Agilidad + Fútbol",
-            exercises:[
-                "Entrada en calor — 10 min",
-                "Aceleraciones — 5 series",
-                "Cambios de dirección — 5 series",
-                "Zigzag entre objetos",
-                "Conducción rápida",
-                "Regates y fintas",
-                "Pases, controles o tiros"
-            ]
-        },
-
-        {
-            day:"Sábado",
-            title:"Fútbol Completo",
-            exercises:[
-                "Entrada en calor",
-                "Conducción",
-                "Pases",
-                "Control de pelota",
-                "Cambios de ritmo",
-                "Tiros",
-                "Partido o práctica con otras personas si es posible"
-            ]
-        },
-
-        {
-            day:"Domingo",
-            title:"Descanso",
-            exercises:[
-                "Descanso completo",
-                "Actividad suave opcional",
-                "Prepararte para la siguiente semana"
-            ]
-        }
-
-    ];
-
-    return plan;
-}
-
-
-/* =========================
-   AJUSTAR SEGÚN NIVEL
-========================= */
-
-function getIntensityText(){
-
-    if(userData.level === "principiante"){
-        return "Empezá con una intensidad moderada y priorizá aprender bien cada movimiento.";
-    }
-
-    if(userData.level === "intermedio"){
-        return "Mantené una intensidad media y buscá hacer cada repetición con buena velocidad y técnica.";
-    }
-
-    return "Usá una intensidad alta pero controlada, dejando suficiente recuperación entre esfuerzos rápidos.";
-}
-
-
-/* =========================
-   MOSTRAR DASHBOARD
-========================= */
-
-function renderDashboard(){
-
-    document.getElementById("statLevel").textContent =
-        capitalize(userData.level);
-
-    document.getElementById("statWorkouts").textContent =
-        completedWorkouts.length + "/" + userData.days;
-
-    document.getElementById("statTime").textContent =
-        (completedWorkouts.length * userData.time) + " min";
-
-
-    document.getElementById("profileDescription").textContent =
-        "Plan personalizado para " +
-        userData.days +
-        " días de entrenamiento, con sesiones de aproximadamente " +
-        userData.time +
-        " minutos. " +
-        getIntensityText();
-
-
-    renderPlan();
-    updateProgress();
-}
-
-
-/* =========================
-   MOSTRAR PLAN
-========================= */
-
-function renderPlan(){
-
-    const weekPlan = document.getElementById("weekPlan");
-    weekPlan.innerHTML = "";
-
-    let plan = getBasePlan();
-
-
-    let trainingDays = 0;
-
-
-    plan.forEach((workout, index) => {
-
-        let isRest = workout.title === "Descanso" ||
-                     workout.title === "Recuperación";
-
-
-        if(!isRest && trainingDays >= userData.days){
-            return;
-        }
-
-        if(!isRest){
-            trainingDays++;
-        }
-
-
-        const completed = completedWorkouts.includes(index);
-
-
-        const card = document.createElement("div");
-        card.className = "day-card";
-
-
-        card.innerHTML = `
-            <div class="day-top">
-                <div class="day">${workout.day}</div>
-                <div class="duration">${isRest ? "Recuperación" : userData.time + " min aprox."}</div>
-            </div>
-
-            <div class="workout-title">${workout.title}</div>
-
-            <ul class="exercise-list">
-                ${workout.exercises.map(exercise =>
-                    `<li>${exercise}</li>`
-                ).join("")}
-            </ul>
-
-            ${
-                isRest
-                ?
-                `<button class="complete-btn" disabled>Descanso programado</button>`
-                :
-                `<button
-                    class="complete-btn ${completed ? "completed" : ""}"
-                    onclick="toggleWorkout(${index})"
-                >
-                    ${completed ? "✓ ENTRENAMIENTO COMPLETADO" : "MARCAR COMO COMPLETADO"}
-                </button>`
-            }
-        `;
-
-
-        weekPlan.appendChild(card);
-
-    });
-
-}
-
-
-/* =========================
-   COMPLETAR ENTRENAMIENTO
-========================= */
-
-function toggleWorkout(index){
-
-    if(completedWorkouts.includes(index)){
-
-        completedWorkouts =
-            completedWorkouts.filter(item => item !== index);
-
-    }else{
-
-        completedWorkouts.push(index);
-
-    }
-
-
-    localStorage.setItem(
-        "footballCompleted",
-        JSON.stringify(completedWorkouts)
-    );
-
-
-    renderDashboard();
-
-}
-
-
-/* =========================
-   PROGRESO
-========================= */
-
-function updateProgress(){
-
-    const target = userData.days;
-
-    let completed = completedWorkouts.length;
-
-    if(completed > target){
-        completed = target;
-    }
-
-
-    const percentage =
-        Math.round((completed / target) * 100);
-
-
-    document.getElementById("progressNumber").textContent =
-        percentage + "%";
-
-
-    const degrees = percentage * 3.6;
-
-
-    document.getElementById("progressCircle").style.background =
-        `conic-gradient(
-            var(--green) ${degrees}deg,
-            #243329 ${degrees}deg
-        )`;
-
-}
-
-
-/* =========================
-   RESET
-========================= */
-
-function resetApp(){
-
-    localStorage.removeItem("footballUser");
-    localStorage.removeItem("footballCompleted");
-
-    userData = {};
-    completedWorkouts = [];
-
-    document.getElementById("dashboard").style.display = "none";
-    document.getElementById("setupScreen").style.display = "flex";
-
-}
-
-
-/* =========================
-   CARGAR DATOS GUARDADOS
-========================= */
-
-function loadSavedData(){
-
-    const savedUser =
-        localStorage.getItem("footballUser");
-
-    const savedCompleted =
-        localStorage.getItem("footballCompleted");
-
-
-    if(savedUser){
-
-        userData = JSON.parse(savedUser);
-
-        if(savedCompleted){
-            completedWorkouts = JSON.parse(savedCompleted);
-        }
-
-
-        document.getElementById("setupScreen").style.display = "none";
-        document.getElementById("dashboard").style.display = "block";
-
-        renderDashboard();
-
-    }
-
-}
-
-
-/* =========================
-   UTILIDAD
-========================= */
-
-function capitalize(text){
-    return text.charAt(0).toUpperCase() + text.slice(1);
-}
-
-
-/* INICIAR */
-loadSavedData();
-
-</script>
+<script src="script.js"></script>
 
 </body>
+
 </html>
