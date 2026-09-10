@@ -1,607 +1,836 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Calculadora Escolar</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="style.css">
+    <meta
+        name="description"
+        content="NOVA AI - Asistente inteligente"
+    >
+
+    <title>NOVA AI</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 </head>
 
 <body>
 
-<div class="app">
+    <!-- ======================================
+         APP
+    ======================================= -->
 
-    <aside class="sidebar">
-
-        <div class="brand">
-            <span class="brand-icon">⌗</span>
-            <span>Calc School</span>
-        </div>
-
-        <button class="menu-btn active" data-section="calculator">
-            🧮 Calculadora
-        </button>
-
-        <button class="menu-btn" data-section="fractions">
-            ½ Fracciones
-        </button>
-
-        <button class="menu-btn" data-section="percentages">
-            % Porcentajes
-        </button>
-
-        <button class="menu-btn" data-section="equations">
-            𝑥 Ecuaciones
-        </button>
-
-        <button class="menu-btn" data-section="geometry">
-            △ Geometría
-        </button>
-
-        <button class="menu-btn" data-section="converter">
-            ⇄ Conversor
-        </button>
-
-        <button class="menu-btn" data-section="history">
-            🕘 Historial
-        </button>
-
-    </aside>
+    <div class="app">
 
 
-    <main class="content">
+        <!-- ==================================
+             SIDEBAR
+        =================================== -->
 
-        <!-- ============================= -->
-        <!-- CALCULADORA -->
-        <!-- ============================= -->
+        <aside class="sidebar" id="sidebar">
 
-        <section id="calculator" class="section active">
+            <div class="sidebar-top">
 
-            <div class="calculator-header">
-
-                <div>
-                    <p class="small-title">CALCULADORA</p>
-                    <h1 id="calculatorModeTitle">Científica</h1>
-                </div>
-
-                <select id="calculatorMode">
-                    <option value="scientific">Científica</option>
-                    <option value="standard">Estándar</option>
-                </select>
-
-            </div>
+                <button
+                    class="new-chat-btn"
+                    id="newChatBtn"
+                >
+                    <span>＋</span>
+                    <span>Nuevo chat</span>
+                </button>
 
 
-            <div class="screen">
+                <div class="sidebar-section">
 
-                <div id="operation" class="operation">
-                    0
-                </div>
+                    <div class="sidebar-title">
+                        Chats recientes
+                    </div>
 
-                <div id="result" class="result">
-                    0
+                    <div
+                        class="chat-list"
+                        id="chatList"
+                    >
+
+                        <!-- Los chats aparecerán acá -->
+
+                    </div>
+
                 </div>
 
             </div>
 
 
-            <div class="memory-row">
+            <div class="sidebar-bottom">
 
-                <button onclick="memoryClear()">MC</button>
-                <button onclick="memoryRecall()">MR</button>
-                <button onclick="memoryAdd()">M+</button>
-                <button onclick="memorySubtract()">M−</button>
-
-            </div>
-
-
-            <div id="scientificButtons" class="scientific-grid">
-
-                <button onclick="insertFunction('sin(')">sin</button>
-                <button onclick="insertFunction('cos(')">cos</button>
-                <button onclick="insertFunction('tan(')">tan</button>
-
-                <button onclick="insertFunction('asin(')">sin⁻¹</button>
-                <button onclick="insertFunction('acos(')">cos⁻¹</button>
-                <button onclick="insertFunction('atan(')">tan⁻¹</button>
-
-                <button onclick="insertFunction('log(')">log</button>
-                <button onclick="insertFunction('ln(')">ln</button>
-
-                <button onclick="insertValue('π')">π</button>
-                <button onclick="insertValue('e')">e</button>
-
-                <button onclick="insertFunction('sqrt(')">√</button>
-
-                <button onclick="square()">x²</button>
-
-                <button onclick="cube()">x³</button>
-
-                <button onclick="insertValue('^')">xʸ</button>
-
-                <button onclick="factorialCurrent()">x!</button>
-
-                <button onclick="insertValue('(')">(</button>
-
-                <button onclick="insertValue(')')">)</button>
-
-                <button onclick="inverse()">1/x</button>
-
-            </div>
+                <button
+                    class="sidebar-option"
+                    id="searchBtn"
+                >
+                    <span class="option-icon">⌕</span>
+                    <span>Buscar</span>
+                </button>
 
 
-            <div class="main-grid">
-
-                <button class="special" onclick="clearAll()">C</button>
-
-                <button class="special" onclick="clearEntry()">CE</button>
-
-                <button class="special" onclick="backspace()">⌫</button>
-
-                <button class="operator" onclick="insertValue('/')">÷</button>
+                <button
+                    class="sidebar-option"
+                    id="libraryBtn"
+                >
+                    <span class="option-icon">▣</span>
+                    <span>Biblioteca</span>
+                </button>
 
 
-                <button onclick="insertValue('7')">7</button>
-                <button onclick="insertValue('8')">8</button>
-                <button onclick="insertValue('9')">9</button>
-
-                <button class="operator" onclick="insertValue('*')">×</button>
-
-
-                <button onclick="insertValue('4')">4</button>
-                <button onclick="insertValue('5')">5</button>
-                <button onclick="insertValue('6')">6</button>
-
-                <button class="operator" onclick="insertValue('-')">−</button>
+                <button
+                    class="sidebar-option"
+                    id="settingsBtn"
+                >
+                    <span class="option-icon">⚙</span>
+                    <span>Configuración</span>
+                </button>
 
 
-                <button onclick="insertValue('1')">1</button>
-                <button onclick="insertValue('2')">2</button>
-                <button onclick="insertValue('3')">3</button>
+                <div class="user-profile">
 
-                <button class="operator" onclick="insertValue('+')">+</button>
+                    <div class="user-avatar">
+                        U
+                    </div>
 
+                    <div class="user-info">
 
-                <button onclick="changeSign()">±</button>
+                        <strong>
+                            Usuario
+                        </strong>
 
-                <button onclick="insertValue('0')">0</button>
+                        <span>
+                            Cuenta gratuita
+                        </span>
 
-                <button onclick="insertValue('.')">,</button>
+                    </div>
 
-                <button class="equals" onclick="calculate()">=</button>
+                    <button
+                        class="profile-more"
+                        id="profileMore"
+                    >
+                        ⋯
+                    </button>
+
+                </div>
 
             </div>
 
-        </section>
+        </aside>
 
 
 
-        <!-- ============================= -->
-        <!-- FRACCIONES -->
-        <!-- ============================= -->
+        <!-- ==================================
+             MAIN
+        =================================== -->
 
-        <section id="fractions" class="section">
-
-            <div class="page-header">
-
-                <p class="small-title">HERRAMIENTAS</p>
-
-                <h1>Fracciones</h1>
-
-                <p>
-                    Sumá, restá, multiplicá o dividí fracciones.
-                </p>
-
-            </div>
+        <main class="main">
 
 
-            <div class="tool-card">
+            <!-- ==============================
+                 HEADER
+            =============================== -->
 
-                <div class="fraction-layout">
+            <header class="topbar">
 
-                    <div class="fraction-input">
+                <div class="topbar-left">
 
-                        <input id="num1" type="number" placeholder="1">
+                    <button
+                        class="mobile-menu"
+                        id="mobileMenu"
+                    >
+                        ☰
+                    </button>
 
-                        <div></div>
 
-                        <input id="den1" type="number" placeholder="2">
+                    <button
+                        class="model-selector"
+                        id="modelSelector"
+                    >
+
+                        <span class="model-name">
+                            NOVA
+                        </span>
+
+                        <span class="model-version">
+                            1.0
+                        </span>
+
+                        <span class="arrow">
+                            ▾
+                        </span>
+
+                    </button>
+
+                </div>
+
+
+                <div class="topbar-right">
+
+                    <button
+                        class="topbar-btn"
+                        id="newWindowBtn"
+                        title="Nueva ventana"
+                    >
+                        ↗
+                    </button>
+
+
+                    <button
+                        class="topbar-btn"
+                        id="moreBtn"
+                        title="Más opciones"
+                    >
+                        ⋯
+                    </button>
+
+                </div>
+
+            </header>
+
+
+
+            <!-- ==================================
+                 CHAT AREA
+            =================================== -->
+
+            <section
+                class="chat-area"
+                id="chatArea"
+            >
+
+
+                <!-- ==============================
+                     WELCOME
+                =============================== -->
+
+                <div
+                    class="welcome"
+                    id="welcome"
+                >
+
+                    <div class="nova-logo">
+
+                        <div class="logo-orbit">
+                            ✦
+                        </div>
 
                     </div>
 
 
-                    <select id="fractionOperation">
+                    <h1>
+                        ¿En qué puedo ayudarte?
+                    </h1>
 
-                        <option value="+">+</option>
-                        <option value="-">−</option>
-                        <option value="*">×</option>
-                        <option value="/">÷</option>
+
+                    <p class="welcome-description">
+                        Preguntame lo que quieras.
+                        Puedo ayudarte a aprender,
+                        crear, programar, investigar
+                        y mucho más.
+                    </p>
+
+
+                    <!-- ==========================
+                         QUICK PROMPTS
+                    =========================== -->
+
+                    <div class="quick-prompts">
+
+
+                        <button
+                            class="prompt-card"
+                            data-prompt="Ayudame a aprender algo nuevo"
+                        >
+
+                            <span class="prompt-icon">
+                                ✦
+                            </span>
+
+                            <div>
+                                <strong>
+                                    Aprender
+                                </strong>
+
+                                <small>
+                                    Explicame algo
+                                </small>
+                            </div>
+
+                        </button>
+
+
+                        <button
+                            class="prompt-card"
+                            data-prompt="Dame una idea creativa"
+                        >
+
+                            <span class="prompt-icon">
+                                ✎
+                            </span>
+
+                            <div>
+                                <strong>
+                                    Crear
+                                </strong>
+
+                                <small>
+                                    Ideas y proyectos
+                                </small>
+                            </div>
+
+                        </button>
+
+
+                        <button
+                            class="prompt-card"
+                            data-prompt="Ayudame con programación"
+                        >
+
+                            <span class="prompt-icon">
+                                &lt;/&gt;
+                            </span>
+
+                            <div>
+                                <strong>
+                                    Programar
+                                </strong>
+
+                                <small>
+                                    Código y proyectos
+                                </small>
+                            </div>
+
+                        </button>
+
+
+                        <button
+                            class="prompt-card"
+                            data-prompt="Investiga este tema"
+                        >
+
+                            <span class="prompt-icon">
+                                ⌕
+                            </span>
+
+                            <div>
+                                <strong>
+                                    Investigar
+                                </strong>
+
+                                <small>
+                                    Buscar información
+                                </small>
+                            </div>
+
+                        </button>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ==============================
+                     MESSAGES
+                =============================== -->
+
+                <div
+                    class="messages"
+                    id="messages"
+                >
+
+                    <!-- Los mensajes se agregan con JS -->
+
+                </div>
+
+
+            </section>
+
+
+
+            <!-- ==================================
+                 INPUT AREA
+            =================================== -->
+
+            <div class="input-container">
+
+
+                <div class="input-box">
+
+
+                    <!-- ATTACH -->
+
+                    <button
+                        class="input-action"
+                        id="attachBtn"
+                        title="Adjuntar"
+                    >
+                        ＋
+                    </button>
+
+
+                    <!-- TEXTAREA -->
+
+                    <textarea
+                        id="messageInput"
+                        placeholder="Preguntale algo a NOVA..."
+                        rows="1"
+                    ></textarea>
+
+
+                    <!-- TOOLS -->
+
+                    <div class="input-tools">
+
+                        <button
+                            class="input-tool"
+                            id="webBtn"
+                            title="Buscar en internet"
+                        >
+                            ⌕
+                        </button>
+
+
+                        <button
+                            class="input-tool"
+                            id="thinkBtn"
+                            title="Pensar"
+                        >
+                            ✦
+                        </button>
+
+
+                        <button
+                            class="send-btn"
+                            id="sendBtn"
+                            title="Enviar"
+                        >
+                            ↑
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="input-disclaimer">
+
+                    NOVA puede cometer errores.
+                    Verificá la información importante.
+
+                </div>
+
+            </div>
+
+
+        </main>
+
+    </div>
+
+
+
+    <!-- ======================================
+         MODEL MENU
+    ======================================= -->
+
+    <div
+        class="floating-menu model-menu"
+        id="modelMenu"
+    >
+
+        <div class="menu-heading">
+            Modelo
+        </div>
+
+
+        <button
+            class="model-option selected"
+            data-model="nova"
+        >
+
+            <div class="model-option-icon">
+                ✦
+            </div>
+
+            <div class="model-option-text">
+
+                <strong>
+                    NOVA
+                </strong>
+
+                <span>
+                    Equilibrado y rápido
+                </span>
+
+            </div>
+
+            <span class="check">
+                ✓
+            </span>
+
+        </button>
+
+
+        <button
+            class="model-option"
+            data-model="nova-reasoning"
+        >
+
+            <div class="model-option-icon">
+                ◈
+            </div>
+
+            <div class="model-option-text">
+
+                <strong>
+                    NOVA Reasoning
+                </strong>
+
+                <span>
+                    Problemas complejos
+                </span>
+
+            </div>
+
+        </button>
+
+
+        <button
+            class="model-option"
+            data-model="nova-fast"
+        >
+
+            <div class="model-option-icon">
+                ⚡
+            </div>
+
+            <div class="model-option-text">
+
+                <strong>
+                    NOVA Fast
+                </strong>
+
+                <span>
+                    Respuestas rápidas
+                </span>
+
+            </div>
+
+        </button>
+
+    </div>
+
+
+
+    <!-- ======================================
+         ATTACH MENU
+    ======================================= -->
+
+    <div
+        class="floating-menu attach-menu"
+        id="attachMenu"
+    >
+
+        <button id="uploadFileBtn">
+            <span>▣</span>
+            Subir archivo
+        </button>
+
+
+        <button id="uploadImageBtn">
+            <span>▧</span>
+            Subir imagen
+        </button>
+
+
+        <button id="cameraBtn">
+            <span>◉</span>
+            Cámara
+        </button>
+
+    </div>
+
+
+
+    <!-- ======================================
+         MORE MENU
+    ======================================= -->
+
+    <div
+        class="floating-menu more-menu"
+        id="moreMenu"
+    >
+
+        <button>
+            Compartir conversación
+        </button>
+
+        <button>
+            Exportar conversación
+        </button>
+
+        <button>
+            Eliminar conversación
+        </button>
+
+    </div>
+
+
+
+    <!-- ======================================
+         SETTINGS PANEL
+    ======================================= -->
+
+    <div
+        class="modal-overlay"
+        id="settingsModal"
+    >
+
+        <div class="modal">
+
+
+            <div class="modal-header">
+
+                <div>
+
+                    <span class="small-label">
+                        NOVA AI
+                    </span>
+
+                    <h2>
+                        Configuración
+                    </h2>
+
+                </div>
+
+
+                <button
+                    class="close-modal"
+                    id="closeSettings"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+
+            <div class="settings-list">
+
+
+                <div class="setting">
+
+                    <div>
+
+                        <strong>
+                            Personalidad
+                        </strong>
+
+                        <p>
+                            Elegí cómo querés que
+                            NOVA se comunique.
+                        </p>
+
+                    </div>
+
+                    <select id="personality">
+
+                        <option>
+                            Natural
+                        </option>
+
+                        <option>
+                            Amigable
+                        </option>
+
+                        <option>
+                            Profesional
+                        </option>
+
+                        <option>
+                            Directa
+                        </option>
+
+                        <option>
+                            Creativa
+                        </option>
 
                     </select>
 
+                </div>
 
-                    <div class="fraction-input">
 
-                        <input id="num2" type="number" placeholder="1">
 
-                        <div></div>
+                <div class="setting">
 
-                        <input id="den2" type="number" placeholder="3">
+                    <div>
+
+                        <strong>
+                            Respuestas
+                        </strong>
+
+                        <p>
+                            Ajustá la cantidad
+                            de información.
+                        </p>
 
                     </div>
+
+                    <select id="responseLength">
+
+                        <option>
+                            Automática
+                        </option>
+
+                        <option>
+                            Corta
+                        </option>
+
+                        <option>
+                            Normal
+                        </option>
+
+                        <option>
+                            Detallada
+                        </option>
+
+                    </select>
 
                 </div>
 
 
-                <button class="primary-action" onclick="calculateFraction()">
-                    Calcular fracción
+
+                <div class="setting">
+
+                    <div>
+
+                        <strong>
+                            Tema
+                        </strong>
+
+                        <p>
+                            Cambiá la apariencia.
+                        </p>
+
+                    </div>
+
+                    <select id="theme">
+
+                        <option>
+                            Oscuro
+                        </option>
+
+                        <option>
+                            Claro
+                        </option>
+
+                        <option>
+                            Sistema
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ======================================
+         SEARCH MODAL
+    ======================================= -->
+
+    <div
+        class="modal-overlay"
+        id="searchModal"
+    >
+
+        <div class="search-modal">
+
+
+            <div class="search-header">
+
+                <span>
+                    ⌕
+                </span>
+
+                <input
+                    id="chatSearch"
+                    type="text"
+                    placeholder="Buscar en tus conversaciones..."
+                >
+
+                <button
+                    id="closeSearch"
+                >
+                    ESC
                 </button>
 
-
-                <div id="fractionResult" class="tool-result">
-                    Resultado
-                </div>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- ============================= -->
-        <!-- PORCENTAJES -->
-        <!-- ============================= -->
-
-        <section id="percentages" class="section">
-
-            <div class="page-header">
-
-                <p class="small-title">HERRAMIENTAS</p>
-
-                <h1>Porcentajes</h1>
-
             </div>
 
 
-            <div class="cards-grid">
-
-                <div class="tool-card">
-
-                    <h2>Porcentaje de un número</h2>
-
-                    <input id="percentageValue" type="number" placeholder="15">
-
-                    <input id="percentageNumber" type="number" placeholder="240">
-
-                    <button class="primary-action" onclick="calculatePercentage()">
-                        Calcular
-                    </button>
-
-                    <div id="percentageResult" class="tool-result">
-                        Resultado
-                    </div>
-
-                </div>
-
-
-                <div class="tool-card">
-
-                    <h2>Aumento porcentual</h2>
-
-                    <input id="increaseValue" type="number" placeholder="1000">
-
-                    <input id="increasePercent" type="number" placeholder="20">
-
-                    <button class="primary-action" onclick="calculateIncrease()">
-                        Calcular
-                    </button>
-
-                    <div id="increaseResult" class="tool-result">
-                        Resultado
-                    </div>
-
-                </div>
-
-
-                <div class="tool-card">
-
-                    <h2>Descuento</h2>
-
-                    <input id="discountPrice" type="number" placeholder="25000">
-
-                    <input id="discountPercent" type="number" placeholder="15">
-
-                    <button class="primary-action" onclick="calculateDiscount()">
-                        Calcular
-                    </button>
-
-                    <div id="discountResult" class="tool-result">
-                        Resultado
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- ============================= -->
-        <!-- ECUACIONES -->
-        <!-- ============================= -->
-
-        <section id="equations" class="section">
-
-            <div class="page-header">
-
-                <p class="small-title">ÁLGEBRA</p>
-
-                <h1>Ecuaciones</h1>
+            <div
+                class="search-results"
+                id="searchResults"
+            >
 
                 <p>
-                    Resolvé ecuaciones simples del tipo ax + b = c.
+                    Escribí algo para buscar.
                 </p>
 
             </div>
 
+        </div>
 
-            <div class="tool-card">
+    </div>
 
-                <div class="equation-row">
 
-                    <input id="equationA" type="number" placeholder="2">
 
-                    <span>x +</span>
+    <!-- ======================================
+         HIDDEN FILE INPUTS
+    ======================================= -->
 
-                    <input id="equationB" type="number" placeholder="5">
+    <input
+        type="file"
+        id="fileInput"
+        hidden
+    >
 
-                    <span>=</span>
 
-                    <input id="equationC" type="number" placeholder="15">
+    <input
+        type="file"
+        id="imageInput"
+        accept="image/*"
+        hidden
+    >
 
-                </div>
 
 
-                <button class="primary-action" onclick="solveEquation()">
-                    Resolver ecuación
-                </button>
+    <!-- ======================================
+         SCRIPT
+    ======================================= -->
 
-
-                <div id="equationResult" class="tool-result large-result">
-
-                    x = ?
-
-                </div>
-
-
-                <div id="equationSteps" class="steps">
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- ============================= -->
-        <!-- GEOMETRÍA -->
-        <!-- ============================= -->
-
-        <section id="geometry" class="section">
-
-            <div class="page-header">
-
-                <p class="small-title">GEOMETRÍA</p>
-
-                <h1>Figuras</h1>
-
-            </div>
-
-
-            <div class="cards-grid">
-
-                <div class="tool-card">
-
-                    <h2>Cuadrado</h2>
-
-                    <input id="squareSide" type="number" placeholder="Lado">
-
-                    <button class="primary-action" onclick="squareGeometry()">
-                        Calcular
-                    </button>
-
-                    <div id="squareResult" class="tool-result"></div>
-
-                </div>
-
-
-                <div class="tool-card">
-
-                    <h2>Rectángulo</h2>
-
-                    <input id="rectangleBase" type="number" placeholder="Base">
-
-                    <input id="rectangleHeight" type="number" placeholder="Altura">
-
-                    <button class="primary-action" onclick="rectangleGeometry()">
-                        Calcular
-                    </button>
-
-                    <div id="rectangleResult" class="tool-result"></div>
-
-                </div>
-
-
-                <div class="tool-card">
-
-                    <h2>Triángulo</h2>
-
-                    <input id="triangleBase" type="number" placeholder="Base">
-
-                    <input id="triangleHeight" type="number" placeholder="Altura">
-
-                    <button class="primary-action" onclick="triangleGeometry()">
-                        Calcular área
-                    </button>
-
-                    <div id="triangleResult" class="tool-result"></div>
-
-                </div>
-
-
-                <div class="tool-card">
-
-                    <h2>Círculo</h2>
-
-                    <input id="circleRadius" type="number" placeholder="Radio">
-
-                    <button class="primary-action" onclick="circleGeometry()">
-                        Calcular
-                    </button>
-
-                    <div id="circleResult" class="tool-result"></div>
-
-                </div>
-
-
-                <div class="tool-card">
-
-                    <h2>Cubo</h2>
-
-                    <input id="cubeSide" type="number" placeholder="Lado">
-
-                    <button class="primary-action" onclick="cubeGeometry()">
-                        Calcular volumen
-                    </button>
-
-                    <div id="cubeResult" class="tool-result"></div>
-
-                </div>
-
-
-                <div class="tool-card">
-
-                    <h2>Cilindro</h2>
-
-                    <input id="cylinderRadius" type="number" placeholder="Radio">
-
-                    <input id="cylinderHeight" type="number" placeholder="Altura">
-
-                    <button class="primary-action" onclick="cylinderGeometry()">
-                        Calcular volumen
-                    </button>
-
-                    <div id="cylinderResult" class="tool-result"></div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- ============================= -->
-        <!-- CONVERSOR -->
-        <!-- ============================= -->
-
-        <section id="converter" class="section">
-
-            <div class="page-header">
-
-                <p class="small-title">CONVERSOR</p>
-
-                <h1>Unidades</h1>
-
-            </div>
-
-
-            <div class="tool-card">
-
-                <select id="converterType" onchange="updateConverterUnits()">
-
-                    <option value="length">Longitud</option>
-                    <option value="mass">Masa</option>
-                    <option value="temperature">Temperatura</option>
-
-                </select>
-
-
-                <input id="converterValue" type="number" placeholder="Valor">
-
-
-                <div class="converter-row">
-
-                    <select id="fromUnit"></select>
-
-                    <span>→</span>
-
-                    <select id="toUnit"></select>
-
-                </div>
-
-
-                <button class="primary-action" onclick="convertUnits()">
-                    Convertir
-                </button>
-
-
-                <div id="converterResult" class="tool-result large-result">
-                    Resultado
-                </div>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- ============================= -->
-        <!-- HISTORIAL -->
-        <!-- ============================= -->
-
-        <section id="history" class="section">
-
-            <div class="page-header">
-
-                <p class="small-title">CALCULADORA</p>
-
-                <h1>Historial</h1>
-
-            </div>
-
-
-            <div class="history-actions">
-
-                <button onclick="clearHistory()">
-                    Borrar historial
-                </button>
-
-            </div>
-
-
-            <div id="historyList" class="history-list">
-
-                <div class="empty-history">
-                    Todavía no hiciste ninguna operación.
-                </div>
-
-            </div>
-
-        </section>
-
-    </main>
-
-</div>
-
-
-<script src="script.js"></script>
+    <script src="script.js"></script>
 
 </body>
 
 </html>
+```
