@@ -2,247 +2,129 @@
 <html lang="es">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <meta
-        name="description"
-        content="NOVA AI - Asistente inteligente"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>NOVA AI</title>
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
-
+    <link rel="stylesheet" href="style.css">
 </head>
-
 
 <body>
 
-    <!-- =========================
-         BARRA LATERAL
-    ========================== -->
-
+    <!-- SIDEBAR -->
     <aside class="sidebar">
 
         <div class="brand">
+            <div class="brand-logo">N</div>
 
-            <div class="brand-icon">
-                ✦
+            <div>
+                <h1>NOVA</h1>
+                <span>AI</span>
             </div>
-
-            <div class="brand-name">
-                NOVA <span>AI</span>
-            </div>
-
         </div>
 
-
-        <button class="new-chat">
+        <button class="new-chat" id="newChatButton">
             <span>＋</span>
-            Nuevo chat
+            Nueva conversación
         </button>
-
 
         <nav class="navigation">
 
-            <button class="nav-item active">
-                <span class="nav-icon">💬</span>
+            <button class="nav-item active" data-section="chats">
+                <span>💬</span>
                 Chats
             </button>
 
-            <button class="nav-item">
-                <span class="nav-icon">⌕</span>
+            <button class="nav-item" data-section="search">
+                <span>⌕</span>
                 Buscar
             </button>
 
-            <button class="nav-item">
-                <span class="nav-icon">▣</span>
+            <button class="nav-item" data-section="library">
+                <span>▣</span>
                 Biblioteca
             </button>
 
-            <button class="nav-item">
-                <span class="nav-icon">⚙</span>
+            <button class="nav-item" data-section="settings">
+                <span>⚙</span>
                 Configuración
             </button>
 
         </nav>
 
-
-        <div class="sidebar-line"></div>
-
-
-        <!-- CHATS RECIENTES -->
-
-        <div class="recent-header">
-
-            <span>Chats recientes</span>
-
-            <button class="add-chat">
-                ＋
-            </button>
-
+        <div class="recent-title">
+            Recientes
         </div>
 
+        <div class="recent-chats" id="recentChats"></div>
 
-        <div class="recent-chats">
+        <div class="sidebar-bottom">
 
-            <button class="recent-chat active">
+            <button class="profile-button" id="profileButton">
 
-                <span class="chat-icon">
-                    ◯
-                </span>
-
-                <div>
-                    <strong>Hola</strong>
-                    <small>Hoy, 18:24</small>
+                <div class="profile-avatar">
+                    T
                 </div>
 
-            </button>
-
-
-            <button class="recent-chat">
-
-                <span class="chat-icon">
-                    ◯
-                </span>
-
-                <div>
-                    <strong>Explicación de fracciones</strong>
-                    <small>Ayer</small>
+                <div class="profile-info">
+                    <strong>Usuario</strong>
+                    <span>Cuenta local</span>
                 </div>
 
-            </button>
-
-
-            <button class="recent-chat">
-
-                <span class="chat-icon">
-                    ◯
-                </span>
-
-                <div>
-                    <strong>Ideas para un canal</strong>
-                    <small>Ayer</small>
-                </div>
+                <span>⋯</span>
 
             </button>
-
-
-            <button class="recent-chat">
-
-                <span class="chat-icon">
-                    ◯
-                </span>
-
-                <div>
-                    <strong>Proyecto de programación</strong>
-                    <small>2 días</small>
-                </div>
-
-            </button>
-
-
-            <button class="recent-chat">
-
-                <span class="chat-icon">
-                    ◯
-                </span>
-
-                <div>
-                    <strong>Preguntas de fútbol</strong>
-                    <small>3 días</small>
-                </div>
-
-            </button>
-
-        </div>
-
-
-        <!-- PERFIL -->
-
-        <div class="profile">
-
-            <div class="profile-avatar">
-                N
-            </div>
-
-            <div class="profile-info">
-
-                <strong>NOVA</strong>
-
-                <span>Asistente inteligente</span>
-
-            </div>
-
-            <span class="profile-arrow">
-                ›
-            </span>
 
         </div>
 
     </aside>
 
 
-
-    <!-- =========================
-         CONTENIDO PRINCIPAL
-    ========================== -->
-
+    <!-- MAIN -->
     <main class="main">
 
-
-        <!-- BARRA SUPERIOR -->
-
+        <!-- TOPBAR -->
         <header class="topbar">
 
-            <button class="model-selector">
+            <button class="mobile-menu" id="mobileMenu">
+                ☰
+            </button>
 
-                <div>
+            <button class="model-selector" id="modelSelector">
 
-                    <strong>
-                        NOVA <span>1.0</span>
-                    </strong>
+                <div class="model-dot"></div>
 
-                    <small>
-                        Modelo más avanzado
-                    </small>
-
-                </div>
+                <span id="currentModel">
+                    NOVA 1.0
+                </span>
 
                 <span class="arrow">
-                    ˅
+                    ▾
                 </span>
 
             </button>
 
-
             <div class="top-actions">
 
                 <button
-                    class="top-button"
-                    title="Buscar"
-                >
+                    class="icon-button"
+                    id="topSearchButton"
+                    title="Buscar conversaciones">
                     ⌕
                 </button>
 
                 <button
-                    class="top-button"
-                    title="Cambiar tema"
-                >
-                    ☼
+                    class="icon-button"
+                    id="themeButton"
+                    title="Cambiar tema">
+                    ☾
                 </button>
 
-                <button class="top-new-chat">
-                    ＋ Nuevo chat
+                <button
+                    class="top-new-chat"
+                    id="topNewChat">
+                    ＋ Nueva
                 </button>
 
             </div>
@@ -250,310 +132,374 @@
         </header>
 
 
+        <!-- CHAT -->
+        <section class="chat-area" id="chatArea">
 
-        <!-- =========================
-             ZONA DEL CHAT
-        ========================== -->
+            <!-- WELCOME -->
+            <div class="welcome" id="welcome">
 
-        <section class="chat-area">
-
-
-            <!-- BIENVENIDA -->
-
-            <div class="welcome">
-
-                <div class="nova-symbol">
-                    ✦
+                <div class="nova-orb">
+                    N
                 </div>
 
-
-                <h1>
+                <h2>
                     ¿En qué puedo ayudarte?
-                    <span>NOVA</span>
-                </h1>
-
+                </h2>
 
                 <p>
                     Soy NOVA, tu asistente inteligente.
-                    Preguntame lo que quieras,<br>
-                    estoy acá para ayudarte.
+                    Puedo ayudarte a aprender, programar,
+                    investigar y crear.
                 </p>
 
             </div>
 
 
-
-            <!-- TARJETAS -->
-
-            <div class="suggestions">
-
+            <!-- SUGGESTIONS -->
+            <div class="suggestions" id="suggestions">
 
                 <button
                     class="suggestion-card"
-                    data-prompt="Quiero aprender algo nuevo"
-                >
+                    data-prompt="Quiero aprender algo nuevo. Ayúdame a entenderlo paso a paso.">
 
-                    <div class="suggestion-icon purple">
-                        ♧
+                    <div class="suggestion-icon">
+                        ✦
                     </div>
 
-                    <div class="suggestion-text">
+                    <strong>
+                        Aprender
+                    </strong>
 
-                        <h3>
-                            Aprender
-                        </h3>
-
-                        <p>
-                            Explicame un tema de
-                            forma sencilla.
-                        </p>
-
-                    </div>
-
-                    <span class="card-arrow">
-                        →
+                    <span>
+                        Explicame algo paso a paso
                     </span>
 
                 </button>
 
 
-
                 <button
                     class="suggestion-card"
-                    data-prompt="Quiero programar algo"
-                >
+                    data-prompt="Quiero programar algo. Ayúdame a hacerlo paso a paso y explicame el código de forma sencilla.">
 
-                    <div class="suggestion-icon blue">
+                    <div class="suggestion-icon">
                         &lt;/&gt;
                     </div>
 
-                    <div class="suggestion-text">
+                    <strong>
+                        Programar
+                    </strong>
 
-                        <h3>
-                            Programar
-                        </h3>
-
-                        <p>
-                            Ayudame a crear o
-                            entender código.
-                        </p>
-
-                    </div>
-
-                    <span class="card-arrow">
-                        →
+                    <span>
+                        Crear y solucionar código
                     </span>
 
                 </button>
 
 
-
                 <button
                     class="suggestion-card"
-                    data-prompt="Quiero crear algo"
-                >
+                    data-prompt="Quiero crear un proyecto nuevo. Dame ideas y ayúdame a desarrollarlo.">
 
-                    <div class="suggestion-icon green">
+                    <div class="suggestion-icon">
                         ✎
                     </div>
 
-                    <div class="suggestion-text">
+                    <strong>
+                        Crear
+                    </strong>
 
-                        <h3>
-                            Crear
-                        </h3>
-
-                        <p>
-                            Ayudame a escribir y
-                            desarrollar ideas.
-                        </p>
-
-                    </div>
-
-                    <span class="card-arrow">
-                        →
+                    <span>
+                        Ideas para proyectos
                     </span>
 
                 </button>
-
 
 
                 <button
                     class="suggestion-card"
-                    data-prompt="Quiero investigar un tema"
-                >
+                    data-prompt="Quiero investigar un tema utilizando información actual y fuentes confiables.">
 
-                    <div class="suggestion-icon orange">
-                        ⌕
+                    <div class="suggestion-icon">
+                        ◉
                     </div>
 
-                    <div class="suggestion-text">
+                    <strong>
+                        Investigar
+                    </strong>
 
-                        <h3>
-                            Investigar
-                        </h3>
-
-                        <p>
-                            Analicemos un tema
-                            juntos.
-                        </p>
-
-                    </div>
-
-                    <span class="card-arrow">
-                        →
+                    <span>
+                        Buscar información actual
                     </span>
 
                 </button>
 
-
             </div>
 
 
-
-            <!-- MENSAJES -->
-
+            <!-- MESSAGES -->
             <div
                 class="messages"
-                id="messages"
-            >
-
+                id="messages">
             </div>
-
 
         </section>
 
 
-
-        <!-- =========================
-             CAJA PARA ESCRIBIR
-        ========================== -->
-
+        <!-- COMPOSER -->
         <div class="composer-container">
 
             <div class="composer">
 
-
                 <button
                     class="composer-button"
                     id="attachButton"
-                    title="Adjuntar"
-                >
+                    title="Adjuntar archivo">
                     ＋
                 </button>
-
 
                 <textarea
                     id="messageInput"
                     rows="1"
-                    placeholder="Preguntale algo a NOVA..."
-                ></textarea>
-
+                    placeholder="Escribile a NOVA..."></textarea>
 
                 <div class="composer-actions">
 
                     <button
                         class="composer-tool"
                         id="fileButton"
-                        title="Adjuntar archivo"
-                    >
-                        ♧
+                        title="Adjuntar archivo">
+                        📎
                     </button>
 
                     <button
                         class="composer-tool"
                         id="webButton"
-                        title="Búsqueda web"
-                    >
-                        ◉
+                        title="Buscar en la web">
+                        ◉ Web
                     </button>
 
                     <button
                         class="send-button"
                         id="sendButton"
-                        title="Enviar"
-                    >
-                        →
+                        title="Enviar">
+                        ↑
                     </button>
 
                 </div>
 
+            </div>
+
+            <div class="composer-status">
+
+                <span id="webStatus">
+                    Web desactivada
+                </span>
+
+                <span>
+                    NOVA puede cometer errores. Verificá información importante.
+                </span>
 
             </div>
 
-
-            <p class="disclaimer">
-                NOVA puede cometer errores.
-                Verificá la información importante.
-            </p>
-
         </div>
-
 
     </main>
 
 
-
-    <!-- =========================
-         MENU DEL MODELO
-    ========================== -->
-
+    <!-- MODEL MENU -->
     <div
-        class="model-menu"
-        id="modelMenu"
-    >
+        class="floating-menu model-menu"
+        id="modelMenu">
 
-        <button data-model="NOVA 1.0">
+        <div class="menu-title">
+            Modelo
+        </div>
 
-            <strong>✦ NOVA 1.0</strong>
+        <button
+            class="model-option"
+            data-model="NOVA 1.0">
 
-            <span>
-                Equilibrado y rápido
-            </span>
-
-        </button>
-
-
-        <button data-model="NOVA Reasoning">
-
-            <strong>◇ NOVA Reasoning</strong>
-
-            <span>
-                Para problemas complejos
-            </span>
+            <strong>NOVA 1.0</strong>
+            <span>Equilibrado</span>
 
         </button>
 
+        <button
+            class="model-option"
+            data-model="NOVA Fast">
 
-        <button data-model="NOVA Fast">
+            <strong>NOVA Fast</strong>
+            <span>Más rápido</span>
 
-            <strong>⚡ NOVA Fast</strong>
+        </button>
 
-            <span>
-                Respuestas rápidas
-            </span>
+        <button
+            class="model-option"
+            data-model="NOVA Pro">
+
+            <strong>NOVA Pro</strong>
+            <span>Más capacidad</span>
 
         </button>
 
     </div>
 
 
+    <!-- SEARCH PANEL -->
+    <div
+        class="overlay"
+        id="searchOverlay">
 
-    <!-- =========================
-         INPUT DE ARCHIVOS
-    ========================== -->
+        <div class="modal">
 
+            <div class="modal-header">
+
+                <h3>
+                    Buscar conversaciones
+                </h3>
+
+                <button
+                    class="close-button"
+                    data-close="searchOverlay">
+                    ×
+                </button>
+
+            </div>
+
+            <input
+                type="text"
+                id="conversationSearch"
+                placeholder="Buscar en tus chats...">
+
+            <div
+                class="search-results"
+                id="searchResults">
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SETTINGS -->
+    <div
+        class="overlay"
+        id="settingsOverlay">
+
+        <div class="modal settings-modal">
+
+            <div class="modal-header">
+
+                <h3>
+                    Configuración
+                </h3>
+
+                <button
+                    class="close-button"
+                    data-close="settingsOverlay">
+                    ×
+                </button>
+
+            </div>
+
+            <div class="settings-list">
+
+                <label class="setting-row">
+
+                    <div>
+                        <strong>Enter para enviar</strong>
+                        <span>Usar Enter para mandar mensajes</span>
+                    </div>
+
+                    <input
+                        type="checkbox"
+                        id="enterSend"
+                        checked>
+
+                </label>
+
+
+                <label class="setting-row">
+
+                    <div>
+                        <strong>Animaciones</strong>
+                        <span>Mostrar animaciones de NOVA</span>
+                    </div>
+
+                    <input
+                        type="checkbox"
+                        id="animationsEnabled"
+                        checked>
+
+                </label>
+
+
+                <label class="setting-row">
+
+                    <div>
+                        <strong>Tema oscuro</strong>
+                        <span>Usar interfaz oscura</span>
+                    </div>
+
+                    <input
+                        type="checkbox"
+                        id="darkMode"
+                        checked>
+
+                </label>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- LIBRARY -->
+    <div
+        class="overlay"
+        id="libraryOverlay">
+
+        <div class="modal">
+
+            <div class="modal-header">
+
+                <h3>
+                    Biblioteca
+                </h3>
+
+                <button
+                    class="close-button"
+                    data-close="libraryOverlay">
+                    ×
+                </button>
+
+            </div>
+
+            <div id="libraryContent">
+
+                <div class="empty-state">
+                    <div>▣</div>
+                    <h3>No hay archivos todavía</h3>
+                    <p>
+                        Los archivos que adjuntes aparecerán aquí.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- FILE INPUT -->
     <input
         type="file"
         id="fileInput"
         hidden
-    >
+        multiple>
 
-
-
-    <!-- =========================
-         JAVASCRIPT
-    ========================== -->
 
     <script src="script.js"></script>
 
