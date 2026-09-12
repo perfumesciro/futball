@@ -1,1068 +1,508 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+<!DOCTYPE html>
+<html lang="es">
 
-:root {
-    --fondo: #080b12;
-    --barra: #0c1019;
-    --panel: #101622;
-    --panel-hover: #171d2b;
-    --borde: #222b3d;
-    --texto: #f5f7ff;
-    --gris: #929cb2;
-    --morado: #7857ff;
-    --morado-claro: #9a82ff;
-}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-html,
-body {
-    width: 100%;
-    height: 100%;
-}
+    <title>NOVA AI</title>
 
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: var(--fondo);
-    color: var(--texto);
-    overflow: hidden;
-}
+    <link rel="stylesheet" href="style.css">
+</head>
 
+<body>
 
-/* ================================
-   BARRA LATERAL
-================================ */
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
 
-.sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
+        <div class="brand">
+            <div class="brand-logo">N</div>
 
-    width: 345px;
-    height: 100vh;
+            <div>
+                <h1>NOVA</h1>
+                <span>AI</span>
+            </div>
+        </div>
 
-    background: var(--barra);
-    border-right: 1px solid var(--borde);
+        <button class="new-chat" id="newChatButton">
+            <span>＋</span>
+            Nueva conversación
+        </button>
 
-    padding: 20px;
+        <nav class="navigation">
 
-    display: flex;
-    flex-direction: column;
+            <button class="nav-item active" data-section="chats">
+                <span>💬</span>
+                Chats
+            </button>
 
-    z-index: 10;
-}
+            <button class="nav-item" data-section="search">
+                <span>⌕</span>
+                Buscar
+            </button>
 
+            <button class="nav-item" data-section="library">
+                <span>▣</span>
+                Biblioteca
+            </button>
 
-/* LOGO */
+            <button class="nav-item" data-section="settings">
+                <span>⚙</span>
+                Configuración
+            </button>
 
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+        </nav>
 
-    padding: 5px 5px 28px;
-}
+        <div class="recent-title">
+            Recientes
+        </div>
 
-.brand-icon {
-    font-size: 31px;
-    color: #866cff;
+        <div class="recent-chats" id="recentChats"></div>
 
-    text-shadow:
-        0 0 18px rgba(120, 87, 255, 0.8);
-}
+        <div class="sidebar-bottom">
 
-.brand-name {
-    font-size: 25px;
-    font-weight: bold;
-}
+            <button class="profile-button" id="profileButton">
 
-.brand-name span {
-    color: var(--morado-claro);
-}
+                <div class="profile-avatar">
+                    T
+                </div>
 
+                <div class="profile-info">
+                    <strong>Usuario</strong>
+                    <span>Cuenta local</span>
+                </div>
 
-/* NUEVO CHAT */
+                <span>⋯</span>
 
-.new-chat {
-    width: 100%;
-    height: 51px;
+            </button>
 
-    border: 1px solid #39415a;
-    border-radius: 11px;
+        </div>
 
-    background:
-        linear-gradient(
-            135deg,
-            #151b2b,
-            #101522
-        );
+    </aside>
 
-    color: white;
 
-    font-size: 14px;
-    font-weight: bold;
+    <!-- MAIN -->
+    <main class="main">
 
-    cursor: pointer;
+        <!-- TOPBAR -->
+        <header class="topbar">
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
+            <button class="mobile-menu" id="mobileMenu">
+                ☰
+            </button>
 
-    transition: 0.2s;
-}
+            <button class="model-selector" id="modelSelector">
 
-.new-chat:hover {
-    background: #1b2233;
-    border-color: #555f7d;
-}
+                <div class="model-dot"></div>
 
-.new-chat span {
-    font-size: 21px;
-}
+                <span id="currentModel">
+                    NOVA 1.0
+                </span>
 
+                <span class="arrow">
+                    ▾
+                </span>
 
-/* MENU */
+            </button>
 
-.navigation {
-    margin-top: 19px;
+            <div class="top-actions">
 
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
+                <button
+                    class="icon-button"
+                    id="topSearchButton"
+                    title="Buscar conversaciones">
+                    ⌕
+                </button>
 
-.nav-item {
-    width: 100%;
-    height: 45px;
+                <button
+                    class="icon-button"
+                    id="themeButton"
+                    title="Cambiar tema">
+                    ☾
+                </button>
 
-    border: none;
-    border-radius: 9px;
+                <button
+                    class="top-new-chat"
+                    id="topNewChat">
+                    ＋ Nueva
+                </button>
 
-    background: transparent;
+            </div>
 
-    color: #b9c1d3;
+        </header>
 
-    font-size: 14px;
 
-    cursor: pointer;
+        <!-- CHAT -->
+        <section class="chat-area" id="chatArea">
 
-    text-align: left;
+            <!-- WELCOME -->
+            <div class="welcome" id="welcome">
 
-    padding: 0 13px;
+                <div class="nova-orb">
+                    N
+                </div>
 
-    display: flex;
-    align-items: center;
+                <h2>
+                    ¿En qué puedo ayudarte?
+                </h2>
 
-    gap: 13px;
-}
+                <p>
+                    Soy NOVA, tu asistente inteligente.
+                    Puedo ayudarte a aprender, programar,
+                    investigar y crear.
+                </p>
 
-.nav-item:hover {
-    background: #151a25;
-    color: white;
-}
+            </div>
 
-.nav-item.active {
-    background:
-        linear-gradient(
-            90deg,
-            rgba(120, 87, 255, 0.20),
-            rgba(120, 87, 255, 0.08)
-        );
 
-    color: white;
+            <!-- SUGGESTIONS -->
+            <div class="suggestions" id="suggestions">
 
-    box-shadow:
-        inset 2px 0 0 var(--morado);
-}
+                <button
+                    class="suggestion-card"
+                    data-prompt="Quiero aprender algo nuevo. Ayúdame a entenderlo paso a paso.">
 
-.nav-icon {
-    width: 22px;
-    text-align: center;
-    font-size: 19px;
-}
+                    <div class="suggestion-icon">
+                        ✦
+                    </div>
 
+                    <strong>
+                        Aprender
+                    </strong>
 
-/* LINEA */
+                    <span>
+                        Explicame algo paso a paso
+                    </span>
 
-.sidebar-line {
-    height: 1px;
-    width: 100%;
+                </button>
 
-    background: var(--borde);
 
-    margin: 20px 0 18px;
-}
+                <button
+                    class="suggestion-card"
+                    data-prompt="Quiero programar algo. Ayúdame a hacerlo paso a paso y explicame el código de forma sencilla.">
 
+                    <div class="suggestion-icon">
+                        &lt;/&gt;
+                    </div>
 
-/* CHATS RECIENTES */
+                    <strong>
+                        Programar
+                    </strong>
 
-.recent-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+                    <span>
+                        Crear y solucionar código
+                    </span>
 
-    padding: 0 9px 9px;
+                </button>
 
-    color: #8791a8;
 
-    font-size: 12px;
-    font-weight: bold;
-}
+                <button
+                    class="suggestion-card"
+                    data-prompt="Quiero crear un proyecto nuevo. Dame ideas y ayúdame a desarrollarlo.">
 
-.add-chat {
-    background: transparent;
-    border: none;
+                    <div class="suggestion-icon">
+                        ✎
+                    </div>
 
-    color: #8791a8;
+                    <strong>
+                        Crear
+                    </strong>
 
-    font-size: 18px;
+                    <span>
+                        Ideas para proyectos
+                    </span>
 
-    cursor: pointer;
-}
+                </button>
 
-.add-chat:hover {
-    color: white;
-}
 
-.recent-chats {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
+                <button
+                    class="suggestion-card"
+                    data-prompt="Quiero investigar un tema utilizando información actual y fuentes confiables.">
 
-    overflow-y: auto;
-}
+                    <div class="suggestion-icon">
+                        ◉
+                    </div>
 
-.recent-chat {
-    width: 100%;
-    min-height: 55px;
+                    <strong>
+                        Investigar
+                    </strong>
 
-    border: none;
-    border-radius: 9px;
+                    <span>
+                        Buscar información actual
+                    </span>
 
-    background: transparent;
+                </button>
 
-    color: #d0d5e0;
+            </div>
 
-    padding: 8px 10px;
 
-    display: flex;
-    align-items: center;
-    gap: 11px;
+            <!-- MESSAGES -->
+            <div
+                class="messages"
+                id="messages">
+            </div>
 
-    text-align: left;
+        </section>
 
-    cursor: pointer;
-}
 
-.recent-chat:hover {
-    background: #141923;
-}
+        <!-- COMPOSER -->
+        <div class="composer-container">
 
-.recent-chat.active {
-    background: #182033;
-}
+            <div class="composer">
 
-.chat-icon {
-    color: #aeb8cd;
-    font-size: 18px;
-}
+                <button
+                    class="composer-button"
+                    id="attachButton"
+                    title="Adjuntar archivo">
+                    ＋
+                </button>
 
-.recent-chat div {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+                <textarea
+                    id="messageInput"
+                    rows="1"
+                    placeholder="Escribile a NOVA..."></textarea>
 
-    min-width: 0;
-}
+                <div class="composer-actions">
 
-.recent-chat strong {
-    font-size: 13px;
+                    <button
+                        class="composer-tool"
+                        id="fileButton"
+                        title="Adjuntar archivo">
+                        📎
+                    </button>
 
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+                    <button
+                        class="composer-tool"
+                        id="webButton"
+                        title="Buscar en la web">
+                        ◉ Web
+                    </button>
 
-.recent-chat small {
-    color: #69748a;
-    font-size: 11px;
-}
+                    <button
+                        class="send-button"
+                        id="sendButton"
+                        title="Enviar">
+                        ↑
+                    </button>
 
+                </div>
 
-/* PERFIL */
+            </div>
 
-.profile {
-    margin-top: auto;
+            <div class="composer-status">
 
-    border-top: 1px solid var(--borde);
+                <span id="webStatus">
+                    Web desactivada
+                </span>
 
-    padding: 17px 7px 2px;
+                <span>
+                    NOVA puede cometer errores. Verificá información importante.
+                </span>
 
-    display: flex;
-    align-items: center;
+            </div>
 
-    gap: 11px;
-}
+        </div>
 
-.profile-avatar {
-    width: 44px;
-    height: 44px;
+    </main>
 
-    border-radius: 50%;
 
-    background:
-        linear-gradient(
-            135deg,
-            #896dff,
-            #603ce8
-        );
+    <!-- MODEL MENU -->
+    <div
+        class="floating-menu model-menu"
+        id="modelMenu">
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+        <div class="menu-title">
+            Modelo
+        </div>
 
-    font-weight: bold;
-    font-size: 17px;
-}
+        <button
+            class="model-option"
+            data-model="NOVA 1.0">
 
-.profile-info {
-    flex: 1;
+            <strong>NOVA 1.0</strong>
+            <span>Equilibrado</span>
 
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
+        </button>
 
-.profile-info strong {
-    font-size: 13px;
-}
+        <button
+            class="model-option"
+            data-model="NOVA Fast">
 
-.profile-info span {
-    color: #737d93;
-    font-size: 11px;
-}
+            <strong>NOVA Fast</strong>
+            <span>Más rápido</span>
 
-.profile-arrow {
-    color: #a1a9bb;
-    font-size: 25px;
-}
+        </button>
 
+        <button
+            class="model-option"
+            data-model="NOVA Pro">
 
-/* ================================
-   PARTE PRINCIPAL
-================================ */
+            <strong>NOVA Pro</strong>
+            <span>Más capacidad</span>
 
-.main {
-    margin-left: 345px;
+        </button>
 
-    width: calc(100% - 345px);
-    height: 100vh;
+    </div>
 
-    background:
-        radial-gradient(
-            circle at 50% 35%,
-            rgba(80, 70, 170, 0.08),
-            transparent 35%
-        ),
-        #080b12;
 
-    position: relative;
+    <!-- SEARCH PANEL -->
+    <div
+        class="overlay"
+        id="searchOverlay">
 
-    display: flex;
-    flex-direction: column;
-}
+        <div class="modal">
 
+            <div class="modal-header">
 
-/* ================================
-   TOPBAR
-================================ */
+                <h3>
+                    Buscar conversaciones
+                </h3>
 
-.topbar {
-    height: 74px;
+                <button
+                    class="close-button"
+                    data-close="searchOverlay">
+                    ×
+                </button>
 
-    border-bottom: 1px solid var(--borde);
+            </div>
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+            <input
+                type="text"
+                id="conversationSearch"
+                placeholder="Buscar en tus chats...">
 
-    padding: 0 24px;
-}
+            <div
+                class="search-results"
+                id="searchResults">
+            </div>
 
+        </div>
 
-/* MODELO */
+    </div>
 
-.model-selector {
-    border: 1px solid #222a3a;
-    border-radius: 10px;
 
-    background: #0d121c;
+    <!-- SETTINGS -->
+    <div
+        class="overlay"
+        id="settingsOverlay">
 
-    color: white;
+        <div class="modal settings-modal">
 
-    padding: 8px 11px;
+            <div class="modal-header">
 
-    display: flex;
-    align-items: center;
-    gap: 13px;
+                <h3>
+                    Configuración
+                </h3>
 
-    cursor: pointer;
+                <button
+                    class="close-button"
+                    data-close="settingsOverlay">
+                    ×
+                </button>
 
-    text-align: left;
-}
+            </div>
 
-.model-selector:hover {
-    background: #141a27;
-}
+            <div class="settings-list">
 
-.model-selector div {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
+                <label class="setting-row">
 
-.model-selector strong {
-    font-size: 15px;
-}
+                    <div>
+                        <strong>Enter para enviar</strong>
+                        <span>Usar Enter para mandar mensajes</span>
+                    </div>
 
-.model-selector strong span {
-    color: var(--morado-claro);
-}
+                    <input
+                        type="checkbox"
+                        id="enterSend"
+                        checked>
 
-.model-selector small {
-    color: #6e7890;
-    font-size: 11px;
-}
+                </label>
 
-.arrow {
-    color: #a1a9bb;
-}
 
+                <label class="setting-row">
 
-/* ACCIONES */
+                    <div>
+                        <strong>Animaciones</strong>
+                        <span>Mostrar animaciones de NOVA</span>
+                    </div>
 
-.top-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+                    <input
+                        type="checkbox"
+                        id="animationsEnabled"
+                        checked>
 
-.top-button {
-    width: 40px;
-    height: 40px;
+                </label>
 
-    border: none;
-    border-radius: 9px;
 
-    background: transparent;
+                <label class="setting-row">
 
-    color: #aab3c7;
+                    <div>
+                        <strong>Tema oscuro</strong>
+                        <span>Usar interfaz oscura</span>
+                    </div>
 
-    font-size: 22px;
+                    <input
+                        type="checkbox"
+                        id="darkMode"
+                        checked>
 
-    cursor: pointer;
-}
+                </label>
 
-.top-button:hover {
-    background: #151b27;
-    color: white;
-}
+            </div>
 
-.top-new-chat {
-    height: 40px;
+        </div>
 
-    border: 1px solid #6049c7;
-    border-radius: 9px;
+    </div>
 
-    background: rgba(120, 87, 255, 0.08);
 
-    color: #a58fff;
+    <!-- LIBRARY -->
+    <div
+        class="overlay"
+        id="libraryOverlay">
 
-    padding: 0 15px;
+        <div class="modal">
 
-    font-weight: bold;
+            <div class="modal-header">
 
-    cursor: pointer;
-}
+                <h3>
+                    Biblioteca
+                </h3>
 
-.top-new-chat:hover {
-    background: rgba(120, 87, 255, 0.17);
-}
+                <button
+                    class="close-button"
+                    data-close="libraryOverlay">
+                    ×
+                </button>
 
+            </div>
 
-/* ================================
-   CHAT
-================================ */
+            <div id="libraryContent">
 
-.chat-area {
-    flex: 1;
+                <div class="empty-state">
+                    <div>▣</div>
+                    <h3>No hay archivos todavía</h3>
+                    <p>
+                        Los archivos que adjuntes aparecerán aquí.
+                    </p>
+                </div>
 
-    overflow-y: auto;
+            </div>
 
-    padding:
-        62px
-        35px
-        180px;
-}
+        </div>
 
-.chat-area::-webkit-scrollbar {
-    width: 7px;
-}
+    </div>
 
-.chat-area::-webkit-scrollbar-thumb {
-    background: #242b3b;
-    border-radius: 10px;
-}
 
+    <!-- FILE INPUT -->
+    <input
+        type="file"
+        id="fileInput"
+        hidden
+        multiple>
 
-/* BIENVENIDA */
 
-.welcome {
-    max-width: 900px;
+    <script src="script.js"></script>
 
-    margin: 10px auto 0;
+</body>
 
-    text-align: center;
-}
-
-.nova-symbol {
-    font-size: 56px;
-
-    color: #866cff;
-
-    margin-bottom: 16px;
-
-    text-shadow:
-        0 0 28px rgba(120, 87, 255, 0.75);
-}
-
-.welcome h1 {
-    font-size: 40px;
-
-    letter-spacing: -1.3px;
-
-    margin-bottom: 15px;
-}
-
-.welcome h1 span {
-    color: var(--morado-claro);
-}
-
-.welcome p {
-    color: #919bb0;
-
-    font-size: 15px;
-
-    line-height: 1.7;
-}
-
-
-/* ================================
-   TARJETAS
-================================ */
-
-.suggestions {
-    max-width: 1070px;
-
-    margin: 43px auto 0;
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(4, 1fr);
-
-    gap: 14px;
-}
-
-.suggestion-card {
-    position: relative;
-
-    height: 208px;
-
-    border: 1px solid #252e41;
-    border-radius: 14px;
-
-    background:
-        linear-gradient(
-            145deg,
-            #111722,
-            #0d121b
-        );
-
-    padding: 21px;
-
-    color: white;
-
-    text-align: left;
-
-    cursor: pointer;
-
-    transition:
-        transform 0.2s,
-        border-color 0.2s,
-        background 0.2s;
-}
-
-.suggestion-card:hover {
-    transform: translateY(-3px);
-
-    border-color: #404a62;
-
-    background: #151b27;
-}
-
-.suggestion-icon {
-    width: 45px;
-    height: 45px;
-
-    border-radius: 11px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    margin-bottom: 20px;
-
-    font-size: 21px;
-}
-
-.suggestion-icon.purple {
-    background: rgba(120, 87, 255, 0.18);
-    color: #a18eff;
-}
-
-.suggestion-icon.blue {
-    background: rgba(66, 137, 255, 0.16);
-    color: #65a1ff;
-}
-
-.suggestion-icon.green {
-    background: rgba(55, 194, 139, 0.14);
-    color: #64d9ac;
-}
-
-.suggestion-icon.orange {
-    background: rgba(245, 151, 58, 0.14);
-    color: #ffae5a;
-}
-
-.suggestion-text h3 {
-    font-size: 16px;
-
-    margin-bottom: 9px;
-}
-
-.suggestion-text p {
-    color: #858fa5;
-
-    font-size: 13px;
-
-    line-height: 1.55;
-}
-
-.card-arrow {
-    position: absolute;
-
-    bottom: 18px;
-    left: 21px;
-
-    color: #927bff;
-
-    font-size: 20px;
-}
-
-
-/* ================================
-   MENSAJES
-================================ */
-
-.messages {
-    max-width: 850px;
-
-    margin: 45px auto;
-
-    display: flex;
-    flex-direction: column;
-
-    gap: 22px;
-}
-
-.message {
-    display: flex;
-    gap: 13px;
-}
-
-.avatar {
-    width: 35px;
-    height: 35px;
-
-    min-width: 35px;
-
-    border-radius: 50%;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.user-avatar {
-    background: #343b4b;
-}
-
-.ai-avatar {
-    background:
-        linear-gradient(
-            135deg,
-            #876bff,
-            #623fe8
-        );
-}
-
-.message-content {
-    color: #d8dce6;
-
-    font-size: 14px;
-
-    line-height: 1.7;
-
-    padding-top: 5px;
-}
-
-
-/* ================================
-   CAJA DE MENSAJE
-================================ */
-
-.composer-container {
-    position: absolute;
-
-    bottom: 0;
-    left: 0;
-    right: 0;
-
-    padding:
-        25px
-        40px
-        17px;
-
-    background:
-        linear-gradient(
-            transparent,
-            #080b12 28%
-        );
-}
-
-.composer {
-    max-width: 1070px;
-
-    min-height: 78px;
-
-    margin: auto;
-
-    border: 1px solid #303a4f;
-    border-radius: 16px;
-
-    background:
-        linear-gradient(
-            145deg,
-            #121824,
-            #0e131d
-        );
-
-    display: flex;
-    align-items: flex-end;
-
-    padding: 11px;
-
-    box-shadow:
-        0 15px 40px rgba(0, 0, 0, 0.35);
-}
-
-.composer:focus-within {
-    border-color: #4b416f;
-}
-
-
-/* BOTON + */
-
-.composer-button {
-    width: 46px;
-    height: 46px;
-
-    border: none;
-    border-radius: 11px;
-
-    background: #202839;
-
-    color: #c4ccdc;
-
-    font-size: 22px;
-
-    cursor: pointer;
-}
-
-.composer-button:hover {
-    background: #2a3347;
-    color: white;
-}
-
-
-/* TEXTAREA */
-
-#messageInput {
-    flex: 1;
-
-    min-height: 46px;
-
-    border: none;
-    outline: none;
-
-    resize: none;
-
-    background: transparent;
-
-    color: white;
-
-    font-family: inherit;
-
-    font-size: 14px;
-
-    padding:
-        13px
-        15px;
-
-    line-height: 1.5;
-}
-
-#messageInput::placeholder {
-    color: #778198;
-}
-
-
-/* BOTONES */
-
-.composer-actions {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.composer-tool {
-    width: 41px;
-    height: 41px;
-
-    border: none;
-    border-radius: 9px;
-
-    background: transparent;
-
-    color: #8d97ac;
-
-    font-size: 19px;
-
-    cursor: pointer;
-}
-
-.composer-tool:hover {
-    background: #202735;
-    color: white;
-}
-
-
-/* ENVIAR */
-
-.send-button {
-    width: 46px;
-    height: 46px;
-
-    border: none;
-    border-radius: 11px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #896dff,
-            #704cff
-        );
-
-    color: white;
-
-    font-size: 24px;
-
-    cursor: pointer;
-
-    box-shadow:
-        0 6px 20px rgba(118, 87, 255, 0.28);
-}
-
-.send-button:hover {
-    transform: translateY(-1px);
-
-    box-shadow:
-        0 8px 25px rgba(118, 87, 255, 0.4);
-}
-
-
-/* AVISO */
-
-.disclaimer {
-    max-width: 1070px;
-
-    margin: 10px auto 0;
-
-    text-align: center;
-
-    color: #5e687c;
-
-    font-size: 10px;
-}
-
-
-/* ================================
-   MENU DE MODELOS
-================================ */
-
-.model-menu {
-    position: fixed;
-
-    top: 64px;
-    left: 360px;
-
-    width: 260px;
-
-    background: #131925;
-
-    border: 1px solid #30394d;
-
-    border-radius: 12px;
-
-    padding: 7px;
-
-    box-shadow:
-        0 20px 50px rgba(0, 0, 0, 0.5);
-
-    display: none;
-
-    z-index: 100;
-}
-
-.model-menu.show {
-    display: block;
-}
-
-.model-menu button {
-    width: 100%;
-
-    border: none;
-    border-radius: 8px;
-
-    background: transparent;
-
-    color: white;
-
-    padding: 13px;
-
-    text-align: left;
-
-    cursor: pointer;
-
-    display: flex;
-    flex-direction: column;
-
-    gap: 5px;
-}
-
-.model-menu button:hover {
-    background: #202737;
-}
-
-.model-menu strong {
-    font-size: 13px;
-}
-
-.model-menu span {
-    color: #7e899f;
-    font-size: 11px;
-}
-
-
-/* ================================
-   RESPONSIVE
-================================ */
-
-@media (max-width: 1100px) {
-
-    .sidebar {
-        width: 285px;
-    }
-
-    .main {
-        margin-left: 285px;
-        width: calc(100% - 285px);
-    }
-
-    .suggestions {
-        grid-template-columns: repeat(2, 1fr);
-        max-width: 700px;
-    }
-
-    .model-menu {
-        left: 300px;
-    }
-}
-
-
-@media (max-width: 800px) {
-
-    body {
-        overflow: auto;
-    }
-
-    .sidebar {
-        display: none;
-    }
-
-    .main {
-        margin-left: 0;
-        width: 100%;
-    }
-
-    .chat-area {
-        padding:
-            45px
-            18px
-            180px;
-    }
-
-    .suggestions {
-        grid-template-columns: 1fr;
-    }
-
-    .welcome h1 {
-        font-size: 29px;
-    }
-
-    .composer-container {
-        padding:
-            15px
-            12px
-            12px;
-    }
-
-    .composer-tool {
-        display: none;
-    }
-
-    .top-new-chat {
-        display: none;
-    }
-
-    .model-menu {
-        left: 10px;
-    }
-}
+</html>
