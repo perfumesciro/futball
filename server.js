@@ -1,3 +1,4 @@
+```js
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -8,20 +9,14 @@ import { fileURLToPath } from "url";
 dotenv.config();
 
 const app = express();
-
 const PORT = 3000;
 
-const __filename =
-    fileURLToPath(import.meta.url);
-
-const __dirname =
-    path.dirname(__filename);
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const client = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 });
-
 
 app.use(cors());
 
@@ -29,13 +24,15 @@ app.use(express.json({
     limit: "10mb"
 }));
 
+/* =========================================================
+   ARCHIVOS DEL SITIO
+========================================================= */
 
-app.use(
-    express.static(
-        path.join(__dirname)
-    )
-);
+app.use(express.static(__dirname));
 
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "index.html"));
+});
 
 /* =========================================================
    CHAT
@@ -52,7 +49,6 @@ app.post("/api/chat", async (req, res) => {
             history
         } = req.body;
 
-
         if (!message) {
 
             return res.status(400).json({
@@ -61,20 +57,11 @@ app.post("/api/chat", async (req, res) => {
 
         }
 
-
-        /*
-           Convertimos el historial de NOVA
-           al formato que necesita el modelo.
-        */
-
         const input = [];
-
 
         if (Array.isArray(history)) {
 
-            for (
-                const item of history
-            ) {
+            for (const item of history) {
 
                 if (
                     item.role !== "user" &&
@@ -83,9 +70,7 @@ app.post("/api/chat", async (req, res) => {
                     continue;
                 }
 
-
                 input.push({
-
                     role: item.role,
 
                     content: [
@@ -95,46 +80,27 @@ app.post("/api/chat", async (req, res) => {
                                     ? "input_text"
                                     : "output_text",
 
-                            text:
-                                String(
-                                    item.content
-                                )
+                            text: String(item.content)
                         }
                     ]
-
                 });
 
             }
 
         }
 
-
-        /*
-           Mensaje actual
-        */
-
         input.push({
-
             role: "user",
 
             content: [
                 {
                     type: "input_text",
-
                     text: message
                 }
             ]
-
         });
 
-
         const tools = [];
-
-
-        /*
-           SOLO agregamos búsqueda
-           cuando el usuario la activa.
-        */
 
         if (web) {
 
@@ -143,11 +109,6 @@ app.post("/api/chat", async (req, res) => {
             });
 
         }
-
-
-        /*
-           Instrucciones de personalidad
-        */
 
         const instructions = `
 
@@ -178,80 +139,47 @@ El usuario quiere una experiencia parecida
 a los asistentes modernos, pero con una conversación
 natural y humana.
 
-        `;
+`;
 
-
-        /*
-           Elegimos modelo de backend.
-
-           Por ahora NOVA 1.0 y NOVA Fast
-           utilizan el mismo modelo real.
-        */
-
-        let realModel =
-            "gpt-5.6-luna";
-
+        let realModel = "gpt-5.6-luna";
 
         if (model === "NOVA Pro") {
-
-            realModel =
-                "gpt-5.6-sol";
-
+            realModel = "gpt-5.6-sol";
         }
 
+        const response = await client.responses.create({
 
-        const response =
-            await client.responses.create({
+            model: realModel,
 
-                model: realModel,
+            instructions,
 
-                instructions,
+            input,
 
-                input,
+            tools,
 
-                tools,
+            store: false
 
-                store: false
-
-            });
-
+        });
 
         const text =
             response.output_text ||
             "No pude generar una respuesta.";
 
-
-        /*
-           Fuentes encontradas por web search
-        */
-
         const sources = [];
 
+        if (Array.isArray(response.output)) {
 
-        if (
-            Array.isArray(
-                response.output
-            )
-        ) {
-
-            for (
-                const item of response.output
-            ) {
+            for (const item of response.output) {
 
                 if (
-                    item.type ===
-                    "web_search_call"
+                    item.type === "web_search_call"
                 ) {
 
-                    const action =
-                        item.action;
-
+                    const action = item.action;
 
                     if (
                         action &&
-                        Array.isArray(
-                            action.sources
-                        )
+                        Array.isArray(action.sources)
                     ) {
 
                         for (
@@ -263,8 +191,7 @@ natural y humana.
                                 source.url &&
                                 !sources.some(
                                     s =>
-                                        s.url ===
-                                        source.url
+                                        s.url === source.url
                                 )
                             ) {
 
@@ -291,15 +218,10 @@ natural y humana.
 
         }
 
-
         res.json({
-
             text,
-
             sources
-
         });
-
 
     } catch (error) {
 
@@ -307,7 +229,6 @@ natural y humana.
             "NOVA ERROR:",
             error
         );
-
 
         res.status(500).json({
 
@@ -319,7 +240,6 @@ natural y humana.
     }
 
 });
-
 
 /* =========================================================
    SERVIDOR
@@ -335,3 +255,4 @@ app.listen(
 
     }
 );
+```
