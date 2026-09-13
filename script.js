@@ -1,1436 +1,1083 @@
 /* =========================================================
-   NOVA AI
-   Frontend
-========================================================= */
+   NOVA AI - SCRIPT PRINCIPAL
+   ========================================================= */
 
-const state = {
-    currentChat: null,
-    webEnabled: false,
-    currentModel: "NOVA 1.0",
-    chats: JSON.parse(localStorage.getItem("nova_chats") || "[]"),
-    files: JSON.parse(localStorage.getItem("nova_files") || "[]"),
-    darkMode: true
-};
-
-
-/* =========================================================
-   ELEMENTOS
-========================================================= */
-
-const messages = document.getElementById("messages");
-const messageInput = document.getElementById("messageInput");
-const sendButton = document.getElementById("sendButton");
-
-const welcome = document.getElementById("welcome");
-const suggestions = document.getElementById("suggestions");
-
-const recentChats = document.getElementById("recentChats");
-
-const webButton = document.getElementById("webButton");
-const webStatus = document.getElementById("webStatus");
-
-const fileInput = document.getElementById("fileInput");
-
-const modelSelector = document.getElementById("modelSelector");
-const modelMenu = document.getElementById("modelMenu");
-const currentModel = document.getElementById("currentModel");
-
-const searchOverlay = document.getElementById("searchOverlay");
-const settingsOverlay = document.getElementById("settingsOverlay");
-const libraryOverlay = document.getElementById("libraryOverlay");
-
-const searchResults = document.getElementById("searchResults");
-
-const themeButton = document.getElementById("themeButton");
-
-const sidebar = document.querySelector(".sidebar");
+let modoActual = "normal";
+let chats = [];
+let chatActual = null;
 
 
 /* =========================================================
    INICIO
-========================================================= */
+   ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    renderRecentChats();
+    cargarChats();
 
-    renderLibrary();
+    if (chats.length > 0) {
+        chatActual = chats[0];
+    } else {
+        crearChat();
+    }
 
-    loadSettings();
-
-    setupEvents();
+    actualizarHistorial();
 
 });
 
 
 /* =========================================================
-   EVENTOS
-========================================================= */
+   NUEVO CHAT
+   ========================================================= */
 
-function setupEvents() {
+function nuevoChat() {
 
-    /* NUEVO CHAT */
+    crearChat();
 
-    document
-        .getElementById("newChatButton")
-        .addEventListener("click", newChat);
+    mostrarInicio();
 
-    document
-        .getElementById("topNewChat")
-        .addEventListener("click", newChat);
+    actualizarHistorial();
 
+}
 
-    /* ENVIAR */
 
-    sendButton.addEventListener("click", sendMessage);
+function crearChat() {
 
+    const nuevo = {
+        id: Date.now(),
+        titulo: "Nuevo chat",
+        mensajes: []
+    };
 
-    /* ENTER */
+    chats.unshift(nuevo);
 
-    messageInput.addEventListener("keydown", (event) => {
+    chatActual = nuevo;
 
-        const enterSend =
-            document.getElementById("enterSend")?.checked ?? true;
-
-        if (
-            event.key === "Enter" &&
-            !event.shiftKey &&
-            enterSend
-        ) {
-
-            event.preventDefault();
-
-            sendMessage();
-        }
-
-    });
-
-
-    /* AUTO RESIZE */
-
-    messageInput.addEventListener("input", () => {
-
-        messageInput.style.height = "auto";
-
-        messageInput.style.height =
-            Math.min(messageInput.scrollHeight, 160) + "px";
-
-    });
-
-
-    /* WEB */
-
-    webButton.addEventListener("click", toggleWeb);
-
-
-    /* FILE */
-
-    document
-        .getElementById("attachButton")
-        .addEventListener("click", () => {
-            fileInput.click();
-        });
-
-    document
-        .getElementById("fileButton")
-        .addEventListener("click", () => {
-            fileInput.click();
-        });
-
-    fileInput.addEventListener("change", handleFiles);
-
-
-    /* MODELO */
-
-    modelSelector.addEventListener("click", (event) => {
-
-        event.stopPropagation();
-
-        modelMenu.classList.toggle("show");
-
-    });
-
-
-    document
-        .querySelectorAll(".model-option")
-        .forEach(button => {
-
-            button.addEventListener("click", () => {
-
-                state.currentModel =
-                    button.dataset.model;
-
-                currentModel.textContent =
-                    state.currentModel;
-
-                modelMenu.classList.remove("show");
-
-            });
-
-        });
-
-
-    /* CERRAR MENUS */
-
-    document.addEventListener("click", (event) => {
-
-        if (
-            !modelMenu.contains(event.target) &&
-            !modelSelector.contains(event.target)
-        ) {
-
-            modelMenu.classList.remove("show");
-
-        }
-
-    });
-
-
-    /* TEMA */
-
-    themeButton.addEventListener("click", toggleTheme);
-
-
-    /* BUSCAR */
-
-    document
-        .getElementById("topSearchButton")
-        .addEventListener("click", openSearch);
-
-
-    /* SETTINGS */
-
-    document
-        .querySelector('[data-section="settings"]')
-        .addEventListener("click", openSettings);
-
-
-    /* LIBRARY */
-
-    document
-        .querySelector('[data-section="library"]')
-        .addEventListener("click", openLibrary);
-
-
-    /* CHATS */
-
-    document
-        .querySelector('[data-section="chats"]')
-        .addEventListener("click", () => {
-
-            closeAllOverlays();
-
-        });
-
-
-    /* BUSCAR */
-
-    document
-        .querySelector('[data-section="search"]')
-        .addEventListener("click", openSearch);
-
-
-    /* SUGERENCIAS */
-
-    document
-        .querySelectorAll(".suggestion-card")
-        .forEach(card => {
-
-            card.addEventListener("click", () => {
-
-                messageInput.value =
-                    card.dataset.prompt;
-
-                sendMessage();
-
-            });
-
-        });
-
-
-    /* MODALES */
-
-    document
-        .querySelectorAll("[data-close]")
-        .forEach(button => {
-
-            button.addEventListener("click", () => {
-
-                const id =
-                    button.dataset.close;
-
-                document
-                    .getElementById(id)
-                    .classList.remove("show");
-
-            });
-
-        });
-
-
-    /* BUSQUEDA DE CHATS */
-
-    document
-        .getElementById("conversationSearch")
-        .addEventListener("input", event => {
-
-            searchConversations(event.target.value);
-
-        });
-
-
-    /* CONFIG */
-
-    document
-        .getElementById("darkMode")
-        .addEventListener("change", event => {
-
-            state.darkMode = event.target.checked;
-
-            applyTheme();
-
-            saveSettings();
-
-        });
-
-
-    document
-        .getElementById("animationsEnabled")
-        .addEventListener("change", saveSettings);
-
-
-    document
-        .getElementById("enterSend")
-        .addEventListener("change", saveSettings);
-
-
-    /* MOBILE */
-
-    document
-        .getElementById("mobileMenu")
-        .addEventListener("click", () => {
-
-            sidebar.classList.toggle("mobile-open");
-
-        });
-
-
-    /* PERFIL */
-
-    document
-        .getElementById("profileButton")
-        .addEventListener("click", () => {
-
-            alert(
-                "Perfil local de NOVA AI.\n\n" +
-                "Más adelante podés agregar inicio de sesión."
-            );
-
-        });
+    guardarChats();
 
 }
 
 
 /* =========================================================
-   NUEVO CHAT
-========================================================= */
+   GUARDAR CHATS
+   ========================================================= */
 
-function newChat() {
+function guardarChats() {
 
-    state.currentChat = {
-        id: Date.now(),
-        title: "Nueva conversación",
-        messages: [],
-        created: Date.now()
-    };
+    localStorage.setItem(
+        "nova_chats",
+        JSON.stringify(chats)
+    );
 
-    messages.innerHTML = "";
+}
 
-    welcome.style.display = "block";
-    suggestions.style.display = "grid";
 
-    messageInput.value = "";
+function cargarChats() {
 
-    renderRecentChats();
+    try {
+
+        const guardados = localStorage.getItem("nova_chats");
+
+        if (guardados) {
+
+            chats = JSON.parse(guardados);
+
+        }
+
+    } catch (error) {
+
+        console.log("No se pudieron cargar los chats.");
+
+        chats = [];
+
+    }
+
+}
+
+
+/* =========================================================
+   HISTORIAL
+   ========================================================= */
+
+function actualizarHistorial() {
+
+    const lista = document.getElementById("listaChats");
+
+    if (!lista) return;
+
+    lista.innerHTML = "";
+
+    chats.forEach(chat => {
+
+        const boton = document.createElement("button");
+
+        boton.className = "chat-historial";
+
+        boton.innerText =
+            chat.titulo || "Nuevo chat";
+
+        boton.onclick = () => {
+
+            abrirChat(chat.id);
+
+        };
+
+        lista.appendChild(boton);
+
+    });
+
+}
+
+
+function abrirChat(id) {
+
+    const encontrado = chats.find(chat => chat.id === id);
+
+    if (!encontrado) return;
+
+    chatActual = encontrado;
+
+    mostrarChat();
+
+}
+
+
+/* =========================================================
+   MOSTRAR INICIO
+   ========================================================= */
+
+function mostrarInicio() {
+
+    document.getElementById("inicio")?.classList.remove("oculto");
+
+    document.getElementById("chat")?.classList.add("oculto");
+
+    document.getElementById("herramientas")?.classList.add("oculto");
+
+}
+
+
+/* =========================================================
+   MOSTRAR CHAT
+   ========================================================= */
+
+function mostrarChat() {
+
+    const inicio = document.getElementById("inicio");
+    const chat = document.getElementById("chat");
+    const herramientas = document.getElementById("herramientas");
+
+    inicio?.classList.add("oculto");
+
+    herramientas?.classList.add("oculto");
+
+    chat?.classList.remove("oculto");
+
+    renderizarMensajes();
+
+}
+
+
+/* =========================================================
+   RENDERIZAR MENSAJES
+   ========================================================= */
+
+function renderizarMensajes() {
+
+    const chat = document.getElementById("chat");
+
+    if (!chat || !chatActual) return;
+
+    chat.innerHTML = "";
+
+    chatActual.mensajes.forEach(mensaje => {
+
+        crearMensajeVisual(
+            mensaje.texto,
+            mensaje.tipo
+        );
+
+    });
+
+    chat.scrollTop = chat.scrollHeight;
+
+}
+
+
+function crearMensajeVisual(texto, tipo) {
+
+    const chat = document.getElementById("chat");
+
+    const mensaje = document.createElement("div");
+
+    if (tipo === "usuario") {
+
+        mensaje.className =
+            "mensaje mensaje-usuario";
+
+        mensaje.innerHTML = `
+            <div class="mensaje-texto">
+                ${escaparHTML(texto)}
+            </div>
+        `;
+
+    } else {
+
+        mensaje.className =
+            "mensaje mensaje-ia";
+
+        mensaje.innerHTML = `
+            <div class="avatar">N</div>
+
+            <div class="mensaje-texto">
+                ${formatearRespuesta(texto)}
+            </div>
+        `;
+
+    }
+
+    chat.appendChild(mensaje);
 
 }
 
 
 /* =========================================================
    ENVIAR MENSAJE
-========================================================= */
+   ========================================================= */
 
-async function sendMessage() {
+async function enviar() {
 
-    const text =
-        messageInput.value.trim();
+    const input = document.getElementById("input");
+    const boton = document.getElementById("botonEnviar");
 
-    if (!text) return;
+    if (!input) return;
 
+    const mensaje = input.value.trim();
 
-    if (!state.currentChat) {
+    if (!mensaje) return;
 
-        state.currentChat = {
-            id: Date.now(),
-            title: createTitle(text),
-            messages: [],
-            created: Date.now()
-        };
+    if (!chatActual) {
+
+        crearChat();
 
     }
 
+
+    /* Cambiar título del chat */
 
     if (
-        state.currentChat.title ===
-        "Nueva conversación"
+        !chatActual.mensajes.length &&
+        chatActual.titulo === "Nuevo chat"
     ) {
 
-        state.currentChat.title =
-            createTitle(text);
+        chatActual.titulo =
+            mensaje.substring(0, 30);
 
     }
 
 
-    welcome.style.display = "none";
+    /* Guardar mensaje */
 
-    suggestions.style.display = "none";
+    chatActual.mensajes.push({
 
+        tipo: "usuario",
 
-    addMessage(
-        "user",
-        text
-    );
+        texto: mensaje
 
-
-    state.currentChat.messages.push({
-        role: "user",
-        content: text
     });
 
 
-    messageInput.value = "";
+    guardarChats();
 
-    messageInput.style.height = "auto";
+    actualizarHistorial();
 
-    saveChats();
-
-    renderRecentChats();
+    mostrarChat();
 
 
-    const typing = showTyping();
+    input.value = "";
+
+    input.style.height = "42px";
+
+
+    boton.disabled = true;
+
+
+    /* Mostrar indicador */
+
+    const indicador = document.createElement("div");
+
+    indicador.className = "mensaje mensaje-ia";
+
+    indicador.id = "indicador";
+
+    indicador.innerHTML = `
+        <div class="avatar">N</div>
+
+        <div class="mensaje-texto">
+
+            <div class="pensando">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+                NOVA está pensando...
+
+            </div>
+
+        </div>
+    `;
+
+    document.getElementById("chat")
+        .appendChild(indicador);
+
+
+    document.getElementById("chat")
+        .scrollTop = 999999;
 
 
     try {
 
-        const response =
-            await askNOVA(text);
+        const respuesta = await fetch("/chat", {
 
-        typing.remove();
-
-        addAIMessage(response);
-
-    } catch (error) {
-
-        typing.remove();
-
-        addAIMessage({
-            text:
-                "No pude conectarme con el servidor de NOVA.\n\n" +
-                "Si todavía no configuraste `server.js`, " +
-                "podés hacerlo siguiendo los pasos que te paso después del código.",
-            sources: []
-        });
-
-        console.error(error);
-
-    }
-
-}
-
-
-/* =========================================================
-   LLAMAR AL BACKEND
-========================================================= */
-
-async function askNOVA(text) {
-
-    const response = await fetch(
-        "/api/chat",
-        {
             method: "POST",
 
             headers: {
-                "Content-Type": "application/json"
+
+                "Content-Type":
+                    "application/json"
+
             },
 
             body: JSON.stringify({
 
-                message: text,
+                message: mensaje,
 
-                model: state.currentModel,
-
-                web: state.webEnabled,
-
-                history:
-                    state.currentChat.messages.slice(-20)
+                mode: modoActual
 
             })
 
+        });
+
+
+        if (!respuesta.ok) {
+
+            throw new Error(
+                "Error del servidor"
+            );
+
         }
-    );
 
 
-    if (!response.ok) {
+        const datos =
+            await respuesta.json();
 
-        throw new Error(
-            "Error del servidor"
-        );
+
+        document.getElementById(
+            "indicador"
+        )?.remove();
+
+
+        const respuestaTexto =
+            datos.reply ||
+            "NOVA no recibió una respuesta.";
+
+
+        chatActual.mensajes.push({
+
+            tipo: "ia",
+
+            texto: respuestaTexto
+
+        });
+
+
+        guardarChats();
+
+        renderizarMensajes();
+
+
+    } catch (error) {
+
+        document.getElementById(
+            "indicador"
+        )?.remove();
+
+
+        chatActual.mensajes.push({
+
+            tipo: "ia",
+
+            texto:
+                "No pude conectarme con NOVA. " +
+                "El mensaje quedó guardado y podés intentarlo nuevamente."
+
+        });
+
+
+        guardarChats();
+
+        renderizarMensajes();
 
     }
 
 
-    return await response.json();
+    boton.disabled = false;
+
+    input.focus();
 
 }
 
 
 /* =========================================================
-   AGREGAR MENSAJE
-========================================================= */
+   ENTER
+   ========================================================= */
 
-function addMessage(role, text) {
-
-    const wrapper =
-        document.createElement("div");
-
-    wrapper.className =
-        `message ${role}`;
-
-
-    if (role === "ai") {
-
-        wrapper.innerHTML = `
-
-            <div class="message-avatar">
-                N
-            </div>
-
-            <div>
-
-                <div class="message-bubble">
-                    ${formatText(text)}
-                </div>
-
-            </div>
-
-        `;
-
-    } else {
-
-        wrapper.innerHTML = `
-
-            <div class="message-bubble">
-                ${formatText(text)}
-            </div>
-
-        `;
-
-    }
-
-
-    messages.appendChild(wrapper);
-
-    scrollToBottom();
-
-    return wrapper;
-
-}
-
-
-/* =========================================================
-   MENSAJE DE IA
-========================================================= */
-
-function addAIMessage(data) {
-
-    const wrapper =
-        document.createElement("div");
-
-    wrapper.className =
-        "message ai";
-
-
-    let sourcesHTML = "";
-
+function manejarEnter(event) {
 
     if (
-        data.sources &&
-        data.sources.length
+        event.key === "Enter" &&
+        !event.shiftKey
     ) {
 
-        sourcesHTML = `
+        event.preventDefault();
 
-            <div class="sources">
-
-                <div class="sources-title">
-                    Fuentes consultadas
-                </div>
-
-                ${data.sources
-                    .map(source => {
-
-                        const title =
-                            escapeHTML(
-                                source.title ||
-                                source.url
-                            );
-
-                        const url =
-                            escapeAttribute(
-                                source.url
-                            );
-
-                        return `
-                            <a
-                                class="source-link"
-                                href="${url}"
-                                target="_blank"
-                                rel="noopener noreferrer">
-
-                                ${title}
-
-                            </a>
-                        `;
-
-                    })
-                    .join("")
-                }
-
-            </div>
-
-        `;
+        enviar();
 
     }
 
-
-    wrapper.innerHTML = `
-
-        <div class="message-avatar">
-            N
-        </div>
-
-        <div>
-
-            <div class="message-bubble">
-
-                ${formatText(
-                    data.text || ""
-                )}
-
-                ${sourcesHTML}
-
-            </div>
+}
 
 
-            <div class="message-tools">
+/* =========================================================
+   SUGERENCIAS
+   ========================================================= */
 
-                <button
-                    class="message-tool copy-button">
-                    Copiar
-                </button>
+function usarSugerencia(texto) {
 
-                <button
-                    class="message-tool regenerate-button">
-                    Regenerar
-                </button>
+    const input =
+        document.getElementById("input");
 
-            </div>
+    mostrarChat();
 
-        </div>
+    input.value = texto;
 
-    `;
-
-
-    messages.appendChild(wrapper);
-
-
-    /* COPIAR */
-
-    wrapper
-        .querySelector(".copy-button")
-        .addEventListener("click", () => {
-
-            navigator.clipboard.writeText(
-                data.text || ""
-            );
-
-        });
-
-
-    /* REGENERAR */
-
-    wrapper
-        .querySelector(".regenerate-button")
-        .addEventListener("click", () => {
-
-            const lastUserMessage =
-                [...state.currentChat.messages]
-                    .reverse()
-                    .find(
-                        item =>
-                            item.role === "user"
-                    );
-
-            if (!lastUserMessage) return;
-
-            messageInput.value =
-                lastUserMessage.content;
-
-            sendMessage();
-
-        });
-
-
-    state.currentChat.messages.push({
-
-        role: "assistant",
-
-        content:
-            data.text || ""
-
-    });
-
-
-    saveChats();
-
-    scrollToBottom();
+    input.focus();
 
 }
 
 
 /* =========================================================
-   TYPING
-========================================================= */
+   MODOS
+   ========================================================= */
 
-function showTyping() {
+function cambiarModo(modo, boton) {
 
-    const wrapper =
-        document.createElement("div");
-
-    wrapper.className =
-        "message ai";
-
-
-    wrapper.innerHTML = `
-
-        <div class="message-avatar">
-            N
-        </div>
-
-        <div class="typing">
-
-            <span></span>
-            <span></span>
-            <span></span>
-
-        </div>
-
-    `;
-
-
-    messages.appendChild(wrapper);
-
-    scrollToBottom();
-
-    return wrapper;
-
-}
-
-
-/* =========================================================
-   WEB
-========================================================= */
-
-function toggleWeb() {
-
-    state.webEnabled =
-        !state.webEnabled;
-
-
-    webButton.classList.toggle(
-        "active",
-        state.webEnabled
-    );
-
-
-    webStatus.textContent =
-        state.webEnabled
-            ? "Web activada"
-            : "Web desactivada";
-
-
-    webStatus.classList.toggle(
-        "active",
-        state.webEnabled
-    );
-
-}
-
-
-/* =========================================================
-   ARCHIVOS
-========================================================= */
-
-function handleFiles(event) {
-
-    const files =
-        [...event.target.files];
-
-
-    if (!files.length) return;
-
-
-    files.forEach(file => {
-
-        const item = {
-
-            id: Date.now() + Math.random(),
-
-            name: file.name,
-
-            type: file.type,
-
-            size: file.size,
-
-            date: Date.now()
-
-        };
-
-
-        state.files.push(item);
-
-    });
-
-
-    localStorage.setItem(
-        "nova_files",
-        JSON.stringify(state.files)
-    );
-
-
-    renderLibrary();
-
-
-    alert(
-        `${files.length} archivo(s) agregado(s) a la biblioteca.`
-    );
-
-
-    fileInput.value = "";
-
-}
-
-
-/* =========================================================
-   BIBLIOTECA
-========================================================= */
-
-function renderLibrary() {
-
-    const container =
-        document.getElementById(
-            "libraryContent"
-        );
-
-
-    if (!state.files.length) {
-
-        container.innerHTML = `
-
-            <div class="empty-state">
-
-                <div>▣</div>
-
-                <h3>
-                    No hay archivos todavía
-                </h3>
-
-                <p>
-                    Los archivos que adjuntes aparecerán aquí.
-                </p>
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    container.innerHTML =
-        state.files
-            .map(file => `
-
-                <div class="search-result">
-
-                    <strong>
-                        ${escapeHTML(file.name)}
-                    </strong>
-
-                    <span>
-                        ${formatBytes(file.size)}
-                    </span>
-
-                </div>
-
-            `)
-            .join("");
-
-}
-
-
-/* =========================================================
-   CHATS
-========================================================= */
-
-function saveChats() {
-
-    if (!state.currentChat) return;
-
-
-    const index =
-        state.chats.findIndex(
-            chat =>
-                chat.id ===
-                state.currentChat.id
-        );
-
-
-    if (index === -1) {
-
-        state.chats.unshift(
-            state.currentChat
-        );
-
-    } else {
-
-        state.chats[index] =
-            state.currentChat;
-
-    }
-
-
-    localStorage.setItem(
-        "nova_chats",
-        JSON.stringify(state.chats)
-    );
-
-}
-
-
-/* =========================================================
-   CHATS RECIENTES
-========================================================= */
-
-function renderRecentChats() {
-
-    recentChats.innerHTML = "";
-
-
-    state.chats
-        .slice(0, 30)
-        .forEach(chat => {
-
-            const button =
-                document.createElement("button");
-
-            button.className =
-                "recent-chat";
-
-            button.textContent =
-                chat.title;
-
-
-            button.addEventListener(
-                "click",
-                () => loadChat(chat.id)
-            );
-
-
-            recentChats.appendChild(
-                button
-            );
-
-        });
-
-}
-
-
-/* =========================================================
-   CARGAR CHAT
-========================================================= */
-
-function loadChat(id) {
-
-    const chat =
-        state.chats.find(
-            item => item.id === id
-        );
-
-
-    if (!chat) return;
-
-
-    state.currentChat = chat;
-
-
-    messages.innerHTML = "";
-
-    welcome.style.display = "none";
-    suggestions.style.display = "none";
-
-
-    chat.messages.forEach(message => {
-
-        if (message.role === "user") {
-
-            addMessage(
-                "user",
-                message.content
-            );
-
-        } else {
-
-            addAIMessage({
-                text: message.content,
-                sources: []
-            });
-
-        }
-
-    });
-
-
-    sidebar.classList.remove(
-        "mobile-open"
-    );
-
-}
-
-
-/* =========================================================
-   BUSCAR CONVERSACIONES
-========================================================= */
-
-function openSearch() {
-
-    closeAllOverlays();
-
-    searchOverlay.classList.add("show");
+    modoActual = modo;
 
     document
-        .getElementById("conversationSearch")
-        .focus();
+        .querySelectorAll(".modo")
+        .forEach(elemento => {
 
-    searchConversations("");
-
-}
-
-
-function searchConversations(query) {
-
-    const q =
-        query.toLowerCase().trim();
-
-
-    const results =
-        state.chats.filter(chat => {
-
-            return (
-                chat.title
-                    .toLowerCase()
-                    .includes(q)
-                ||
-                chat.messages.some(
-                    message =>
-                        message.content
-                            .toLowerCase()
-                            .includes(q)
-                )
+            elemento.classList.remove(
+                "activo"
             );
 
         });
 
 
-    if (!results.length) {
-
-        searchResults.innerHTML = `
-
-            <div class="empty-state">
-
-                <div>⌕</div>
-
-                <h3>
-                    No encontré conversaciones
-                </h3>
-
-            </div>
-
-        `;
-
-        return;
-
-    }
+    boton.classList.add("activo");
 
 
-    searchResults.innerHTML =
-        results.map(chat => `
-
-            <div
-                class="search-result"
-                data-chat-id="${chat.id}">
-
-                <strong>
-                    ${escapeHTML(chat.title)}
-                </strong>
-
-                <span>
-                    ${chat.messages.length} mensajes
-                </span>
-
-            </div>
-
-        `)
-        .join("");
+    const input =
+        document.getElementById("input");
 
 
-    searchResults
-        .querySelectorAll(".search-result")
-        .forEach(result => {
+    const textos = {
 
-            result.addEventListener(
-                "click",
-                () => {
+        normal:
+            "Escribí un mensaje para NOVA...",
 
-                    loadChat(
-                        Number(
-                            result.dataset.chatId
-                        )
-                    );
+        tutor:
+            "¿Qué querés aprender?",
 
-                    closeAllOverlays();
+        code:
+            "Pegá tu código o explicame el problema...",
 
-                }
-            );
-
-        });
-
-}
-
-
-/* =========================================================
-   SETTINGS
-========================================================= */
-
-function openSettings() {
-
-    closeAllOverlays();
-
-    settingsOverlay.classList.add(
-        "show"
-    );
-
-}
-
-
-function saveSettings() {
-
-    const settings = {
-
-        enterSend:
-            document
-                .getElementById("enterSend")
-                .checked,
-
-        animations:
-            document
-                .getElementById("animationsEnabled")
-                .checked,
-
-        darkMode:
-            document
-                .getElementById("darkMode")
-                .checked
+        ideas:
+            "¿Qué querés crear?"
 
     };
 
 
-    localStorage.setItem(
-        "nova_settings",
-        JSON.stringify(settings)
-    );
+    input.placeholder =
+        textos[modo] ||
+        textos.normal;
 
 }
 
 
-function loadSettings() {
+/* =========================================================
+   HERRAMIENTAS
+   ========================================================= */
 
-    const saved =
-        JSON.parse(
-            localStorage.getItem(
-                "nova_settings"
-            ) || "null"
+function mostrarHerramientas() {
+
+    document
+        .getElementById("inicio")
+        ?.classList.add("oculto");
+
+    document
+        .getElementById("chat")
+        ?.classList.add("oculto");
+
+    document
+        .getElementById("herramientas")
+        ?.classList.remove("oculto");
+
+}
+
+
+function abrirHerramienta(tipo) {
+
+    const contenido =
+        document.getElementById(
+            "modalContenido"
         );
 
-
-    if (!saved) return;
-
-
-    document
-        .getElementById("enterSend")
-        .checked =
-        saved.enterSend;
+    if (!contenido) return;
 
 
-    document
-        .getElementById("animationsEnabled")
-        .checked =
-        saved.animations;
+    if (tipo === "calculadora") {
 
+        contenido.innerHTML = `
 
-    document
-        .getElementById("darkMode")
-        .checked =
-        saved.darkMode;
+            <h2>🧮 Calculadora</h2>
 
+            <input
+                id="calcInput"
+                class="herramienta-input"
+                placeholder="Ej: 25 * 4 + 10"
+            >
 
-    state.darkMode =
-        saved.darkMode;
+            <button
+                class="herramienta-boton"
+                onclick="calcular()"
+            >
+                Calcular
+            </button>
 
+            <div id="resultadoCalc"></div>
 
-    applyTheme();
-
-}
-
-
-/* =========================================================
-   TEMA
-========================================================= */
-
-function toggleTheme() {
-
-    state.darkMode =
-        !state.darkMode;
-
-
-    document
-        .getElementById("darkMode")
-        .checked =
-        state.darkMode;
-
-
-    applyTheme();
-
-    saveSettings();
-
-}
-
-
-function applyTheme() {
-
-    document.body.classList.toggle(
-        "light",
-        !state.darkMode
-    );
-
-
-    themeButton.textContent =
-        state.darkMode
-            ? "☾"
-            : "☀";
-
-}
-
-
-/* =========================================================
-   LIBRARY MODAL
-========================================================= */
-
-function openLibrary() {
-
-    closeAllOverlays();
-
-    renderLibrary();
-
-    libraryOverlay.classList.add(
-        "show"
-    );
-
-}
-
-
-/* =========================================================
-   OVERLAYS
-========================================================= */
-
-function closeAllOverlays() {
-
-    document
-        .querySelectorAll(".overlay")
-        .forEach(overlay => {
-
-            overlay.classList.remove(
-                "show"
-            );
-
-        });
-
-}
-
-
-/* =========================================================
-   TITULO
-========================================================= */
-
-function createTitle(text) {
-
-    let title =
-        text.trim();
-
-
-    if (title.length > 35) {
-
-        title =
-            title.substring(0, 35) +
-            "...";
+        `;
 
     }
 
 
-    return title;
+    if (tipo === "estudio") {
+
+        contenido.innerHTML = `
+
+            <h2>📚 NOVA Tutor</h2>
+
+            <p>
+                NOVA puede explicarte un tema
+                paso a paso y adaptarse a tu nivel.
+            </p>
+
+            <button
+                class="herramienta-boton"
+                onclick="usarHerramientaEnChat(
+                    'Quiero estudiar un tema. Explicámelo paso a paso y haceme preguntas para comprobar si entendí.'
+                )"
+            >
+                Empezar a estudiar
+            </button>
+
+        `;
+
+    }
+
+
+    if (tipo === "ideas") {
+
+        contenido.innerHTML = `
+
+            <h2>💡 NOVA Ideas</h2>
+
+            <p>
+                Decime qué querés crear y NOVA
+                puede ayudarte a convertirlo
+                en un proyecto real.
+            </p>
+
+            <button
+                class="herramienta-boton"
+                onclick="usarHerramientaEnChat(
+                    'Dame 10 ideas originales de proyectos que pueda crear y explicame cómo empezar cada uno.'
+                )"
+            >
+                Generar ideas
+            </button>
+
+        `;
+
+    }
+
+
+    if (tipo === "codigo") {
+
+        contenido.innerHTML = `
+
+            <h2>💻 NOVA Code</h2>
+
+            <p>
+                NOVA puede ayudarte a encontrar
+                errores y entender tu código.
+            </p>
+
+            <button
+                class="herramienta-boton"
+                onclick="usarHerramientaEnChat(
+                    'Quiero programar. Ayudame a construir mi proyecto paso a paso y explicame cada parte del código.'
+                )"
+            >
+                Abrir NOVA Code
+            </button>
+
+        `;
+
+    }
+
+
+    if (tipo === "planner") {
+
+        contenido.innerHTML = `
+
+            <h2>📅 NOVA Planner</h2>
+
+            <input
+                id="plannerInput"
+                class="herramienta-input"
+                placeholder="¿Qué proyecto querés organizar?"
+            >
+
+            <button
+                class="herramienta-boton"
+                onclick="crearPlan()"
+            >
+                Crear plan
+            </button>
+
+            <div id="planResultado"></div>
+
+        `;
+
+    }
+
+
+    if (tipo === "notas") {
+
+        const notas =
+            localStorage.getItem(
+                "nova_notas"
+            ) || "";
+
+
+        contenido.innerHTML = `
+
+            <h2>📝 Notas</h2>
+
+            <textarea
+                id="notasInput"
+                class="notas"
+                placeholder="Escribí tus notas..."
+            >${escaparHTML(notas)}</textarea>
+
+            <button
+                class="herramienta-boton"
+                onclick="guardarNotas()"
+            >
+                Guardar notas
+            </button>
+
+            <p id="notaEstado"></p>
+
+        `;
+
+    }
+
+
+    document
+        .getElementById("modal")
+        ?.classList.remove("oculto");
 
 }
 
 
 /* =========================================================
-   SCROLL
-========================================================= */
+   CALCULADORA
+   ========================================================= */
 
-function scrollToBottom() {
+function calcular() {
 
-    const chatArea =
+    const input =
         document.getElementById(
-            "chatArea"
+            "calcInput"
+        );
+
+    const resultado =
+        document.getElementById(
+            "resultadoCalc"
         );
 
 
-    setTimeout(() => {
+    try {
 
-        chatArea.scrollTo({
-            top: chatArea.scrollHeight,
-            behavior: "smooth"
-        });
+        const expresion =
+            input.value.trim();
 
-    }, 50);
+
+        if (!expresion) {
+
+            resultado.innerText =
+                "Escribí una operación.";
+
+            return;
+
+        }
+
+
+        /*
+          Permitimos solamente números
+          y operadores matemáticos básicos.
+        */
+
+        if (
+            !/^[0-9+\-*/().%\s]+$/
+                .test(expresion)
+        ) {
+
+            resultado.innerText =
+                "Operación no válida.";
+
+            return;
+
+        }
+
+
+        const valor =
+            Function(
+                `"use strict"; return (${expresion})`
+            )();
+
+
+        resultado.innerText =
+            "Resultado: " + valor;
+
+    } catch {
+
+        resultado.innerText =
+            "No pude realizar el cálculo.";
+
+    }
 
 }
 
 
 /* =========================================================
-   FORMATEAR TEXTO
-========================================================= */
+   PLANNER
+   ========================================================= */
 
-function formatText(text) {
+function crearPlan() {
 
-    if (!text) return "";
+    const input =
+        document.getElementById(
+            "plannerInput"
+        );
+
+    const resultado =
+        document.getElementById(
+            "planResultado"
+        );
 
 
-    let safe =
-        escapeHTML(text);
+    const proyecto =
+        input.value.trim();
 
 
-    /* CODE */
+    if (!proyecto) {
 
-    safe =
-        safe.replace(
+        resultado.innerText =
+            "Escribí un proyecto.";
+
+        return;
+
+    }
+
+
+    resultado.innerHTML = `
+
+        <h3>Plan para: ${escaparHTML(proyecto)}</h3>
+
+        <ol>
+
+            <li>Definir el objetivo.</li>
+
+            <li>Dividir el proyecto en tareas.</li>
+
+            <li>Empezar por la primera tarea.</li>
+
+            <li>Probar lo realizado.</li>
+
+            <li>Corregir errores.</li>
+
+            <li>Mejorar el resultado.</li>
+
+            <li>Finalizar y guardar el proyecto.</li>
+
+        </ol>
+
+    `;
+
+}
+
+
+/* =========================================================
+   NOTAS
+   ========================================================= */
+
+function guardarNotas() {
+
+    const input =
+        document.getElementById(
+            "notasInput"
+        );
+
+    if (!input) return;
+
+
+    localStorage.setItem(
+        "nova_notas",
+        input.value
+    );
+
+
+    const estado =
+        document.getElementById(
+            "notaEstado"
+        );
+
+
+    if (estado) {
+
+        estado.innerText =
+            "✓ Notas guardadas";
+
+    }
+
+}
+
+
+/* =========================================================
+   ABRIR HERRAMIENTA EN CHAT
+   ========================================================= */
+
+function usarHerramientaEnChat(texto) {
+
+    cerrarModal();
+
+    mostrarChat();
+
+    const input =
+        document.getElementById("input");
+
+    input.value = texto;
+
+    input.focus();
+
+}
+
+
+/* =========================================================
+   CONFIGURACIÓN
+   ========================================================= */
+
+function abrirConfiguracion() {
+
+    const contenido =
+        document.getElementById(
+            "modalContenido"
+        );
+
+
+    contenido.innerHTML = `
+
+        <h2>⚙ Configuración</h2>
+
+        <p>
+            Configuración de NOVA AI
+        </p>
+
+        <hr>
+
+        <h3>Conversaciones</h3>
+
+        <button
+            class="herramienta-boton"
+            onclick="borrarTodosLosChats()"
+        >
+            Borrar historial
+        </button>
+
+        <p style="color:#747d8d;font-size:12px;">
+            Esto eliminará las conversaciones
+            guardadas en este navegador.
+        </p>
+
+    `;
+
+
+    document
+        .getElementById("modal")
+        ?.classList.remove("oculto");
+
+}
+
+
+/* =========================================================
+   BORRAR TODOS LOS CHATS
+   ========================================================= */
+
+function borrarTodosLosChats() {
+
+    const confirmar =
+        confirm(
+            "¿Querés borrar todas las conversaciones?"
+        );
+
+
+    if (!confirmar) return;
+
+
+    chats = [];
+
+    localStorage.removeItem(
+        "nova_chats"
+    );
+
+
+    crearChat();
+
+    actualizarHistorial();
+
+    mostrarInicio();
+
+    cerrarModal();
+
+}
+
+
+/* =========================================================
+   CERRAR MODAL
+   ========================================================= */
+
+function cerrarModal() {
+
+    document
+        .getElementById("modal")
+        ?.classList.add("oculto");
+
+}
+
+
+/* =========================================================
+   FORMATEAR RESPUESTAS
+   ========================================================= */
+
+function formatearRespuesta(texto) {
+
+    let resultado =
+        escaparHTML(texto);
+
+
+    /*
+      Código entre ```
+    */
+
+    resultado =
+        resultado.replace(
             /```([\s\S]*?)```/g,
             "<pre><code>$1</code></pre>"
         );
 
 
-    /* NEGRITA */
+    /*
+      Negrita
+    */
 
-    safe =
-        safe.replace(
+    resultado =
+        resultado.replace(
             /\*\*(.*?)\*\*/g,
             "<strong>$1</strong>"
         );
 
 
-    /* SALTOS */
+    /*
+      Saltos de línea
+    */
 
-    safe =
-        safe.replace(
+    resultado =
+        resultado.replace(
             /\n/g,
             "<br>"
         );
 
 
-    return safe;
+    return resultado;
 
 }
 
 
 /* =========================================================
    SEGURIDAD HTML
-========================================================= */
+   ========================================================= */
 
-function escapeHTML(value) {
+function escaparHTML(texto) {
 
-    return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+    const div =
+        document.createElement("div");
 
-}
+    div.textContent =
+        texto;
 
-
-function escapeAttribute(value) {
-
-    return escapeHTML(value);
+    return div.innerHTML;
 
 }
 
 
 /* =========================================================
-   TAMAÑO ARCHIVO
-========================================================= */
+   AUTO AJUSTAR TEXTAREA
+   ========================================================= */
 
-function formatBytes(bytes) {
+document.addEventListener(
+    "input",
+    event => {
 
-    if (!bytes) return "0 B";
-
-
-    const units =
-        ["B", "KB", "MB", "GB"];
-
-
-    const index =
-        Math.floor(
-            Math.log(bytes) /
-            Math.log(1024)
-        );
+        if (
+            event.target.id !== "input"
+        ) return;
 
 
-    return (
-        (bytes /
-            Math.pow(1024, index)
-        ).toFixed(1)
-        + " "
-        + units[index]
-    );
+        event.target.style.height =
+            "42px";
 
-}
+
+        event.target.style.height =
+            Math.min(
+                event.target.scrollHeight,
+                180
+            ) + "px";
+
+    }
+);
