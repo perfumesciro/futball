@@ -1,508 +1,1055 @@
-<!DOCTYPE html>
-<html lang="es">
+/* =========================================================
+   NOVA AI - ESTILOS PRINCIPALES
+   ========================================================= */
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+* {
+  box-sizing: border-box;
+}
 
-    <title>NOVA AI</title>
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
 
-    <link rel="stylesheet" href="style.css">
-</head>
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #0b0d12;
+  color: #f5f7fb;
+  overflow: hidden;
+}
 
-<body>
+/* =========================================================
+   ESTRUCTURA
+   ========================================================= */
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
 
-        <div class="brand">
-            <div class="brand-logo">N</div>
+  width: 255px;
+  height: 100vh;
 
-            <div>
-                <h1>NOVA</h1>
-                <span>AI</span>
-            </div>
-        </div>
+  background: #11141b;
+  border-right: 1px solid #242934;
 
-        <button class="new-chat" id="newChatButton">
-            <span>＋</span>
-            Nueva conversación
-        </button>
+  display: flex;
+  flex-direction: column;
 
-        <nav class="navigation">
+  padding: 20px 14px;
 
-            <button class="nav-item active" data-section="chats">
-                <span>💬</span>
-                Chats
-            </button>
+  z-index: 10;
+}
 
-            <button class="nav-item" data-section="search">
-                <span>⌕</span>
-                Buscar
-            </button>
+.main {
+  margin-left: 255px;
 
-            <button class="nav-item" data-section="library">
-                <span>▣</span>
-                Biblioteca
-            </button>
+  width: calc(100% - 255px);
+  height: 100vh;
 
-            <button class="nav-item" data-section="settings">
-                <span>⚙</span>
-                Configuración
-            </button>
+  display: flex;
+  flex-direction: column;
 
-        </nav>
+  background: #0b0d12;
+}
 
-        <div class="recent-title">
-            Recientes
-        </div>
+/* =========================================================
+   LOGO
+   ========================================================= */
 
-        <div class="recent-chats" id="recentChats"></div>
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 11px;
 
-        <div class="sidebar-bottom">
+  padding: 5px 8px 22px;
+}
 
-            <button class="profile-button" id="profileButton">
+.logo-icon {
+  width: 39px;
+  height: 39px;
 
-                <div class="profile-avatar">
-                    T
-                </div>
+  border-radius: 12px;
 
-                <div class="profile-info">
-                    <strong>Usuario</strong>
-                    <span>Cuenta local</span>
-                </div>
+  background: linear-gradient(135deg, #7288ff, #536be8);
 
-                <span>⋯</span>
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-            </button>
+  font-size: 21px;
+  font-weight: bold;
 
-        </div>
+  box-shadow: 0 5px 20px rgba(91, 112, 240, 0.25);
+}
 
-    </aside>
+.logo strong {
+  display: block;
 
+  font-size: 18px;
+  letter-spacing: 0.5px;
+}
 
-    <!-- MAIN -->
-    <main class="main">
+.logo span {
+  color: #7187ff;
+  font-size: 13px;
+}
 
-        <!-- TOPBAR -->
-        <header class="topbar">
+/* =========================================================
+   NUEVO CHAT
+   ========================================================= */
 
-            <button class="mobile-menu" id="mobileMenu">
-                ☰
-            </button>
+.nuevo-chat {
+  width: 100%;
+  height: 45px;
 
-            <button class="model-selector" id="modelSelector">
+  border: 1px solid #303642;
+  border-radius: 11px;
 
-                <div class="model-dot"></div>
+  background: #1b1f28;
+  color: white;
 
-                <span id="currentModel">
-                    NOVA 1.0
-                </span>
+  font-size: 14px;
+  font-weight: 600;
 
-                <span class="arrow">
-                    ▾
-                </span>
+  cursor: pointer;
 
-            </button>
+  transition: 0.2s;
+}
 
-            <div class="top-actions">
+.nuevo-chat:hover {
+  background: #242a35;
+  border-color: #46506a;
+}
 
-                <button
-                    class="icon-button"
-                    id="topSearchButton"
-                    title="Buscar conversaciones">
-                    ⌕
-                </button>
+.nuevo-chat span {
+  margin-right: 7px;
+  font-size: 19px;
+}
 
-                <button
-                    class="icon-button"
-                    id="themeButton"
-                    title="Cambiar tema">
-                    ☾
-                </button>
+/* =========================================================
+   MENÚ
+   ========================================================= */
 
-                <button
-                    class="top-new-chat"
-                    id="topNewChat">
-                    ＋ Nueva
-                </button>
+.menu {
+  margin-top: 18px;
 
-            </div>
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
 
-        </header>
+.menu button {
+  width: 100%;
+  height: 42px;
 
+  border: none;
+  border-radius: 9px;
 
-        <!-- CHAT -->
-        <section class="chat-area" id="chatArea">
+  background: transparent;
+  color: #aeb5c3;
 
-            <!-- WELCOME -->
-            <div class="welcome" id="welcome">
+  text-align: left;
 
-                <div class="nova-orb">
-                    N
-                </div>
+  padding: 0 12px;
 
-                <h2>
-                    ¿En qué puedo ayudarte?
-                </h2>
+  cursor: pointer;
 
-                <p>
-                    Soy NOVA, tu asistente inteligente.
-                    Puedo ayudarte a aprender, programar,
-                    investigar y crear.
-                </p>
+  font-size: 14px;
 
-            </div>
+  transition: 0.2s;
+}
 
+.menu button:hover {
+  background: #1b1f27;
+  color: white;
+}
 
-            <!-- SUGGESTIONS -->
-            <div class="suggestions" id="suggestions">
+.menu button span {
+  width: 27px;
+  display: inline-block;
+}
 
-                <button
-                    class="suggestion-card"
-                    data-prompt="Quiero aprender algo nuevo. Ayúdame a entenderlo paso a paso.">
+/* =========================================================
+   HISTORIAL
+   ========================================================= */
 
-                    <div class="suggestion-icon">
-                        ✦
-                    </div>
+.historial {
+  margin-top: 22px;
 
-                    <strong>
-                        Aprender
-                    </strong>
+  flex: 1;
 
-                    <span>
-                        Explicame algo paso a paso
-                    </span>
+  overflow-y: auto;
+}
 
-                </button>
+.historial::-webkit-scrollbar {
+  width: 4px;
+}
 
+.historial::-webkit-scrollbar-thumb {
+  background: #303642;
+  border-radius: 10px;
+}
 
-                <button
-                    class="suggestion-card"
-                    data-prompt="Quiero programar algo. Ayúdame a hacerlo paso a paso y explicame el código de forma sencilla.">
+.titulo-menu {
+  margin: 0 9px 10px;
 
-                    <div class="suggestion-icon">
-                        &lt;/&gt;
-                    </div>
+  color: #656d7c;
 
-                    <strong>
-                        Programar
-                    </strong>
+  font-size: 10px;
+  font-weight: bold;
 
-                    <span>
-                        Crear y solucionar código
-                    </span>
+  letter-spacing: 1px;
+}
 
-                </button>
+.chat-historial {
+  width: 100%;
 
+  border: none;
+  border-radius: 8px;
 
-                <button
-                    class="suggestion-card"
-                    data-prompt="Quiero crear un proyecto nuevo. Dame ideas y ayúdame a desarrollarlo.">
+  background: transparent;
+  color: #aeb5c3;
 
-                    <div class="suggestion-icon">
-                        ✎
-                    </div>
+  text-align: left;
 
-                    <strong>
-                        Crear
-                    </strong>
+  padding: 10px;
 
-                    <span>
-                        Ideas para proyectos
-                    </span>
+  margin-bottom: 3px;
 
-                </button>
+  cursor: pointer;
 
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
-                <button
-                    class="suggestion-card"
-                    data-prompt="Quiero investigar un tema utilizando información actual y fuentes confiables.">
+.chat-historial:hover {
+  background: #1b1f27;
+  color: white;
+}
 
-                    <div class="suggestion-icon">
-                        ◉
-                    </div>
+/* =========================================================
+   PARTE INFERIOR SIDEBAR
+   ========================================================= */
 
-                    <strong>
-                        Investigar
-                    </strong>
+.sidebar-bottom {
+  border-top: 1px solid #242934;
 
-                    <span>
-                        Buscar información actual
-                    </span>
+  padding-top: 12px;
+}
 
-                </button>
+.sidebar-bottom button {
+  width: 100%;
+  height: 40px;
 
-            </div>
+  border: none;
+  border-radius: 8px;
 
+  background: transparent;
+  color: #9da5b4;
 
-            <!-- MESSAGES -->
-            <div
-                class="messages"
-                id="messages">
-            </div>
+  text-align: left;
 
-        </section>
+  padding: 0 10px;
 
+  cursor: pointer;
+}
 
-        <!-- COMPOSER -->
-        <div class="composer-container">
+.sidebar-bottom button:hover {
+  background: #1b1f27;
+  color: white;
+}
 
-            <div class="composer">
+/* =========================================================
+   TOPBAR
+   ========================================================= */
 
-                <button
-                    class="composer-button"
-                    id="attachButton"
-                    title="Adjuntar archivo">
-                    ＋
-                </button>
+.topbar {
+  height: 62px;
 
-                <textarea
-                    id="messageInput"
-                    rows="1"
-                    placeholder="Escribile a NOVA..."></textarea>
+  border-bottom: 1px solid #20252e;
 
-                <div class="composer-actions">
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-                    <button
-                        class="composer-tool"
-                        id="fileButton"
-                        title="Adjuntar archivo">
-                        📎
-                    </button>
+  padding: 0 25px;
+}
 
-                    <button
-                        class="composer-tool"
-                        id="webButton"
-                        title="Buscar en la web">
-                        ◉ Web
-                    </button>
+.mobile-logo {
+  display: none;
 
-                    <button
-                        class="send-button"
-                        id="sendButton"
-                        title="Enviar">
-                        ↑
-                    </button>
+  font-weight: bold;
+  font-size: 18px;
+}
 
-                </div>
+.mobile-logo span {
+  color: #7187ff;
+}
 
-            </div>
+.estado {
+  margin-left: auto;
 
-            <div class="composer-status">
+  color: #747d8e;
 
-                <span id="webStatus">
-                    Web desactivada
-                </span>
+  font-size: 12px;
 
-                <span>
-                    NOVA puede cometer errores. Verificá información importante.
-                </span>
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
 
-            </div>
+.punto {
+  width: 7px;
+  height: 7px;
 
-        </div>
+  border-radius: 50%;
 
-    </main>
+  background: #55d98a;
+}
 
+/* =========================================================
+   CONTENIDO
+   ========================================================= */
 
-    <!-- MODEL MENU -->
-    <div
-        class="floating-menu model-menu"
-        id="modelMenu">
+.contenido {
+  flex: 1;
 
-        <div class="menu-title">
-            Modelo
-        </div>
+  overflow-y: auto;
 
-        <button
-            class="model-option"
-            data-model="NOVA 1.0">
+  position: relative;
+}
 
-            <strong>NOVA 1.0</strong>
-            <span>Equilibrado</span>
+.contenido::-webkit-scrollbar {
+  width: 7px;
+}
 
-        </button>
+.contenido::-webkit-scrollbar-thumb {
+  background: #292e38;
+  border-radius: 10px;
+}
 
-        <button
-            class="model-option"
-            data-model="NOVA Fast">
+/* =========================================================
+   PANTALLA INICIAL
+   ========================================================= */
 
-            <strong>NOVA Fast</strong>
-            <span>Más rápido</span>
+.pantalla-inicio {
+  min-height: 100%;
 
-        </button>
+  display: flex;
+  flex-direction: column;
 
-        <button
-            class="model-option"
-            data-model="NOVA Pro">
+  align-items: center;
+  justify-content: center;
 
-            <strong>NOVA Pro</strong>
-            <span>Más capacidad</span>
+  padding: 40px 20px 130px;
+}
 
-        </button>
+.nova-grande {
+  width: 65px;
+  height: 65px;
 
-    </div>
+  border-radius: 20px;
 
+  background: linear-gradient(135deg, #7288ff, #536be8);
 
-    <!-- SEARCH PANEL -->
-    <div
-        class="overlay"
-        id="searchOverlay">
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-        <div class="modal">
+  font-size: 32px;
+  font-weight: bold;
 
-            <div class="modal-header">
+  margin-bottom: 25px;
 
-                <h3>
-                    Buscar conversaciones
-                </h3>
+  box-shadow:
+    0 10px 40px rgba(91, 112, 240, 0.25);
+}
 
-                <button
-                    class="close-button"
-                    data-close="searchOverlay">
-                    ×
-                </button>
+.pantalla-inicio h1 {
+  margin: 0;
 
-            </div>
+  font-size: 34px;
+  text-align: center;
 
-            <input
-                type="text"
-                id="conversationSearch"
-                placeholder="Buscar en tus chats...">
+  letter-spacing: -1px;
+}
 
-            <div
-                class="search-results"
-                id="searchResults">
-            </div>
+.pantalla-inicio > p {
+  color: #7d8595;
 
-        </div>
+  margin-top: 10px;
 
-    </div>
+  font-size: 15px;
+}
 
+/* =========================================================
+   ACCIONES INICIALES
+   ========================================================= */
 
-    <!-- SETTINGS -->
-    <div
-        class="overlay"
-        id="settingsOverlay">
+.acciones {
+  width: min(850px, 100%);
 
-        <div class="modal settings-modal">
+  display: grid;
 
-            <div class="modal-header">
+  grid-template-columns: repeat(4, 1fr);
 
-                <h3>
-                    Configuración
-                </h3>
+  gap: 12px;
 
-                <button
-                    class="close-button"
-                    data-close="settingsOverlay">
-                    ×
-                </button>
+  margin-top: 35px;
+}
 
-            </div>
+.acciones button {
+  min-height: 125px;
 
-            <div class="settings-list">
+  border: 1px solid #282e38;
+  border-radius: 15px;
 
-                <label class="setting-row">
+  background: #12151c;
+  color: white;
 
-                    <div>
-                        <strong>Enter para enviar</strong>
-                        <span>Usar Enter para mandar mensajes</span>
-                    </div>
+  text-align: left;
 
-                    <input
-                        type="checkbox"
-                        id="enterSend"
-                        checked>
+  padding: 17px;
 
-                </label>
+  cursor: pointer;
 
+  transition: 0.2s;
+}
 
-                <label class="setting-row">
+.acciones button:hover {
+  transform: translateY(-2px);
 
-                    <div>
-                        <strong>Animaciones</strong>
-                        <span>Mostrar animaciones de NOVA</span>
-                    </div>
+  background: #171b24;
 
-                    <input
-                        type="checkbox"
-                        id="animationsEnabled"
-                        checked>
+  border-color: #3a4354;
+}
 
-                </label>
+.acciones button span {
+  display: block;
 
+  font-size: 23px;
 
-                <label class="setting-row">
+  margin-bottom: 13px;
+}
 
-                    <div>
-                        <strong>Tema oscuro</strong>
-                        <span>Usar interfaz oscura</span>
-                    </div>
+.acciones strong {
+  display: block;
 
-                    <input
-                        type="checkbox"
-                        id="darkMode"
-                        checked>
+  font-size: 14px;
+}
 
-                </label>
+.acciones small {
+  display: block;
 
-            </div>
+  margin-top: 5px;
 
-        </div>
+  color: #747d8d;
 
-    </div>
+  font-size: 11px;
 
+  line-height: 1.4;
+}
 
-    <!-- LIBRARY -->
-    <div
-        class="overlay"
-        id="libraryOverlay">
+/* =========================================================
+   CHAT
+   ========================================================= */
 
-        <div class="modal">
+.chat {
+  width: min(850px, 100%);
 
-            <div class="modal-header">
+  margin: 0 auto;
 
-                <h3>
-                    Biblioteca
-                </h3>
+  padding: 30px 20px 140px;
+}
 
-                <button
-                    class="close-button"
-                    data-close="libraryOverlay">
-                    ×
-                </button>
+.mensaje {
+  display: flex;
 
-            </div>
+  gap: 12px;
 
-            <div id="libraryContent">
+  margin-bottom: 25px;
 
-                <div class="empty-state">
-                    <div>▣</div>
-                    <h3>No hay archivos todavía</h3>
-                    <p>
-                        Los archivos que adjuntes aparecerán aquí.
-                    </p>
-                </div>
+  line-height: 1.6;
 
-            </div>
+  font-size: 15px;
+}
 
-        </div>
+.mensaje-usuario {
+  justify-content: flex-end;
+}
 
-    </div>
+.mensaje-usuario .mensaje-texto {
+  background: #252b36;
 
+  border-radius: 16px;
 
-    <!-- FILE INPUT -->
-    <input
-        type="file"
-        id="fileInput"
-        hidden
-        multiple>
+  padding: 11px 15px;
 
+  max-width: 75%;
+}
 
-    <script src="script.js"></script>
+.mensaje-ia .mensaje-texto {
+  max-width: 90%;
 
-</body>
+  color: #d9deea;
+}
 
-</html>
+.avatar {
+  width: 31px;
+  height: 31px;
+
+  min-width: 31px;
+
+  border-radius: 10px;
+
+  background: #657cf2;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 13px;
+  font-weight: bold;
+}
+
+/* =========================================================
+   ZONA DEL CHAT
+   ========================================================= */
+
+.zona-chat {
+  padding: 10px 25px 18px;
+
+  background: linear-gradient(
+    to top,
+    #0b0d12 75%,
+    rgba(11, 13, 18, 0)
+  );
+}
+
+/* =========================================================
+   MODOS
+   ========================================================= */
+
+.modos {
+  width: min(850px, 100%);
+
+  margin: 0 auto 8px;
+
+  display: flex;
+
+  gap: 5px;
+}
+
+.modo {
+  border: 1px solid transparent;
+
+  background: transparent;
+
+  color: #777f8e;
+
+  border-radius: 7px;
+
+  padding: 6px 10px;
+
+  font-size: 11px;
+
+  cursor: pointer;
+}
+
+.modo:hover {
+  color: white;
+}
+
+.modo.activo {
+  background: #191d26;
+
+  color: #dce2ee;
+
+  border-color: #282e38;
+}
+
+/* =========================================================
+   INPUT
+   ========================================================= */
+
+.input-container {
+  width: min(850px, 100%);
+
+  min-height: 58px;
+
+  margin: 0 auto;
+
+  border: 1px solid #303641;
+
+  background: #15181f;
+
+  border-radius: 17px;
+
+  display: flex;
+
+  align-items: flex-end;
+
+  padding: 7px;
+
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.18);
+}
+
+#input {
+  flex: 1;
+
+  min-height: 42px;
+  max-height: 180px;
+
+  resize: none;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: white;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  padding: 12px 10px;
+
+  line-height: 1.4;
+}
+
+#input::placeholder {
+  color: #666e7d;
+}
+
+.enviar {
+  width: 42px;
+  height: 42px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: #657cf2;
+  color: white;
+
+  cursor: pointer;
+
+  font-size: 17px;
+
+  transition: 0.2s;
+}
+
+.enviar:hover {
+  background: #7187ff;
+}
+
+.enviar:disabled {
+  opacity: 0.45;
+
+  cursor: not-allowed;
+}
+
+.texto-ayuda {
+  width: min(850px, 100%);
+
+  margin: 8px auto 0;
+
+  text-align: center;
+
+  color: #535b69;
+
+  font-size: 10px;
+}
+
+/* =========================================================
+   HERRAMIENTAS
+   ========================================================= */
+
+.herramientas {
+  width: min(900px, 100%);
+
+  margin: 0 auto;
+
+  padding: 50px 25px 140px;
+}
+
+.herramientas h2 {
+  margin: 0;
+
+  font-size: 27px;
+}
+
+.herramientas > p {
+  color: #7c8493;
+
+  margin-top: 8px;
+}
+
+.herramientas-grid {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 14px;
+
+  margin-top: 30px;
+}
+
+.herramientas-grid button {
+  min-height: 145px;
+
+  border: 1px solid #282e38;
+  border-radius: 16px;
+
+  background: #12151c;
+
+  color: white;
+
+  text-align: left;
+
+  padding: 20px;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.herramientas-grid button:hover {
+  background: #181c24;
+
+  border-color: #41495a;
+
+  transform: translateY(-2px);
+}
+
+.herramientas-grid button:first-line {
+  font-size: 25px;
+}
+
+.herramientas-grid strong {
+  display: block;
+
+  margin-top: 13px;
+
+  font-size: 14px;
+}
+
+.herramientas-grid small {
+  display: block;
+
+  color: #727b8c;
+
+  margin-top: 6px;
+
+  font-size: 11px;
+}
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+.modal {
+  position: fixed;
+
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.65);
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  padding: 20px;
+
+  z-index: 100;
+}
+
+.modal-contenido {
+  width: min(550px, 100%);
+
+  max-height: 85vh;
+
+  overflow-y: auto;
+
+  position: relative;
+
+  background: #15181f;
+
+  border: 1px solid #303642;
+
+  border-radius: 18px;
+
+  padding: 28px;
+
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.45);
+}
+
+.cerrar {
+  position: absolute;
+
+  top: 12px;
+  right: 15px;
+
+  width: 32px;
+  height: 32px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: transparent;
+
+  color: #8b94a4;
+
+  font-size: 22px;
+
+  cursor: pointer;
+}
+
+.cerrar:hover {
+  background: #252a34;
+
+  color: white;
+}
+
+/* =========================================================
+   ESTADOS
+   ========================================================= */
+
+.oculto {
+  display: none !important;
+}
+
+.pensando {
+  display: flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  color: #727b8b;
+}
+
+.pensando span {
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: #7288ff;
+
+  animation: pensar 1.2s infinite;
+}
+
+.pensando span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.pensando span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes pensar {
+
+  0%,
+  60%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+
+  30% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+
+}
+
+/* =========================================================
+   CÓDIGO EN RESPUESTAS
+   ========================================================= */
+
+pre {
+  background: #0a0c10;
+
+  border: 1px solid #252b35;
+
+  border-radius: 10px;
+
+  padding: 15px;
+
+  overflow-x: auto;
+
+  font-family: Consolas, monospace;
+
+  font-size: 13px;
+}
+
+code {
+  font-family: Consolas, monospace;
+}
+
+/* =========================================================
+   RESPONSIVE - TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .sidebar {
+    width: 215px;
+  }
+
+  .main {
+    margin-left: 215px;
+
+    width: calc(100% - 215px);
+  }
+
+  .acciones {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .herramientas-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+/* =========================================================
+   RESPONSIVE - CELULAR
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  body {
+    overflow: auto;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .main {
+    margin-left: 0;
+
+    width: 100%;
+
+    height: 100vh;
+  }
+
+  .mobile-logo {
+    display: block;
+  }
+
+  .topbar {
+    padding: 0 15px;
+  }
+
+  .estado {
+    font-size: 10px;
+  }
+
+  .pantalla-inicio {
+    padding: 30px 15px 130px;
+  }
+
+  .pantalla-inicio h1 {
+    font-size: 27px;
+  }
+
+  .pantalla-inicio > p {
+    font-size: 13px;
+  }
+
+  .nova-grande {
+    width: 58px;
+    height: 58px;
+
+    font-size: 27px;
+  }
+
+  .acciones {
+    grid-template-columns: 1fr 1fr;
+
+    gap: 8px;
+
+    margin-top: 25px;
+  }
+
+  .acciones button {
+    min-height: 110px;
+
+    padding: 13px;
+  }
+
+  .acciones button span {
+    font-size: 20px;
+
+    margin-bottom: 9px;
+  }
+
+  .chat {
+    padding: 20px 12px 130px;
+  }
+
+  .mensaje-usuario .mensaje-texto {
+    max-width: 85%;
+  }
+
+  .zona-chat {
+    padding: 7px 10px 12px;
+  }
+
+  .herramientas {
+    padding: 30px 15px 130px;
+  }
+
+  .herramientas-grid {
+    grid-template-columns: 1fr 1fr;
+
+    gap: 9px;
+  }
+
+  .herramientas-grid button {
+    min-height: 125px;
+
+    padding: 14px;
+  }
+
+}
+
+/* =========================================================
+   CELULAR PEQUEÑO
+   ========================================================= */
+
+@media (max-width: 430px) {
+
+  .acciones {
+    grid-template-columns: 1fr;
+  }
+
+  .acciones button {
+    min-height: 85px;
+  }
+
+  .acciones button span {
+    display: inline;
+
+    margin-right: 7px;
+  }
+
+  .herramientas-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modo {
+    padding: 5px 7px;
+
+    font-size: 10px;
+  }
+
+}
