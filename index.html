@@ -1,190 +1,259 @@
-
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>NOVA AI</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0f1115;
-      color: white;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    header {
-      padding: 20px;
-      border-bottom: 1px solid #292d35;
-      font-size: 22px;
-      font-weight: bold;
-    }
-
-    .logo {
-      color: #ffffff;
-    }
-
-    .logo span {
-      color: #6c8cff;
-    }
-
-    #chat {
-      flex: 1;
-      padding: 25px;
-      overflow-y: auto;
-    }
-
-    .mensaje {
-      max-width: 750px;
-      margin-bottom: 20px;
-      line-height: 1.5;
-    }
-
-    .usuario {
-      margin-left: auto;
-      background: #252a34;
-      padding: 12px 16px;
-      border-radius: 14px;
-      width: fit-content;
-      max-width: 75%;
-    }
-
-    .ia {
-      color: #d8dbe2;
-    }
-
-    .inicio {
-      text-align: center;
-      margin-top: 18vh;
-    }
-
-    .inicio h1 {
-      font-size: 38px;
-      margin-bottom: 10px;
-    }
-
-    .inicio p {
-      color: #969ba6;
-    }
-
-    .barra {
-      padding: 15px 20px 20px;
-      border-top: 1px solid #292d35;
-      display: flex;
-      gap: 10px;
-    }
-
-    #input {
-      flex: 1;
-      padding: 14px;
-      border-radius: 12px;
-      border: 1px solid #343945;
-      background: #1b1e24;
-      color: white;
-      outline: none;
-      font-size: 15px;
-    }
-
-    button {
-      border: none;
-      border-radius: 12px;
-      padding: 0 20px;
-      background: #6c8cff;
-      color: white;
-      cursor: pointer;
-      font-size: 15px;
-    }
-
-    button:hover {
-      background: #5878ed;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <header>
-    <div class="logo">NOVA <span>AI</span></div>
-  </header>
+  <aside class="sidebar">
 
-  <main id="chat">
-
-    <div class="inicio" id="inicio">
-      <h1>¿En qué puedo ayudarte?</h1>
-      <p>Estoy listo para responder tus preguntas.</p>
+    <div class="logo">
+      <div class="logo-icon">N</div>
+      <div>
+        <strong>NOVA</strong>
+        <span>AI</span>
+      </div>
     </div>
+
+    <button class="nuevo-chat" onclick="nuevoChat()">
+      <span>＋</span>
+      Nuevo chat
+    </button>
+
+    <div class="menu">
+
+      <button onclick="mostrarInicio()">
+        <span>⌂</span>
+        Inicio
+      </button>
+
+      <button onclick="mostrarHistorial()">
+        <span>◷</span>
+        Historial
+      </button>
+
+      <button onclick="mostrarHerramientas()">
+        <span>✦</span>
+        Herramientas
+      </button>
+
+    </div>
+
+    <div class="historial" id="historial">
+
+      <p class="titulo-menu">CONVERSACIONES</p>
+
+      <div id="listaChats"></div>
+
+    </div>
+
+    <div class="sidebar-bottom">
+
+      <button onclick="abrirConfiguracion()">
+        ⚙ Configuración
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <div class="mobile-logo">
+        NOVA <span>AI</span>
+      </div>
+
+      <div class="estado">
+        <span class="punto"></span>
+        NOVA está disponible
+      </div>
+
+    </header>
+
+
+    <section id="contenido" class="contenido">
+
+      <div id="inicio" class="pantalla-inicio">
+
+        <div class="nova-grande">
+          N
+        </div>
+
+        <h1>
+          ¿En qué puedo ayudarte?
+        </h1>
+
+        <p>
+          Soy NOVA, tu asistente inteligente.
+        </p>
+
+
+        <div class="acciones">
+
+          <button onclick="usarSugerencia('Ayudame a estudiar')">
+            <span>📚</span>
+            <strong>Estudiar</strong>
+            <small>Aprendé paso a paso</small>
+          </button>
+
+          <button onclick="usarSugerencia('Ayudame con un proyecto')">
+            <span>💡</span>
+            <strong>Ideas</strong>
+            <small>Creá nuevos proyectos</small>
+          </button>
+
+          <button onclick="usarSugerencia('Ayudame a programar')">
+            <span>💻</span>
+            <strong>Programar</strong>
+            <small>Resolvé errores y código</small>
+          </button>
+
+          <button onclick="usarSugerencia('Ayudame a organizar mi día')">
+            <span>📋</span>
+            <strong>Organizar</strong>
+            <small>Ordená tus tareas</small>
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div id="chat" class="chat"></div>
+
+
+      <div id="herramientas" class="herramientas oculto">
+
+        <h2>Herramientas de NOVA</h2>
+
+        <p>
+          Elegí una herramienta para empezar.
+        </p>
+
+        <div class="herramientas-grid">
+
+          <button onclick="abrirHerramienta('calculadora')">
+            🧮
+            <strong>Calculadora</strong>
+            <small>Realizá cálculos</small>
+          </button>
+
+          <button onclick="abrirHerramienta('estudio')">
+            📚
+            <strong>NOVA Tutor</strong>
+            <small>Aprendé cualquier tema</small>
+          </button>
+
+          <button onclick="abrirHerramienta('ideas')">
+            💡
+            <strong>NOVA Ideas</strong>
+            <small>Generá ideas</small>
+          </button>
+
+          <button onclick="abrirHerramienta('codigo')">
+            💻
+            <strong>NOVA Code</strong>
+            <small>Ayuda con programación</small>
+          </button>
+
+          <button onclick="abrirHerramienta('planner')">
+            📅
+            <strong>NOVA Planner</strong>
+            <small>Organizá proyectos</small>
+          </button>
+
+          <button onclick="abrirHerramienta('notas')">
+            📝
+            <strong>Notas</strong>
+            <small>Guardá información</small>
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <footer class="zona-chat">
+
+      <div class="modos">
+
+        <button class="modo activo" onclick="cambiarModo('normal', this)">
+          NOVA
+        </button>
+
+        <button class="modo" onclick="cambiarModo('tutor', this)">
+          Tutor
+        </button>
+
+        <button class="modo" onclick="cambiarModo('code', this)">
+          Code
+        </button>
+
+        <button class="modo" onclick="cambiarModo('ideas', this)">
+          Ideas
+        </button>
+
+      </div>
+
+
+      <div class="input-container">
+
+        <textarea
+          id="input"
+          placeholder="Escribí un mensaje para NOVA..."
+          rows="1"
+          onkeydown="manejarEnter(event)"
+        ></textarea>
+
+        <button
+          class="enviar"
+          onclick="enviar()"
+          id="botonEnviar"
+        >
+          ➤
+        </button>
+
+      </div>
+
+
+      <div class="texto-ayuda">
+        NOVA puede cometer errores. Verificá información importante.
+      </div>
+
+    </footer>
 
   </main>
 
-  <div class="barra">
-    <input
-      id="input"
-      type="text"
-      placeholder="Escribí un mensaje..."
-      onkeydown="if(event.key === 'Enter') enviar()"
-    >
 
-    <button onclick="enviar()">Enviar</button>
+  <div id="modal" class="modal oculto">
+
+    <div class="modal-contenido">
+
+      <button class="cerrar" onclick="cerrarModal()">
+        ×
+      </button>
+
+      <div id="modalContenido"></div>
+
+    </div>
+
   </div>
 
-  <script>
-    async function enviar() {
 
-      const input = document.getElementById("input");
-      const chat = document.getElementById("chat");
-      const mensaje = input.value.trim();
-
-      if (!mensaje) return;
-
-      document.getElementById("inicio")?.remove();
-
-      const usuario = document.createElement("div");
-      usuario.className = "mensaje usuario";
-      usuario.innerText = mensaje;
-
-      chat.appendChild(usuario);
-
-      input.value = "";
-
-      const cargando = document.createElement("div");
-      cargando.className = "mensaje ia";
-      cargando.innerText = "NOVA está pensando...";
-
-      chat.appendChild(cargando);
-
-      try {
-
-        const res = await fetch("/chat", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            message: mensaje
-          })
-        });
-
-        const data = await res.json();
-
-        cargando.innerText = data.reply;
-
-      } catch (error) {
-
-        cargando.innerText = "No pude conectarme con el servidor.";
-
-      }
-
-      chat.scrollTop = chat.scrollHeight;
-    }
-  </script>
+  <script src="script.js"></script>
 
 </body>
+
 </html>
