@@ -1,964 +1,530 @@
-/* =========================================================
-   NOVA AI - SCRIPT PRINCIPAL
-   ========================================================= */
+const chat = document.getElementById("chat");
+const input = document.getElementById("input");
+const botonEnviar = document.getElementById("botonEnviar");
 
 let modoActual = "normal";
-let chats = [];
+let chats = JSON.parse(localStorage.getItem("nova_chats") || "[]");
 let chatActual = null;
 
-
-/* =========================================================
-   INICIO
-   ========================================================= */
+// ===============================
+// INICIO
+// ===============================
 
 document.addEventListener("DOMContentLoaded", () => {
+    actualizarHistorial();
 
-    cargarChats();
-
-    if (chats.length > 0) {
-        chatActual = chats[0];
-    } else {
+    if (chats.length === 0) {
         crearChat();
+    } else {
+        abrirChat(chats[0].id);
     }
 
-    actualizarHistorial();
+    if (input) {
+        input.addEventListener("keydown", manejarEnter);
 
+        input.addEventListener("input", () => {
+            input.style.height = "auto";
+            input.style.height = input.scrollHeight + "px";
+        });
+    }
 });
 
-
-/* =========================================================
-   NUEVO CHAT
-   ========================================================= */
+// ===============================
+// NUEVO CHAT
+// ===============================
 
 function nuevoChat() {
-
     crearChat();
-
-    mostrarInicio();
-
-    actualizarHistorial();
-
 }
 
-
 function crearChat() {
-
     const nuevo = {
         id: Date.now(),
-        titulo: "Nuevo chat",
+        titulo: "Nueva conversación",
         mensajes: []
     };
 
     chats.unshift(nuevo);
-
-    chatActual = nuevo;
+    chatActual = nuevo.id;
 
     guardarChats();
-
+    actualizarHistorial();
+    mostrarInicio();
 }
 
-
-/* =========================================================
-   GUARDAR CHATS
-   ========================================================= */
+// ===============================
+// GUARDAR
+// ===============================
 
 function guardarChats() {
-
-    localStorage.setItem(
-        "nova_chats",
-        JSON.stringify(chats)
-    );
-
+    localStorage.setItem("nova_chats", JSON.stringify(chats));
 }
 
-
-function cargarChats() {
-
-    try {
-
-        const guardados = localStorage.getItem("nova_chats");
-
-        if (guardados) {
-
-            chats = JSON.parse(guardados);
-
-        }
-
-    } catch (error) {
-
-        console.log("No se pudieron cargar los chats.");
-
-        chats = [];
-
-    }
-
-}
-
-
-/* =========================================================
-   HISTORIAL
-   ========================================================= */
+// ===============================
+// HISTORIAL
+// ===============================
 
 function actualizarHistorial() {
-
     const lista = document.getElementById("listaChats");
 
     if (!lista) return;
 
     lista.innerHTML = "";
 
-    chats.forEach(chat => {
-
+    chats.forEach(c => {
         const boton = document.createElement("button");
 
         boton.className = "chat-historial";
-
-        boton.innerText =
-            chat.titulo || "Nuevo chat";
+        boton.textContent = c.titulo || "Nueva conversación";
 
         boton.onclick = () => {
-
-            abrirChat(chat.id);
-
+            abrirChat(c.id);
         };
 
         lista.appendChild(boton);
-
     });
-
 }
 
+// ===============================
+// ABRIR CHAT
+// ===============================
 
 function abrirChat(id) {
-
-    const encontrado = chats.find(chat => chat.id === id);
+    const encontrado = chats.find(c => c.id === id);
 
     if (!encontrado) return;
 
-    chatActual = encontrado;
+    chatActual = id;
 
     mostrarChat();
-
+    renderizarMensajes();
 }
 
-
-/* =========================================================
-   MOSTRAR INICIO
-   ========================================================= */
+// ===============================
+// INICIO
+// ===============================
 
 function mostrarInicio() {
+    const inicio = document.getElementById("inicio");
+    const chatZona = document.getElementById("chat");
 
-    document.getElementById("inicio")?.classList.remove("oculto");
-
-    document.getElementById("chat")?.classList.add("oculto");
-
-    document.getElementById("herramientas")?.classList.add("oculto");
-
+    if (inicio) inicio.style.display = "block";
+    if (chatZona) chatZona.innerHTML = "";
 }
 
-
-/* =========================================================
-   MOSTRAR CHAT
-   ========================================================= */
+// ===============================
+// CHAT
+// ===============================
 
 function mostrarChat() {
-
     const inicio = document.getElementById("inicio");
-    const chat = document.getElementById("chat");
-    const herramientas = document.getElementById("herramientas");
 
-    inicio?.classList.add("oculto");
-
-    herramientas?.classList.add("oculto");
-
-    chat?.classList.remove("oculto");
-
-    renderizarMensajes();
-
+    if (inicio) {
+        inicio.style.display = "none";
+    }
 }
 
-
-/* =========================================================
-   RENDERIZAR MENSAJES
-   ========================================================= */
+// ===============================
+// RENDERIZAR MENSAJES
+// ===============================
 
 function renderizarMensajes() {
+    const zona = document.getElementById("chat");
 
-    const chat = document.getElementById("chat");
+    if (!zona) return;
 
-    if (!chat || !chatActual) return;
+    zona.innerHTML = "";
 
-    chat.innerHTML = "";
+    const actual = chats.find(c => c.id === chatActual);
 
-    chatActual.mensajes.forEach(mensaje => {
+    if (!actual) return;
 
+    actual.mensajes.forEach(mensaje => {
         crearMensajeVisual(
-            mensaje.texto,
-            mensaje.tipo
+            mensaje.rol,
+            mensaje.texto
         );
-
     });
 
-    chat.scrollTop = chat.scrollHeight;
-
+    zona.scrollTop = zona.scrollHeight;
 }
 
+// ===============================
+// MENSAJE VISUAL
+// ===============================
 
-function crearMensajeVisual(texto, tipo) {
+function crearMensajeVisual(rol, texto) {
+    const zona = document.getElementById("chat");
 
-    const chat = document.getElementById("chat");
+    if (!zona) return;
 
-    const mensaje = document.createElement("div");
+    const contenedor = document.createElement("div");
 
-    if (tipo === "usuario") {
+    contenedor.className =
+        rol === "user"
+            ? "mensaje usuario"
+            : "mensaje nova";
 
-        mensaje.className =
-            "mensaje mensaje-usuario";
+    const contenido = document.createElement("div");
 
-        mensaje.innerHTML = `
-            <div class="mensaje-texto">
-                ${escaparHTML(texto)}
-            </div>
-        `;
+    contenido.className = "mensaje-contenido";
 
-    } else {
+    contenido.innerHTML =
+        formatearRespuesta(texto);
 
-        mensaje.className =
-            "mensaje mensaje-ia";
+    contenedor.appendChild(contenido);
 
-        mensaje.innerHTML = `
-            <div class="avatar">N</div>
+    zona.appendChild(contenedor);
 
-            <div class="mensaje-texto">
-                ${formatearRespuesta(texto)}
-            </div>
-        `;
-
-    }
-
-    chat.appendChild(mensaje);
-
+    zona.scrollTop = zona.scrollHeight;
 }
 
-
-/* =========================================================
-   ENVIAR MENSAJE
-   ========================================================= */
+// ===============================
+// ENVIAR
+// ===============================
 
 async function enviar() {
-
-    const input = document.getElementById("input");
-    const boton = document.getElementById("botonEnviar");
-
-    if (!input) return;
 
     const mensaje = input.value.trim();
 
     if (!mensaje) return;
 
-    if (!chatActual) {
+    const actual =
+        chats.find(c => c.id === chatActual);
 
-        crearChat();
+    if (!actual) return;
 
-    }
-
-
-    /* Cambiar título del chat */
-
-    if (
-        !chatActual.mensajes.length &&
-        chatActual.titulo === "Nuevo chat"
-    ) {
-
-        chatActual.titulo =
-            mensaje.substring(0, 30);
-
-    }
-
-
-    /* Guardar mensaje */
-
-    chatActual.mensajes.push({
-
-        tipo: "usuario",
-
+    // Guardar mensaje del usuario
+    actual.mensajes.push({
+        rol: "user",
         texto: mensaje
-
     });
 
+    if (
+        actual.titulo === "Nueva conversación"
+    ) {
+        actual.titulo =
+            mensaje.substring(0, 30) +
+            (mensaje.length > 30 ? "..." : "");
+    }
 
     guardarChats();
-
     actualizarHistorial();
+
+    input.value = "";
+    input.style.height = "auto";
 
     mostrarChat();
 
+    crearMensajeVisual(
+        "user",
+        mensaje
+    );
 
-    input.value = "";
+    // =================================
+    // RESPUESTAS LOCALES
+    // =================================
 
-    input.style.height = "42px";
+    const respuestaLocal =
+        responderLocalmente(mensaje);
 
+    if (respuestaLocal !== null) {
 
-    boton.disabled = true;
+        actual.mensajes.push({
+            rol: "assistant",
+            texto: respuestaLocal
+        });
 
+        guardarChats();
 
-    /* Mostrar indicador */
+        crearMensajeVisual(
+            "assistant",
+            respuestaLocal
+        );
 
-    const indicador = document.createElement("div");
+        return;
+    }
 
-    indicador.className = "mensaje mensaje-ia";
+    // =================================
+    // INTENTAR SERVIDOR
+    // =================================
 
-    indicador.id = "indicador";
+    const cargando =
+        document.createElement("div");
 
-    indicador.innerHTML = `
-        <div class="avatar">N</div>
+    cargando.className =
+        "mensaje nova cargando";
 
-        <div class="mensaje-texto">
-
-            <div class="pensando">
-
-                <span></span>
-                <span></span>
-                <span></span>
-
-                NOVA está pensando...
-
-            </div>
-
+    cargando.innerHTML = `
+        <div class="mensaje-contenido">
+            <span>●</span>
+            <span>●</span>
+            <span>●</span>
         </div>
     `;
 
-    document.getElementById("chat")
-        .appendChild(indicador);
-
-
-    document.getElementById("chat")
-        .scrollTop = 999999;
-
+    chat.appendChild(cargando);
 
     try {
 
-        const respuesta = await fetch("/chat", {
+        const respuesta =
+            await fetch("/chat", {
+                method: "POST",
 
-            method: "POST",
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
 
-            headers: {
-
-                "Content-Type":
-                    "application/json"
-
-            },
-
-            body: JSON.stringify({
-
-                message: mensaje,
-
-                mode: modoActual
-
-            })
-
-        });
-
+                body: JSON.stringify({
+                    message: mensaje,
+                    mode: modoActual
+                })
+            });
 
         if (!respuesta.ok) {
-
-            throw new Error(
-                "Error del servidor"
-            );
-
+            throw new Error("Servidor no disponible");
         }
-
 
         const datos =
             await respuesta.json();
 
+        cargando.remove();
 
-        document.getElementById(
-            "indicador"
-        )?.remove();
-
-
-        const respuestaTexto =
+        const texto =
             datos.reply ||
-            "NOVA no recibió una respuesta.";
+            "No recibí una respuesta.";
 
-
-        chatActual.mensajes.push({
-
-            tipo: "ia",
-
-            texto: respuestaTexto
-
+        actual.mensajes.push({
+            rol: "assistant",
+            texto: texto
         });
-
 
         guardarChats();
 
-        renderizarMensajes();
-
+        crearMensajeVisual(
+            "assistant",
+            texto
+        );
 
     } catch (error) {
 
-        document.getElementById(
-            "indicador"
-        )?.remove();
+        cargando.remove();
 
+        const texto =
+            "No pude conectarme con NOVA en este momento. " +
+            "Tu mensaje quedó guardado.";
 
-        chatActual.mensajes.push({
-
-            tipo: "ia",
-
-            texto:
-                "No pude conectarme con NOVA. " +
-                "El mensaje quedó guardado y podés intentarlo nuevamente."
-
+        actual.mensajes.push({
+            rol: "assistant",
+            texto: texto
         });
-
 
         guardarChats();
 
-        renderizarMensajes();
-
+        crearMensajeVisual(
+            "assistant",
+            texto
+        );
     }
-
-
-    boton.disabled = false;
-
-    input.focus();
-
 }
 
+// ===============================
+// RESPUESTAS LOCALES
+// ===============================
 
-/* =========================================================
-   ENTER
-   ========================================================= */
+function responderLocalmente(mensaje) {
 
-function manejarEnter(event) {
+    const texto =
+        mensaje
+            .toLowerCase()
+            .trim();
+
+    // Saludos
+    if (
+        texto === "hola" ||
+        texto === "hola nova" ||
+        texto === "buenas"
+    ) {
+        return "¡Hola! 👋 Soy NOVA. ¿En qué puedo ayudarte?";
+    }
+
+    // 1 + 1
+    if (
+        texto === "1+1" ||
+        texto === "1 + 1"
+    ) {
+        return "2";
+    }
+
+    // 2 + 2
+    if (
+        texto === "2+2" ||
+        texto === "2 + 2"
+    ) {
+        return "4";
+    }
+
+    // Quién eres
+    if (
+        texto.includes("quien sos") ||
+        texto.includes("quién sos") ||
+        texto.includes("quien eres")
+    ) {
+        return "Soy NOVA AI, tu asistente inteligente.";
+    }
+
+    // Qué puede hacer
+    if (
+        texto.includes("que podes hacer") ||
+        texto.includes("qué podés hacer")
+    ) {
+        return "Puedo ayudarte a estudiar, programar, generar ideas, organizar proyectos y mucho más.";
+    }
+
+    return null;
+}
+
+// ===============================
+// ENTER
+// ===============================
+
+function manejarEnter(evento) {
 
     if (
-        event.key === "Enter" &&
-        !event.shiftKey
+        evento.key === "Enter" &&
+        !evento.shiftKey
     ) {
-
-        event.preventDefault();
+        evento.preventDefault();
 
         enviar();
-
     }
-
 }
 
-
-/* =========================================================
-   SUGERENCIAS
-   ========================================================= */
+// ===============================
+// SUGERENCIAS
+// ===============================
 
 function usarSugerencia(texto) {
-
-    const input =
-        document.getElementById("input");
-
-    mostrarChat();
 
     input.value = texto;
 
     input.focus();
-
 }
 
+// ===============================
+// MODOS
+// ===============================
 
-/* =========================================================
-   MODOS
-   ========================================================= */
-
-function cambiarModo(modo, boton) {
+function cambiarModo(modo) {
 
     modoActual = modo;
 
     document
         .querySelectorAll(".modo")
-        .forEach(elemento => {
-
-            elemento.classList.remove(
-                "activo"
-            );
-
+        .forEach(boton => {
+            boton.classList.remove("activo");
         });
 
+    const boton =
+        document.querySelector(
+            `[data-modo="${modo}"]`
+        );
 
-    boton.classList.add("activo");
-
-
-    const input =
-        document.getElementById("input");
-
-
-    const textos = {
-
-        normal:
-            "Escribí un mensaje para NOVA...",
-
-        tutor:
-            "¿Qué querés aprender?",
-
-        code:
-            "Pegá tu código o explicame el problema...",
-
-        ideas:
-            "¿Qué querés crear?"
-
-    };
-
-
-    input.placeholder =
-        textos[modo] ||
-        textos.normal;
-
+    if (boton) {
+        boton.classList.add("activo");
+    }
 }
 
-
-/* =========================================================
-   HERRAMIENTAS
-   ========================================================= */
+// ===============================
+// HERRAMIENTAS
+// ===============================
 
 function mostrarHerramientas() {
 
-    document
-        .getElementById("inicio")
-        ?.classList.add("oculto");
+    const inicio =
+        document.getElementById("inicio");
 
-    document
-        .getElementById("chat")
-        ?.classList.add("oculto");
+    const herramientas =
+        document.getElementById("herramientas");
 
-    document
-        .getElementById("herramientas")
-        ?.classList.remove("oculto");
+    if (inicio)
+        inicio.style.display = "none";
 
+    if (herramientas)
+        herramientas.style.display = "block";
 }
 
+// ===============================
+// FORMATO
+// ===============================
 
-function abrirHerramienta(tipo) {
+function formatearRespuesta(texto) {
 
-    const contenido =
-        document.getElementById(
-            "modalContenido"
+    let seguro =
+        escaparHTML(texto);
+
+    seguro =
+        seguro.replace(
+            /\*\*(.*?)\*\*/g,
+            "<strong>$1</strong>"
         );
 
-    if (!contenido) return;
+    seguro =
+        seguro.replace(
+            /`([^`]+)`/g,
+            "<code>$1</code>"
+        );
 
+    seguro =
+        seguro.replace(
+            /\n/g,
+            "<br>"
+        );
 
-    if (tipo === "calculadora") {
-
-        contenido.innerHTML = `
-
-            <h2>🧮 Calculadora</h2>
-
-            <input
-                id="calcInput"
-                class="herramienta-input"
-                placeholder="Ej: 25 * 4 + 10"
-            >
-
-            <button
-                class="herramienta-boton"
-                onclick="calcular()"
-            >
-                Calcular
-            </button>
-
-            <div id="resultadoCalc"></div>
-
-        `;
-
-    }
-
-
-    if (tipo === "estudio") {
-
-        contenido.innerHTML = `
-
-            <h2>📚 NOVA Tutor</h2>
-
-            <p>
-                NOVA puede explicarte un tema
-                paso a paso y adaptarse a tu nivel.
-            </p>
-
-            <button
-                class="herramienta-boton"
-                onclick="usarHerramientaEnChat(
-                    'Quiero estudiar un tema. Explicámelo paso a paso y haceme preguntas para comprobar si entendí.'
-                )"
-            >
-                Empezar a estudiar
-            </button>
-
-        `;
-
-    }
-
-
-    if (tipo === "ideas") {
-
-        contenido.innerHTML = `
-
-            <h2>💡 NOVA Ideas</h2>
-
-            <p>
-                Decime qué querés crear y NOVA
-                puede ayudarte a convertirlo
-                en un proyecto real.
-            </p>
-
-            <button
-                class="herramienta-boton"
-                onclick="usarHerramientaEnChat(
-                    'Dame 10 ideas originales de proyectos que pueda crear y explicame cómo empezar cada uno.'
-                )"
-            >
-                Generar ideas
-            </button>
-
-        `;
-
-    }
-
-
-    if (tipo === "codigo") {
-
-        contenido.innerHTML = `
-
-            <h2>💻 NOVA Code</h2>
-
-            <p>
-                NOVA puede ayudarte a encontrar
-                errores y entender tu código.
-            </p>
-
-            <button
-                class="herramienta-boton"
-                onclick="usarHerramientaEnChat(
-                    'Quiero programar. Ayudame a construir mi proyecto paso a paso y explicame cada parte del código.'
-                )"
-            >
-                Abrir NOVA Code
-            </button>
-
-        `;
-
-    }
-
-
-    if (tipo === "planner") {
-
-        contenido.innerHTML = `
-
-            <h2>📅 NOVA Planner</h2>
-
-            <input
-                id="plannerInput"
-                class="herramienta-input"
-                placeholder="¿Qué proyecto querés organizar?"
-            >
-
-            <button
-                class="herramienta-boton"
-                onclick="crearPlan()"
-            >
-                Crear plan
-            </button>
-
-            <div id="planResultado"></div>
-
-        `;
-
-    }
-
-
-    if (tipo === "notas") {
-
-        const notas =
-            localStorage.getItem(
-                "nova_notas"
-            ) || "";
-
-
-        contenido.innerHTML = `
-
-            <h2>📝 Notas</h2>
-
-            <textarea
-                id="notasInput"
-                class="notas"
-                placeholder="Escribí tus notas..."
-            >${escaparHTML(notas)}</textarea>
-
-            <button
-                class="herramienta-boton"
-                onclick="guardarNotas()"
-            >
-                Guardar notas
-            </button>
-
-            <p id="notaEstado"></p>
-
-        `;
-
-    }
-
-
-    document
-        .getElementById("modal")
-        ?.classList.remove("oculto");
-
+    return seguro;
 }
 
+// ===============================
+// SEGURIDAD
+// ===============================
 
-/* =========================================================
-   CALCULADORA
-   ========================================================= */
+function escaparHTML(texto) {
 
-function calcular() {
-
-    const input =
-        document.getElementById(
-            "calcInput"
-        );
-
-    const resultado =
-        document.getElementById(
-            "resultadoCalc"
-        );
-
-
-    try {
-
-        const expresion =
-            input.value.trim();
-
-
-        if (!expresion) {
-
-            resultado.innerText =
-                "Escribí una operación.";
-
-            return;
-
-        }
-
-
-        /*
-          Permitimos solamente números
-          y operadores matemáticos básicos.
-        */
-
-        if (
-            !/^[0-9+\-*/().%\s]+$/
-                .test(expresion)
-        ) {
-
-            resultado.innerText =
-                "Operación no válida.";
-
-            return;
-
-        }
-
-
-        const valor =
-            Function(
-                `"use strict"; return (${expresion})`
-            )();
-
-
-        resultado.innerText =
-            "Resultado: " + valor;
-
-    } catch {
-
-        resultado.innerText =
-            "No pude realizar el cálculo.";
-
-    }
-
+    return texto
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
-
-/* =========================================================
-   PLANNER
-   ========================================================= */
-
-function crearPlan() {
-
-    const input =
-        document.getElementById(
-            "plannerInput"
-        );
-
-    const resultado =
-        document.getElementById(
-            "planResultado"
-        );
-
-
-    const proyecto =
-        input.value.trim();
-
-
-    if (!proyecto) {
-
-        resultado.innerText =
-            "Escribí un proyecto.";
-
-        return;
-
-    }
-
-
-    resultado.innerHTML = `
-
-        <h3>Plan para: ${escaparHTML(proyecto)}</h3>
-
-        <ol>
-
-            <li>Definir el objetivo.</li>
-
-            <li>Dividir el proyecto en tareas.</li>
-
-            <li>Empezar por la primera tarea.</li>
-
-            <li>Probar lo realizado.</li>
-
-            <li>Corregir errores.</li>
-
-            <li>Mejorar el resultado.</li>
-
-            <li>Finalizar y guardar el proyecto.</li>
-
-        </ol>
-
-    `;
-
-}
-
-
-/* =========================================================
-   NOTAS
-   ========================================================= */
-
-function guardarNotas() {
-
-    const input =
-        document.getElementById(
-            "notasInput"
-        );
-
-    if (!input) return;
-
-
-    localStorage.setItem(
-        "nova_notas",
-        input.value
-    );
-
-
-    const estado =
-        document.getElementById(
-            "notaEstado"
-        );
-
-
-    if (estado) {
-
-        estado.innerText =
-            "✓ Notas guardadas";
-
-    }
-
-}
-
-
-/* =========================================================
-   ABRIR HERRAMIENTA EN CHAT
-   ========================================================= */
-
-function usarHerramientaEnChat(texto) {
-
-    cerrarModal();
-
-    mostrarChat();
-
-    const input =
-        document.getElementById("input");
-
-    input.value = texto;
-
-    input.focus();
-
-}
-
-
-/* =========================================================
-   CONFIGURACIÓN
-   ========================================================= */
+// ===============================
+// CONFIGURACIÓN
+// ===============================
 
 function abrirConfiguracion() {
 
-    const contenido =
-        document.getElementById(
-            "modalContenido"
-        );
+    const modal =
+        document.getElementById("modal");
 
-
-    contenido.innerHTML = `
-
-        <h2>⚙ Configuración</h2>
-
-        <p>
-            Configuración de NOVA AI
-        </p>
-
-        <hr>
-
-        <h3>Conversaciones</h3>
-
-        <button
-            class="herramienta-boton"
-            onclick="borrarTodosLosChats()"
-        >
-            Borrar historial
-        </button>
-
-        <p style="color:#747d8d;font-size:12px;">
-            Esto eliminará las conversaciones
-            guardadas en este navegador.
-        </p>
-
-    `;
-
-
-    document
-        .getElementById("modal")
-        ?.classList.remove("oculto");
-
+    if (modal)
+        modal.style.display = "flex";
 }
 
-
-/* =========================================================
-   BORRAR TODOS LOS CHATS
-   ========================================================= */
+// ===============================
+// BORRAR CHATS
+// ===============================
 
 function borrarTodosLosChats() {
 
-    const confirmar =
-        confirm(
-            "¿Querés borrar todas las conversaciones?"
-        );
-
-
-    if (!confirmar) return;
-
+    if (
+        !confirm(
+            "¿Seguro que querés borrar todas las conversaciones?"
+        )
+    ) {
+        return;
+    }
 
     chats = [];
 
@@ -966,118 +532,18 @@ function borrarTodosLosChats() {
         "nova_chats"
     );
 
-
     crearChat();
-
-    actualizarHistorial();
-
-    mostrarInicio();
-
-    cerrarModal();
-
 }
 
-
-/* =========================================================
-   CERRAR MODAL
-   ========================================================= */
+// ===============================
+// CERRAR MODAL
+// ===============================
 
 function cerrarModal() {
 
-    document
-        .getElementById("modal")
-        ?.classList.add("oculto");
+    const modal =
+        document.getElementById("modal");
 
+    if (modal)
+        modal.style.display = "none";
 }
-
-
-/* =========================================================
-   FORMATEAR RESPUESTAS
-   ========================================================= */
-
-function formatearRespuesta(texto) {
-
-    let resultado =
-        escaparHTML(texto);
-
-
-    /*
-      Código entre ```
-    */
-
-    resultado =
-        resultado.replace(
-            /```([\s\S]*?)```/g,
-            "<pre><code>$1</code></pre>"
-        );
-
-
-    /*
-      Negrita
-    */
-
-    resultado =
-        resultado.replace(
-            /\*\*(.*?)\*\*/g,
-            "<strong>$1</strong>"
-        );
-
-
-    /*
-      Saltos de línea
-    */
-
-    resultado =
-        resultado.replace(
-            /\n/g,
-            "<br>"
-        );
-
-
-    return resultado;
-
-}
-
-
-/* =========================================================
-   SEGURIDAD HTML
-   ========================================================= */
-
-function escaparHTML(texto) {
-
-    const div =
-        document.createElement("div");
-
-    div.textContent =
-        texto;
-
-    return div.innerHTML;
-
-}
-
-
-/* =========================================================
-   AUTO AJUSTAR TEXTAREA
-   ========================================================= */
-
-document.addEventListener(
-    "input",
-    event => {
-
-        if (
-            event.target.id !== "input"
-        ) return;
-
-
-        event.target.style.height =
-            "42px";
-
-
-        event.target.style.height =
-            Math.min(
-                event.target.scrollHeight,
-                180
-            ) + "px";
-
-    }
-);
