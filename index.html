@@ -6,9 +6,9 @@
   <meta name="viewport"
         content="width=device-width, initial-scale=1.0">
 
-  <meta name="theme-color" content="#0b0e15">
+  <meta name="theme-color" content="#202020">
 
-  <title>NOVA STUDIO | Editor profesional</title>
+  <title>NOVA STUDIO PRO | Editor creativo</title>
 
   <!-- TIPOGRAFÍA -->
   <link rel="preconnect"
@@ -19,7 +19,7 @@
         crossorigin>
 
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
     rel="stylesheet"
   >
 
@@ -30,14 +30,14 @@
   >
 
   <!-- ESTILOS -->
-  <link rel="stylesheet" href="./style.css?v=2">
+  <link rel="stylesheet" href="style.css?v=3">
 </head>
 
 <body>
 
-<!-- =====================================
+<!-- ========================================
      BARRA SUPERIOR
-===================================== -->
+======================================== -->
 
 <header class="topbar">
 
@@ -46,91 +46,98 @@
       <i class="fa-solid fa-wand-magic-sparkles"></i>
     </span>
 
-    NOVA <span>STUDIO</span>
+    NOVA <span>STUDIO PRO</span>
   </div>
 
-  <nav>
-    <button onclick="irInicio()">
-      <i class="fa-solid fa-house"></i>
-      Inicio
-    </button>
+  <nav class="main-nav">
+
+    <button onclick="irInicio()">Inicio</button>
 
     <button onclick="abrirEditor('foto')">
-      <i class="fa-regular fa-image"></i>
-      Fotos
+      Editor de fotos
     </button>
 
     <button onclick="abrirEditor('video')">
-      <i class="fa-solid fa-film"></i>
-      Videos
+      Editor de videos
     </button>
 
     <button onclick="abrirEditor('diseno')">
-      <i class="fa-solid fa-palette"></i>
-      Diseños
+      Diseño
     </button>
+
   </nav>
 
-  <button class="primary" onclick="descargar()">
-    <i class="fa-solid fa-download"></i>
-    Exportar
-  </button>
+  <div class="top-actions">
+
+    <button onclick="guardarProyecto()"
+            title="Guardar proyecto">
+      <i class="fa-regular fa-floppy-disk"></i>
+      Guardar
+    </button>
+
+    <button class="primary"
+            onclick="descargar()">
+      <i class="fa-solid fa-download"></i>
+      Exportar
+    </button>
+
+  </div>
 
 </header>
 
 
-<!-- =====================================
+<!-- ========================================
      PANTALLA DE INICIO
-===================================== -->
+======================================== -->
 
 <main id="inicio">
 
   <section class="hero">
 
     <div class="tag">
-      <i class="fa-solid fa-sparkles"></i>
-      TU ESTUDIO CREATIVO
+      <i class="fa-solid fa-wand-magic-sparkles"></i>
+      TU ESTUDIO CREATIVO PROFESIONAL
     </div>
 
     <h1>
-      Creá sin límites<span>.</span>
+      Todo lo que imaginás.<br>
+      <span>En un solo editor.</span>
     </h1>
 
     <p>
-      Editá fotografías, creá videos y diseñá contenido
-      desde una sola plataforma.
+      Editá fotografías, creá videos y diseñá
+      contenido con herramientas profesionales.
     </p>
 
     <div class="home-grid">
 
       <!-- FOTOS -->
 
-      <div class="home-card"
-           onclick="abrirEditor('foto')">
+      <article class="home-card">
 
         <div class="card-icon">
-          <i class="fa-solid fa-camera"></i>
+          <i class="fa-solid fa-image"></i>
         </div>
 
         <h2>Editor de fotos</h2>
 
         <p>
-          Mejorá tus fotografías, agregá filtros,
-          textos, capas y efectos profesionales.
+          Trabajá con capas, filtros, textos,
+          pinceles y herramientas de selección.
         </p>
 
-        <button>
-          Empezar
+        <button class="primary"
+                onclick="abrirEditor('foto')">
+          Editar fotos
           <i class="fa-solid fa-arrow-right"></i>
         </button>
 
-      </div>
+      </article>
 
 
       <!-- VIDEOS -->
 
-      <div class="home-card"
-           onclick="abrirEditor('video')">
+      <article class="home-card">
 
         <div class="card-icon">
           <i class="fa-solid fa-clapperboard"></i>
@@ -139,40 +146,42 @@
         <h2>Editor de videos</h2>
 
         <p>
-          Recortá videos, modificá la velocidad,
-          agregá textos y exportá tus creaciones.
+          Importá videos, recortá fragmentos,
+          agregá textos y trabajá con una
+          línea de tiempo.
         </p>
 
-        <button>
-          Empezar
+        <button class="primary"
+                onclick="abrirEditor('video')">
+          Editar videos
           <i class="fa-solid fa-arrow-right"></i>
         </button>
 
-      </div>
+      </article>
 
 
       <!-- DISEÑO -->
 
-      <div class="home-card"
-           onclick="abrirEditor('diseno')">
+      <article class="home-card">
 
         <div class="card-icon">
-          <i class="fa-solid fa-pen-ruler"></i>
+          <i class="fa-solid fa-palette"></i>
         </div>
 
-        <h2>Crear diseños</h2>
+        <h2>Diseño gráfico</h2>
 
         <p>
-          Creá miniaturas para YouTube, publicaciones,
-          carteles y diseños personalizados.
+          Creá miniaturas para YouTube,
+          publicaciones y diseños personalizados.
         </p>
 
-        <button>
-          Empezar
+        <button class="primary"
+                onclick="abrirEditor('diseno')">
+          Crear diseño
           <i class="fa-solid fa-arrow-right"></i>
         </button>
 
-      </div>
+      </article>
 
     </div>
 
@@ -181,791 +190,818 @@
 </main>
 
 
-<!-- =====================================
-     EDITOR PRINCIPAL
-===================================== -->
+<!-- ========================================
+     EDITOR PROFESIONAL
+======================================== -->
 
 <section id="editor" class="hidden">
 
 
-  <!-- ===================================
-       BARRA LATERAL
-  =================================== -->
+  <!-- =====================================
+       MENÚ ESTILO PHOTOSHOP
+  ===================================== -->
 
-  <aside class="sidebar">
+  <div class="editor-menu">
 
-    <button onclick="mostrarPanel('archivos')"
-            title="Archivos">
+    <div class="menu-group">
 
-      <i class="fa-regular fa-folder-open"></i>
-      <span>Archivos</span>
+      <button onclick="mostrarPanel('archivos')">
+        Archivo
+      </button>
 
-    </button>
+      <button onclick="deshacer()">
+        Editar
+      </button>
 
+      <button onclick="mostrarPanel('ajustes')">
+        Imagen
+      </button>
 
-    <button onclick="mostrarPanel('ajustes')"
-            title="Ajustes">
+      <button onclick="mostrarPanel('capas')">
+        Capa
+      </button>
 
-      <i class="fa-solid fa-sliders"></i>
-      <span>Ajustes</span>
+      <button onclick="mostrarPanel('texto')">
+        Texto
+      </button>
 
-    </button>
+      <button onclick="mostrarPanel('ajustes')">
+        Filtro
+      </button>
 
+      <button onclick="mostrarPanel('video')">
+        Video
+      </button>
 
-    <button onclick="mostrarPanel('texto')"
-            title="Texto">
+    </div>
 
-      <i class="fa-solid fa-font"></i>
-      <span>Texto</span>
-
-    </button>
-
-
-    <button onclick="mostrarPanel('formas')"
-            title="Elementos">
-
-      <i class="fa-solid fa-shapes"></i>
-      <span>Formas</span>
-
-    </button>
-
-
-    <button onclick="mostrarPanel('capas')"
-            title="Capas">
-
-      <i class="fa-solid fa-layer-group"></i>
-      <span>Capas</span>
-
-    </button>
-
-
-    <button onclick="mostrarPanel('video')"
-            title="Video">
-
-      <i class="fa-solid fa-film"></i>
-      <span>Video</span>
-
-    </button>
-
-  </aside>
-
-
-  <!-- ===================================
-       PANEL DE HERRAMIENTAS
-  =================================== -->
-
-  <aside class="properties">
-
-    <div class="panel-heading">
-
-      <h2 id="panelTitulo">
-        Archivos
-      </h2>
+    <div class="menu-group">
 
       <button onclick="deshacer()"
               title="Deshacer">
-
         <i class="fa-solid fa-rotate-left"></i>
+      </button>
 
+      <button onclick="rehacer()"
+              title="Rehacer">
+        <i class="fa-solid fa-rotate-right"></i>
       </button>
 
     </div>
 
-
-    <!-- ===============================
-         ARCHIVOS
-    =============================== -->
-
-    <div id="panel-archivos" class="panel">
-
-      <h3>Importar archivos</h3>
-
-      <label class="upload">
-
-        <i class="fa-solid fa-image"></i>
-        Agregar imagen
-
-        <input
-          type="file"
-          accept="image/*"
-          onchange="cargarImagen(event)"
-        >
-
-      </label>
+  </div>
 
 
-      <label class="upload secondary">
+  <!-- =====================================
+       BARRA DE OPCIONES
+  ===================================== -->
 
-        <i class="fa-solid fa-video"></i>
-        Agregar video
+  <div class="options-bar">
 
-        <input
-          type="file"
-          accept="video/*"
-          onchange="cargarVideo(event)"
-        >
+    <span class="options-title">
+      Herramientas
+    </span>
 
-      </label>
+    <button onclick="mostrarPanel('archivos')">
+      <i class="fa-solid fa-folder-open"></i>
+      Abrir
+    </button>
+
+    <button onclick="guardarProyecto()">
+      <i class="fa-solid fa-floppy-disk"></i>
+      Guardar
+    </button>
+
+    <button onclick="duplicarSeleccion()">
+      <i class="fa-solid fa-copy"></i>
+      Duplicar
+    </button>
+
+    <button onclick="eliminarSeleccion()">
+      <i class="fa-solid fa-trash"></i>
+      Eliminar
+    </button>
+
+    <button onclick="rotarSeleccion()">
+      <i class="fa-solid fa-rotate"></i>
+      Rotar
+    </button>
+
+  </div>
 
 
-      <p class="hint">
-        Importá fotografías o videos desde tu
-        computadora para empezar a editar.
-      </p>
+  <!-- =====================================
+       CUERPO DEL EDITOR
+  ===================================== -->
+
+  <div class="editor-body">
 
 
-      <h3>Proyecto</h3>
+    <!-- ===================================
+         HERRAMIENTAS IZQUIERDAS
+    =================================== -->
 
-      <button class="tool"
-              onclick="limpiarLienzo()">
+    <aside class="sidebar">
 
-        <i class="fa-solid fa-plus"></i>
-        Crear proyecto vacío
+      <button onclick="mostrarPanel('archivos')"
+              title="Importar archivos">
+
+        <i class="fa-solid fa-folder-open"></i>
+        <span>Archivos</span>
+
+      </button>
+
+
+      <button onclick="mostrarPanel('formas')"
+              title="Mover elementos">
+
+        <i class="fa-solid fa-arrows-up-down-left-right"></i>
+        <span>Mover</span>
 
       </button>
 
 
-      <button class="tool"
-              onclick="guardarProyecto()">
+      <button onclick="mostrarPanel('ajustes')"
+              title="Ajustar imagen">
 
-        <i class="fa-regular fa-floppy-disk"></i>
-        Guardar proyecto
-
-      </button>
-
-    </div>
-
-
-    <!-- ===============================
-         AJUSTES
-    =============================== -->
-
-    <div id="panel-ajustes"
-         class="panel hidden">
-
-      <h3>Ajustes de imagen</h3>
-
-
-      <label>
-        <span>
-          <i class="fa-solid fa-sun"></i>
-          Brillo
-        </span>
-
-        <output id="vBrillo">100%</output>
-      </label>
-
-      <input
-        id="brillo"
-        type="range"
-        min="0"
-        max="200"
-        value="100"
-        oninput="actualizarFiltros()"
-      >
-
-
-      <label>
-        <span>
-          <i class="fa-solid fa-circle-half-stroke"></i>
-          Contraste
-        </span>
-
-        <output id="vContraste">100%</output>
-      </label>
-
-      <input
-        id="contraste"
-        type="range"
-        min="0"
-        max="200"
-        value="100"
-        oninput="actualizarFiltros()"
-      >
-
-
-      <label>
-        <span>
-          <i class="fa-solid fa-droplet"></i>
-          Saturación
-        </span>
-
-        <output id="vSaturacion">100%</output>
-      </label>
-
-      <input
-        id="saturacion"
-        type="range"
-        min="0"
-        max="200"
-        value="100"
-        oninput="actualizarFiltros()"
-      >
-
-
-      <label>
-        <span>
-          <i class="fa-solid fa-water"></i>
-          Desenfoque
-        </span>
-
-        <output id="vBlur">0px</output>
-      </label>
-
-      <input
-        id="blur"
-        type="range"
-        min="0"
-        max="20"
-        value="0"
-        oninput="actualizarFiltros()"
-      >
-
-
-      <h3>Filtros rápidos</h3>
-
-      <div class="tool-grid">
-
-        <button onclick="filtroRapido('normal')">
-          <i class="fa-regular fa-image"></i>
-          Original
-        </button>
-
-        <button onclick="filtroRapido('gris')">
-          <i class="fa-solid fa-circle-half-stroke"></i>
-          Blanco y negro
-        </button>
-
-        <button onclick="filtroRapido('vintage')">
-          <i class="fa-solid fa-camera-retro"></i>
-          Vintage
-        </button>
-
-        <button onclick="filtroRapido('vivo')">
-          <i class="fa-solid fa-palette"></i>
-          Vibrante
-        </button>
-
-      </div>
-
-
-      <h3>Transformar</h3>
-
-      <button class="tool"
-              onclick="rotarSeleccion()">
-
-        <i class="fa-solid fa-rotate"></i>
-        Rotar 90°
-
-      </button>
-
-    </div>
-
-
-    <!-- ===============================
-         TEXTO
-    =============================== -->
-
-    <div id="panel-texto"
-         class="panel hidden">
-
-      <h3>Agregar texto</h3>
-
-      <textarea
-        id="nuevoTexto"
-        placeholder="Escribí tu texto..."
-      >Tu texto</textarea>
-
-
-      <label>Tamaño del texto</label>
-
-      <input
-        id="tamanoTexto"
-        type="range"
-        min="16"
-        max="150"
-        value="48"
-      >
-
-
-      <label>Color del texto</label>
-
-      <input
-        id="colorTexto"
-        type="color"
-        value="#ffffff"
-      >
-
-
-      <button
-        class="primary full"
-        onclick="agregarTexto()"
-      >
-
-        <i class="fa-solid fa-plus"></i>
-        Agregar texto
+        <i class="fa-solid fa-sliders"></i>
+        <span>Ajustes</span>
 
       </button>
 
 
-      <p class="hint">
-        Arrastrá el texto para moverlo.
-        Hacé doble clic sobre él para editarlo.
-      </p>
+      <button onclick="mostrarPanel('texto')"
+              title="Agregar texto">
 
-    </div>
-
-
-    <!-- ===============================
-         FORMAS
-    =============================== -->
-
-    <div id="panel-formas"
-         class="panel hidden">
-
-      <h3>Agregar formas</h3>
-
-      <label>Color de la forma</label>
-
-      <input
-        id="colorForma"
-        type="color"
-        value="#397bff"
-      >
-
-
-      <div class="tool-grid">
-
-        <button onclick="agregarForma('rect')">
-
-          <i class="fa-regular fa-square"></i>
-          Rectángulo
-
-        </button>
-
-
-        <button onclick="agregarForma('circle')">
-
-          <i class="fa-regular fa-circle"></i>
-          Círculo
-
-        </button>
-
-      </div>
-
-
-      <h3>Transformar elemento</h3>
-
-
-      <button class="tool"
-              onclick="duplicarSeleccion()">
-
-        <i class="fa-regular fa-copy"></i>
-        Duplicar
+        <i class="fa-solid fa-font"></i>
+        <span>Texto</span>
 
       </button>
 
 
-      <button class="tool"
-              onclick="adelantar()">
+      <button onclick="mostrarPanel('formas')"
+              title="Formas">
 
-        <i class="fa-solid fa-arrow-up"></i>
-        Traer adelante
-
-      </button>
-
-
-      <button class="tool"
-              onclick="atrasar()">
-
-        <i class="fa-solid fa-arrow-down"></i>
-        Enviar atrás
+        <i class="fa-solid fa-shapes"></i>
+        <span>Formas</span>
 
       </button>
 
 
-      <button class="tool"
-              onclick="rotarSeleccion()">
+      <button onclick="mostrarPanel('capas')"
+              title="Capas">
 
-        <i class="fa-solid fa-rotate"></i>
-        Rotar elemento
-
-      </button>
-
-
-      <button class="tool danger"
-              onclick="eliminarSeleccion()">
-
-        <i class="fa-solid fa-trash"></i>
-        Eliminar elemento
-
-      </button>
-
-    </div>
-
-
-    <!-- ===============================
-         CAPAS
-    =============================== -->
-
-    <div id="panel-capas"
-         class="panel hidden">
-
-      <h3>Capas del proyecto</h3>
-
-      <p class="hint">
-        Seleccioná una capa para modificarla.
-        Las capas superiores aparecen delante
-        de las inferiores.
-      </p>
-
-      <div id="listaCapas"></div>
-
-
-      <h3>Organizar</h3>
-
-
-      <button class="tool"
-              onclick="adelantar()">
-
-        <i class="fa-solid fa-arrow-up"></i>
-        Subir capa
+        <i class="fa-solid fa-layer-group"></i>
+        <span>Capas</span>
 
       </button>
 
 
-      <button class="tool"
-              onclick="atrasar()">
+      <button onclick="mostrarPanel('video')"
+              title="Herramientas de video">
 
-        <i class="fa-solid fa-arrow-down"></i>
-        Bajar capa
-
-      </button>
-
-
-      <button class="tool"
-              onclick="duplicarSeleccion()">
-
-        <i class="fa-regular fa-copy"></i>
-        Duplicar capa
+        <i class="fa-solid fa-film"></i>
+        <span>Video</span>
 
       </button>
 
-
-      <button class="tool danger"
-              onclick="eliminarSeleccion()">
-
-        <i class="fa-solid fa-trash"></i>
-        Eliminar capa
-
-      </button>
-
-    </div>
+    </aside>
 
 
-    <!-- ===============================
-         VIDEO
-    =============================== -->
+    <!-- ===================================
+         PANEL DE HERRAMIENTAS
+    =================================== -->
 
-    <div id="panel-video"
-         class="panel hidden">
+    <aside class="properties">
 
-      <h3>Herramientas de video</h3>
+      <div class="panel-heading">
 
-
-      <label>
-        Inicio del recorte
-      </label>
-
-      <input
-        id="inicioVideo"
-        type="number"
-        min="0"
-        step="0.1"
-        value="0"
-      >
-
-
-      <label>
-        Final del recorte
-      </label>
-
-      <input
-        id="finVideo"
-        type="number"
-        min="0"
-        step="0.1"
-        value="0"
-      >
-
-
-      <button class="tool"
-              onclick="aplicarRecorte()">
-
-        <i class="fa-solid fa-scissors"></i>
-        Aplicar recorte
-
-      </button>
-
-
-      <h3>Velocidad</h3>
-
-
-      <select
-        id="velocidad"
-        onchange="cambiarVelocidad()"
-      >
-
-        <option value="0.5">
-          0.5x — Cámara lenta
-        </option>
-
-        <option value="1" selected>
-          1x — Normal
-        </option>
-
-        <option value="1.5">
-          1.5x — Rápido
-        </option>
-
-        <option value="2">
-          2x — Muy rápido
-        </option>
-
-      </select>
-
-
-      <p class="hint">
-        Podés agregar textos e imágenes encima
-        del video utilizando los otros paneles.
-        La exportación actual es experimental
-        y no incluye audio.
-      </p>
-
-    </div>
-
-  </aside>
-
-
-  <!-- ===================================
-       ESPACIO DE TRABAJO
-  =================================== -->
-
-  <section class="workspace">
-
-
-    <!-- BARRA SUPERIOR DEL EDITOR -->
-
-    <div class="workspace-toolbar">
-
-      <div>
+        <h2 id="panelTitulo">
+          Mis archivos
+        </h2>
 
         <button onclick="deshacer()"
                 title="Deshacer">
 
           <i class="fa-solid fa-rotate-left"></i>
-          Deshacer
-
-        </button>
-
-
-        <button onclick="rehacer()"
-                title="Rehacer">
-
-          <i class="fa-solid fa-rotate-right"></i>
-          Rehacer
 
         </button>
 
       </div>
 
 
-      <span id="nombreProyecto">
-        Proyecto sin título
-      </span>
+      <!-- ================================
+           IMPORTAR ARCHIVOS
+      ================================ -->
 
+      <div id="panel-archivos" class="panel">
 
-      <div>
+        <h3>Importar archivos</h3>
 
-        <button onclick="guardarProyecto()">
+        <label class="upload">
 
-          <i class="fa-regular fa-floppy-disk"></i>
-          Guardar
+          <i class="fa-solid fa-image"></i>
+          Importar fotografías
 
-        </button>
-
-
-        <button class="primary"
-                onclick="descargar()">
-
-          <i class="fa-solid fa-download"></i>
-          Exportar
-
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <!-- LIENZO PRINCIPAL -->
-
-    <div class="canvas-area">
-
-      <div id="lienzo" class="lienzo">
-
-
-        <!-- MENSAJE INICIAL -->
-
-        <div id="mensajeVacio">
-
-          <div class="empty-icon">
-
-            <i class="fa-solid fa-wand-magic-sparkles"></i>
-
-          </div>
-
-
-          <h2>
-            Tu creatividad empieza acá
-          </h2>
-
-
-          <p>
-            Importá una fotografía, un video
-            o creá un diseño desde cero.
-          </p>
-
-
-          <button
-            class="primary"
-            onclick="mostrarPanel('archivos')"
+          <input
+            id="inputFotos"
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            multiple
+            onchange="importarFotos(event)"
           >
 
-            <i class="fa-solid fa-plus"></i>
-            Agregar archivo
+        </label>
 
+
+        <label class="upload secondary">
+
+          <i class="fa-solid fa-video"></i>
+          Importar videos
+
+          <input
+            id="inputVideos"
+            type="file"
+            accept="video/*"
+            multiple
+            onchange="importarVideos(event)"
+          >
+
+        </label>
+
+
+        <div class="drop-zone" id="dropZone">
+
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+
+          <h4>Arrastrá tus archivos acá</h4>
+
+          <p>
+            Fotografías y videos desde tu PC.
+          </p>
+
+        </div>
+
+
+        <h3>Archivos del proyecto</h3>
+
+        <div id="listaArchivos">
+
+          <p class="hint">
+            Todavía no importaste archivos.
+          </p>
+
+        </div>
+
+
+        <h3>Proyecto</h3>
+
+        <button class="tool"
+                onclick="limpiarLienzo()">
+
+          <i class="fa-solid fa-file-circle-plus"></i>
+          Nuevo proyecto
+
+        </button>
+
+        <button class="tool"
+                onclick="guardarProyecto()">
+
+          <i class="fa-solid fa-floppy-disk"></i>
+          Guardar proyecto
+
+        </button>
+
+      </div>
+
+
+      <!-- ================================
+           AJUSTES Y FILTROS
+      ================================ -->
+
+      <div id="panel-ajustes"
+           class="panel hidden">
+
+        <h3>Ajustes de imagen</h3>
+
+
+        <label>
+          Brillo
+          <output id="vBrillo">100%</output>
+        </label>
+
+        <input
+          id="brillo"
+          type="range"
+          min="0"
+          max="200"
+          value="100"
+          oninput="actualizarFiltros()"
+        >
+
+
+        <label>
+          Contraste
+          <output id="vContraste">100%</output>
+        </label>
+
+        <input
+          id="contraste"
+          type="range"
+          min="0"
+          max="200"
+          value="100"
+          oninput="actualizarFiltros()"
+        >
+
+
+        <label>
+          Saturación
+          <output id="vSaturacion">100%</output>
+        </label>
+
+        <input
+          id="saturacion"
+          type="range"
+          min="0"
+          max="200"
+          value="100"
+          oninput="actualizarFiltros()"
+        >
+
+
+        <label>
+          Desenfoque
+          <output id="vBlur">0px</output>
+        </label>
+
+        <input
+          id="blur"
+          type="range"
+          min="0"
+          max="20"
+          value="0"
+          oninput="actualizarFiltros()"
+        >
+
+
+        <h3>Filtros</h3>
+
+        <div class="tool-grid">
+
+          <button onclick="filtroRapido('normal')">
+            Original
+          </button>
+
+          <button onclick="filtroRapido('gris')">
+            Blanco y negro
+          </button>
+
+          <button onclick="filtroRapido('vintage')">
+            Vintage
+          </button>
+
+          <button onclick="filtroRapido('vivo')">
+            Vibrante
           </button>
 
         </div>
 
 
-        <!-- REPRODUCTOR -->
+        <h3>Transformaciones</h3>
 
-        <video
-          id="videoPreview"
-          class="hidden"
-          playsinline
-          preload="metadata"
-        ></video>
+        <button class="tool"
+                onclick="rotarSeleccion()">
 
-
-        <!-- LAS CAPAS SE GENERAN CON JAVASCRIPT -->
-
-      </div>
-
-    </div>
-
-
-    <!-- =================================
-         LÍNEA DE TIEMPO
-    ================================= -->
-
-    <div id="timeline"
-         class="timeline hidden">
-
-
-      <div class="timeline-header">
-
-        <strong>
-
-          <i class="fa-solid fa-film"></i>
-          Línea de tiempo
-
-        </strong>
-
-
-        <span id="tiempoActual">
-          00:00 / 00:00
-        </span>
-
-      </div>
-
-
-      <div class="video-controls">
-
-
-        <button onclick="reproducirVideo()"
-                title="Reproducir o pausar">
-
-          <i class="fa-solid fa-play"></i>
-          /
-          <i class="fa-solid fa-pause"></i>
-
+          <i class="fa-solid fa-rotate"></i>
+          Rotar 90°
         </button>
 
+      </div>
+
+
+      <!-- ================================
+           TEXTO
+      ================================ -->
+
+      <div id="panel-texto"
+           class="panel hidden">
+
+        <h3>Agregar texto</h3>
+
+        <textarea
+          id="nuevoTexto"
+          placeholder="Escribí tu texto..."
+        >Tu texto</textarea>
+
+
+        <label>Tamaño</label>
 
         <input
-          id="barraVideo"
+          id="tamanoTexto"
           type="range"
-          min="0"
-          max="100"
-          value="0"
-          oninput="moverVideo(this.value)"
+          min="16"
+          max="150"
+          value="48"
         >
 
 
-      </div>
+        <label>Color</label>
 
-    </div>
-
-
-    <!-- =================================
-         BARRA INFERIOR
-    ================================= -->
-
-    <div class="bottom-bar">
+        <input
+          id="colorTexto"
+          type="color"
+          value="#ffffff"
+        >
 
 
-      <span id="estado">
-        NOVA STUDIO está listo
-      </span>
-
-
-      <div>
-
-        <button onclick="cambiarZoom(-0.1)"
-                title="Alejar">
-
-          <i class="fa-solid fa-minus"></i>
-
-        </button>
-
-
-        <span id="zoomLabel">
-          100%
-        </span>
-
-
-        <button onclick="cambiarZoom(0.1)"
-                title="Acercar">
+        <button class="primary full"
+                onclick="agregarTexto()">
 
           <i class="fa-solid fa-plus"></i>
+          Agregar texto
 
+        </button>
+
+        <p class="hint">
+          Podés arrastrar los textos y hacer
+          doble clic para modificarlos.
+        </p>
+
+      </div>
+
+
+      <!-- ================================
+           FORMAS
+      ================================ -->
+
+      <div id="panel-formas"
+           class="panel hidden">
+
+        <h3>Elementos</h3>
+
+
+        <label>Color</label>
+
+        <input
+          id="colorForma"
+          type="color"
+          value="#397bff"
+        >
+
+
+        <div class="tool-grid">
+
+          <button onclick="agregarForma('rect')">
+            <i class="fa-regular fa-square"></i>
+            Rectángulo
+          </button>
+
+          <button onclick="agregarForma('circle')">
+            <i class="fa-regular fa-circle"></i>
+            Círculo
+          </button>
+
+        </div>
+
+
+        <h3>Transformar</h3>
+
+        <button class="tool"
+                onclick="duplicarSeleccion()">
+          Duplicar
+        </button>
+
+        <button class="tool"
+                onclick="adelantar()">
+          Traer adelante
+        </button>
+
+        <button class="tool"
+                onclick="atrasar()">
+          Enviar atrás
+        </button>
+
+        <button class="tool danger"
+                onclick="eliminarSeleccion()">
+          Eliminar
         </button>
 
       </div>
 
-    </div>
+
+      <!-- ================================
+           CAPAS
+      ================================ -->
+
+      <div id="panel-capas"
+           class="panel hidden">
+
+        <h3>Capas</h3>
+
+        <div id="listaCapas"></div>
 
 
-  </section>
+        <button class="tool"
+                onclick="duplicarSeleccion()">
+          Duplicar capa
+        </button>
+
+        <button class="tool"
+                onclick="adelantar()">
+          Subir capa
+        </button>
+
+        <button class="tool"
+                onclick="atrasar()">
+          Bajar capa
+        </button>
+
+        <button class="tool danger"
+                onclick="eliminarSeleccion()">
+          Eliminar capa
+        </button>
+
+      </div>
+
+
+      <!-- ================================
+           VIDEO
+      ================================ -->
+
+      <div id="panel-video"
+           class="panel hidden">
+
+        <h3>Editar video</h3>
+
+
+        <label>
+          Inicio del recorte
+        </label>
+
+        <input
+          id="inicioVideo"
+          type="number"
+          min="0"
+          step="0.1"
+          value="0"
+        >
+
+
+        <label>
+          Final del recorte
+        </label>
+
+        <input
+          id="finVideo"
+          type="number"
+          min="0"
+          step="0.1"
+          value="0"
+        >
+
+
+        <button class="tool"
+                onclick="aplicarRecorte()">
+
+          <i class="fa-solid fa-scissors"></i>
+          Aplicar recorte
+
+        </button>
+
+
+        <h3>Velocidad</h3>
+
+        <select
+          id="velocidad"
+          onchange="cambiarVelocidad()"
+        >
+
+          <option value="0.5">
+            0.5x — Lento
+          </option>
+
+          <option value="1" selected>
+            1x — Normal
+          </option>
+
+          <option value="1.5">
+            1.5x — Rápido
+          </option>
+
+          <option value="2">
+            2x — Muy rápido
+          </option>
+
+        </select>
+
+      </div>
+
+    </aside>
+
+
+    <!-- ===================================
+         ZONA CENTRAL
+    =================================== -->
+
+    <section class="workspace">
+
+
+      <!-- PESTAÑA DEL DOCUMENTO -->
+
+      <div class="document-tabs">
+
+        <div class="document-tab active">
+
+          <i class="fa-regular fa-image"></i>
+
+          <span id="nombreProyecto">
+            Proyecto sin título
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- LIENZO -->
+
+      <div class="canvas-area"
+           id="zonaTrabajo">
+
+        <div id="lienzo" class="lienzo">
+
+
+          <div id="mensajeVacio">
+
+            <div class="empty-icon">
+              <i class="fa-solid fa-images"></i>
+            </div>
+
+            <h2>
+              Empezá a crear
+            </h2>
+
+            <p>
+              Importá una foto o un video
+              para comenzar tu proyecto.
+            </p>
+
+            <button class="primary"
+                    onclick="mostrarPanel('archivos')">
+
+              <i class="fa-solid fa-plus"></i>
+              Importar archivo
+
+            </button>
+
+          </div>
+
+
+          <video
+            id="videoPreview"
+            class="hidden"
+            playsinline
+            preload="metadata"
+          ></video>
+
+
+          <!-- CAPAS GENERADAS POR JAVASCRIPT -->
+
+        </div>
+
+      </div>
+
+
+      <!-- LÍNEA DE TIEMPO -->
+
+      <div id="timeline"
+           class="timeline hidden">
+
+        <div class="timeline-header">
+
+          <strong>
+            <i class="fa-solid fa-film"></i>
+            Línea de tiempo
+          </strong>
+
+          <span id="tiempoActual">
+            00:00 / 00:00
+          </span>
+
+        </div>
+
+
+        <div class="video-controls">
+
+          <button onclick="reproducirVideo()">
+            <i class="fa-solid fa-play"></i>
+          </button>
+
+          <input
+            id="barraVideo"
+            type="range"
+            min="0"
+            max="100"
+            value="0"
+            oninput="moverVideo(this.value)"
+          >
+
+        </div>
+
+        <div id="pistasVideo"
+             class="video-tracks"></div>
+
+      </div>
+
+
+      <!-- BARRA INFERIOR -->
+
+      <div class="bottom-bar">
+
+        <span id="estado">
+          NOVA STUDIO está listo
+        </span>
+
+        <div>
+
+          <button onclick="cambiarZoom(-0.1)">
+            −
+          </button>
+
+          <span id="zoomLabel">
+            100%
+          </span>
+
+          <button onclick="cambiarZoom(0.1)">
+            +
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================
+         PANEL DERECHO
+    =================================== -->
+
+    <aside class="right-panel">
+
+      <div class="right-section">
+
+        <h3>Color</h3>
+
+        <input
+          type="color"
+          id="colorPrincipal"
+          value="#397bff"
+        >
+
+      </div>
+
+
+      <div class="right-section">
+
+        <h3>Propiedades</h3>
+
+        <div id="propiedadesSeleccion">
+
+          <p class="hint">
+            Seleccioná un elemento
+            para ver sus propiedades.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="right-section layers-section">
+
+        <h3>
+          <i class="fa-solid fa-layer-group"></i>
+          Capas
+        </h3>
+
+        <div id="capasDerecha"></div>
+
+      </div>
+
+    </aside>
+
+  </div>
 
 </section>
 
 
-<!-- JAVASCRIPT -->
-<script src="./script.js?v=2"></script>
+<!-- ========================================
+     JAVASCRIPT
+======================================== -->
+
+<script src="script.js?v=3"></script>
 
 </body>
 </html>
