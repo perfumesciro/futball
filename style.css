@@ -955,3 +955,87 @@ button:active {
   }
 
 }
+
+/* CORRECCIONES DE NOVA STUDIO */
+
+.hidden {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  background: #0b0e15;
+  color: #f4f6fc;
+  font-family: Inter, Arial, sans-serif;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  height: 72px;
+  background: #101520;
+  border-bottom: 1px solid #30394b;
+}
+
+.topbar nav {
+  display: flex;
+  gap: 20px;
+}
+
+.topbar button {
+  background: transparent;
+  border: none;
+  color: #dce5f5;
+  cursor: pointer;
+}
+
+.topbar .primary {
+  background: #397bff;
+  padding: 12px 20px;
+  border-radius: 10px;
+}
+
+.hero {
+  max-width: 1250px;
+  margin: auto;
+  padding: 90px 25px;
+  text-align: center;
+}
+
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 65px;
+}
+
+.home-card {
+  background: linear-gradient(145deg, #202d45, #151b29);
+  border: 1px solid #34415a;
+  border-radius: 20px;
+  padding: 32px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.home-card:hover {
+  border-color: #397bff;
+  transform: translateY(-5px);
+}
+
+.home-card button {
+  background: #397bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  cursor: pointer;
+}
+
+@media (max-width: 800px) {
+  .home-grid {
+    grid-template-columns: 1fr;
+  }
+}
