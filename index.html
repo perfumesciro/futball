@@ -1,431 +1,525 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10131d">
 
-    <title>NOVA AI</title>
-    <meta
-        name="description"
-        content="NOVA AI - Tu asistente inteligente"
-    >
+  <title>NOVA STUDIO | Editor de fotos y videos</title>
 
-    <link rel="stylesheet" href="style.css">
-
-    <link
-        rel="preconnect"
-        href="https://fonts.googleapis.com"
-    >
-
-    <link
-        rel="preconnect"
-        href="https://fonts.gstatic.com"
-        crossorigin
-    >
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    >
-
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    >
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="app">
-
-    <!-- ================= SIDEBAR ================= -->
-
-    <aside class="sidebar" id="sidebar">
-
-        <div class="sidebar-top">
-
-            <div class="brand">
-                <div class="brand-logo">
-                    N
-                </div>
-
-                <div class="brand-info">
-                    <strong>NOVA</strong>
-                    <span>AI Assistant</span>
-                </div>
-            </div>
-
-            <button
-                class="icon-btn close-sidebar"
-                id="closeSidebar"
-                title="Cerrar menú"
-            >
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-
-        </div>
-
-
-        <!-- NUEVO CHAT -->
-
-        <button class="new-chat-btn" id="newChat">
-            <i class="fa-solid fa-plus"></i>
-            <span>Nuevo chat</span>
-        </button>
-
-
-        <!-- BUSCADOR -->
-
-        <div class="search-box">
-
-            <i class="fa-solid fa-magnifying-glass"></i>
-
-            <input
-                type="text"
-                id="searchChats"
-                placeholder="Buscar chats..."
-                autocomplete="off"
-            >
-
-        </div>
-
-
-        <!-- HISTORIAL -->
-
-        <div class="history-container">
-
-            <div class="history-title">
-                <span>Conversaciones</span>
-            </div>
-
-            <div id="history" class="history">
-                <!-- JS agrega los chats -->
-            </div>
-
-        </div>
-
-
-        <!-- SIDEBAR BOTTOM -->
-
-        <div class="sidebar-bottom">
-
-            <button
-                class="sidebar-btn"
-                id="themeBtn"
-            >
-                <i class="fa-solid fa-moon"></i>
-                <span>Cambiar tema</span>
-            </button>
-
-
-            <button
-                class="sidebar-btn danger"
-                id="clearBtn"
-            >
-                <i class="fa-solid fa-trash"></i>
-                <span>Limpiar chat</span>
-            </button>
-
-
-            <div class="profile">
-
-                <div class="profile-avatar">
-                    T
-                </div>
-
-                <div class="profile-info">
-                    <strong>Usuario</strong>
-                    <span>NOVA AI</span>
-                </div>
-
-                <i class="fa-solid fa-ellipsis"></i>
-
-            </div>
-
-        </div>
-
-    </aside>
-
-
-    <!-- ================= MAIN ================= -->
-
-    <main class="main">
-
-        <!-- TOPBAR -->
-
-        <header class="topbar">
-
-            <div class="topbar-left">
-
-                <button
-                    class="icon-btn menu-btn"
-                    id="menuBtn"
-                    title="Menú"
-                >
-                    <i class="fa-solid fa-bars"></i>
-                </button>
-
-
-                <div class="mobile-brand">
-
-                    <div class="brand-logo small">
-                        N
-                    </div>
-
-                    <strong>NOVA AI</strong>
-
-                </div>
-
-            </div>
-
-
-            <div class="topbar-center">
-
-                <div class="nova-status">
-
-                    <span class="status-dot"></span>
-
-                    <span id="statusText">
-                        Comprobando IA...
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <div class="topbar-right">
-
-                <button
-                    class="icon-btn"
-                    id="topNewChat"
-                    title="Nuevo chat"
-                >
-                    <i class="fa-solid fa-pen-to-square"></i>
-                </button>
-
-            </div>
-
-        </header>
-
-
-        <!-- ================= CHAT ================= -->
-
-        <section
-            class="chat"
-            id="chat"
+<!-- BARRA SUPERIOR -->
+<header class="topbar">
+  <div class="logo" onclick="irInicio()">
+    <span class="logo-icon">✦</span>
+    NOVA <span>STUDIO</span>
+  </div>
+
+  <nav>
+    <button onclick="irInicio()">Inicio</button>
+    <button onclick="abrirEditor('foto')">Fotos</button>
+    <button onclick="abrirEditor('video')">Videos</button>
+    <button onclick="abrirEditor('diseno')">Diseños</button>
+  </nav>
+
+  <button class="primary" onclick="descargar()">
+    ↓ Exportar
+  </button>
+</header>
+
+<!-- PANTALLA DE INICIO -->
+<main id="inicio">
+  <section class="hero">
+    <div class="tag">✦ TU ESTUDIO CREATIVO</div>
+
+    <h1>Creá sin límites<span>.</span></h1>
+
+    <p>
+      Editá fotografías, creá videos y diseñá contenido
+      desde un mismo lugar.
+    </p>
+
+    <div class="home-grid">
+
+      <div class="home-card" onclick="abrirEditor('foto')">
+        <div class="card-icon">📷</div>
+        <h2>Editor de fotos</h2>
+        <p>
+          Editá imágenes con filtros, ajustes, textos,
+          capas y efectos.
+        </p>
+        <button>Empezar →</button>
+      </div>
+
+      <div class="home-card" onclick="abrirEditor('video')">
+        <div class="card-icon">🎬</div>
+        <h2>Editor de videos</h2>
+        <p>
+          Recortá videos, cambiá su velocidad,
+          agregá textos y exportá tus creaciones.
+        </p>
+        <button>Empezar →</button>
+      </div>
+
+      <div class="home-card" onclick="abrirEditor('diseno')">
+        <div class="card-icon">🎨</div>
+        <h2>Crear diseños</h2>
+        <p>
+          Creá miniaturas, publicaciones, carteles
+          y diseños personalizados.
+        </p>
+        <button>Empezar →</button>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<!-- EDITOR PRINCIPAL -->
+<section id="editor" class="hidden">
+
+  <!-- BARRA LATERAL -->
+  <aside class="sidebar">
+
+    <button onclick="mostrarPanel('archivos')">
+      📁 <span>Archivos</span>
+    </button>
+
+    <button onclick="mostrarPanel('ajustes')">
+      ☀️ <span>Ajustes</span>
+    </button>
+
+    <button onclick="mostrarPanel('texto')">
+      🔤 <span>Texto</span>
+    </button>
+
+    <button onclick="mostrarPanel('formas')">
+      ⬡ <span>Formas</span>
+    </button>
+
+    <button onclick="mostrarPanel('capas')">
+      ▤ <span>Capas</span>
+    </button>
+
+    <button onclick="mostrarPanel('video')">
+      🎬 <span>Video</span>
+    </button>
+
+  </aside>
+
+  <!-- PANEL DE HERRAMIENTAS -->
+  <aside class="properties">
+
+    <div class="panel-heading">
+      <h2 id="panelTitulo">Archivos</h2>
+      <button onclick="deshacer()" title="Deshacer">↶</button>
+    </div>
+
+    <!-- ARCHIVOS -->
+    <div id="panel-archivos" class="panel">
+
+      <label class="upload">
+        + Agregar imagen
+        <input
+          type="file"
+          accept="image/*"
+          onchange="cargarImagen(event)"
         >
-
-            <div
-                class="messages"
-                id="messages"
-            >
-
-                <!-- ================= WELCOME ================= -->
-
-                <div
-                    class="welcome"
-                    id="welcome"
-                >
-
-                    <div class="welcome-logo">
-                        N
-                    </div>
-
-                    <h1>
-                        Hola, soy <span>NOVA</span>
-                    </h1>
-
-                    <p>
-                        Tu asistente inteligente.
-                        Preguntame lo que quieras.
-                    </p>
-
-
-                    <!-- SUGERENCIAS -->
-
-                    <div class="suggestions">
-
-                        <button
-                            class="suggestion"
-                            data-prompt="Explicame qué cosas podés hacer."
-                        >
-
-                            <div class="suggestion-icon">
-                                <i class="fa-solid fa-wand-magic-sparkles"></i>
-                            </div>
-
-                            <div>
-                                <strong>¿Qué podés hacer?</strong>
-                                <span>Conocé las funciones de NOVA</span>
-                            </div>
-
-                        </button>
-
-
-                        <button
-                            class="suggestion"
-                            data-prompt="Ayudame a crear una página web moderna."
-                        >
-
-                            <div class="suggestion-icon">
-                                <i class="fa-solid fa-code"></i>
-                            </div>
-
-                            <div>
-                                <strong>Programación</strong>
-                                <span>Creá una página web conmigo</span>
-                            </div>
-
-                        </button>
-
-
-                        <button
-                            class="suggestion"
-                            data-prompt="Explicame algo interesante que probablemente no conozca."
-                        >
-
-                            <div class="suggestion-icon">
-                                <i class="fa-solid fa-lightbulb"></i>
-                            </div>
-
-                            <div>
-                                <strong>Aprender algo</strong>
-                                <span>Descubrí algo nuevo</span>
-                            </div>
-
-                        </button>
-
-
-                        <button
-                            class="suggestion"
-                            data-prompt="Ayudame a tener una idea para un proyecto."
-                        >
-
-                            <div class="suggestion-icon">
-                                <i class="fa-solid fa-rocket"></i>
-                            </div>
-
-                            <div>
-                                <strong>Crear un proyecto</strong>
-                                <span>Empecemos una idea nueva</span>
-                            </div>
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================= COMPOSER ================= -->
-
-        <div class="composer-area">
-
-            <div class="composer">
-
-                <!-- BOTÓN ARCHIVO -->
-
-                <button
-                    class="composer-btn"
-                    id="attachBtn"
-                    title="Adjuntar archivo"
-                    type="button"
-                >
-                    <i class="fa-solid fa-paperclip"></i>
-                </button>
-
-
-                <input
-                    type="file"
-                    id="fileInput"
-                    hidden
-                    multiple
-                >
-
-
-                <!-- INPUT -->
-
-                <textarea
-                    id="prompt"
-                    rows="1"
-                    placeholder="Escribile a NOVA..."
-                    autocomplete="off"
-                    spellcheck="true"
-                ></textarea>
-
-
-                <!-- MICRÓFONO -->
-
-                <button
-                    class="composer-btn"
-                    id="voiceBtn"
-                    title="Hablar con NOVA"
-                    type="button"
-                >
-                    <i class="fa-solid fa-microphone"></i>
-                </button>
-
-
-                <!-- ENVIAR -->
-
-                <button
-                    class="send-btn"
-                    id="sendBtn"
-                    title="Enviar"
-                    type="button"
-                >
-                    <i class="fa-solid fa-arrow-up"></i>
-                </button>
-
-            </div>
-
-
-            <div class="composer-footer">
-
-                <span>
-                    NOVA puede cometer errores. Verificá información importante.
-                </span>
-
-            </div>
-
-        </div>
-
-    </main>
-
-</div>
-
-
-<!-- ================= TEMPLATE MENSAJE ================= -->
-
-<template id="messageTemplate">
-
-    <div class="message">
-
-        <div class="message-avatar">
-            N
-        </div>
-
-        <div class="message-content">
-
-            <div class="message-header">
-                <strong>NOVA</strong>
-            </div>
-
-            <div class="message-text"></div>
-
-        </div>
+      </label>
+
+      <label class="upload secondary">
+        + Agregar video
+        <input
+          type="file"
+          accept="video/*"
+          onchange="cargarVideo(event)"
+        >
+      </label>
+
+      <p class="hint">
+        Podés agregar imágenes y colocarlas encima
+        de otras para crear composiciones.
+      </p>
+
+      <button class="tool" onclick="limpiarLienzo()">
+        + Crear proyecto vacío
+      </button>
 
     </div>
 
-</template>
+    <!-- AJUSTES DE IMAGEN -->
+    <div id="panel-ajustes" class="panel hidden">
 
+      <h3>Ajustes de imagen</h3>
 
-<!-- ================= JAVASCRIPT ================= -->
+      <label>
+        Brillo
+        <output id="vBrillo">100%</output>
+      </label>
+      <input
+        id="brillo"
+        type="range"
+        min="0"
+        max="200"
+        value="100"
+        oninput="actualizarFiltros()"
+      >
+
+      <label>
+        Contraste
+        <output id="vContraste">100%</output>
+      </label>
+      <input
+        id="contraste"
+        type="range"
+        min="0"
+        max="200"
+        value="100"
+        oninput="actualizarFiltros()"
+      >
+
+      <label>
+        Saturación
+        <output id="vSaturacion">100%</output>
+      </label>
+      <input
+        id="saturacion"
+        type="range"
+        min="0"
+        max="200"
+        value="100"
+        oninput="actualizarFiltros()"
+      >
+
+      <label>
+        Desenfoque
+        <output id="vBlur">0px</output>
+      </label>
+      <input
+        id="blur"
+        type="range"
+        min="0"
+        max="20"
+        value="0"
+        oninput="actualizarFiltros()"
+      >
+
+      <h3>Filtros rápidos</h3>
+
+      <div class="tool-grid">
+        <button onclick="filtroRapido('normal')">
+          Original
+        </button>
+
+        <button onclick="filtroRapido('gris')">
+          Blanco y negro
+        </button>
+
+        <button onclick="filtroRapido('vintage')">
+          Vintage
+        </button>
+
+        <button onclick="filtroRapido('vivo')">
+          Vibrante
+        </button>
+      </div>
+
+      <h3>Transformar</h3>
+
+      <button class="tool" onclick="rotarSeleccion()">
+        ↻ Rotar elemento
+      </button>
+
+    </div>
+
+    <!-- TEXTO -->
+    <div id="panel-texto" class="panel hidden">
+
+      <h3>Agregar texto</h3>
+
+      <textarea
+        id="nuevoTexto"
+        placeholder="Escribí tu texto..."
+      >Tu texto</textarea>
+
+      <label>Tamaño del texto</label>
+
+      <input
+        id="tamanoTexto"
+        type="range"
+        min="16"
+        max="150"
+        value="48"
+      >
+
+      <label>Color del texto</label>
+
+      <input
+        id="colorTexto"
+        type="color"
+        value="#ffffff"
+      >
+
+      <button
+        class="primary full"
+        onclick="agregarTexto()"
+      >
+        + Agregar texto
+      </button>
+
+      <p class="hint">
+        Podés mover el texto directamente sobre
+        el lienzo y cambiar su tamaño.
+      </p>
+
+    </div>
+
+    <!-- FORMAS -->
+    <div id="panel-formas" class="panel hidden">
+
+      <h3>Agregar elementos</h3>
+
+      <label>Color</label>
+
+      <input
+        id="colorForma"
+        type="color"
+        value="#397bff"
+      >
+
+      <div class="tool-grid">
+
+        <button onclick="agregarForma('rect')">
+          ▭ Rectángulo
+        </button>
+
+        <button onclick="agregarForma('circle')">
+          ● Círculo
+        </button>
+
+      </div>
+
+      <h3>Elemento seleccionado</h3>
+
+      <button class="tool" onclick="duplicarSeleccion()">
+        Duplicar
+      </button>
+
+      <button class="tool" onclick="adelantar()">
+        Traer adelante
+      </button>
+
+      <button class="tool" onclick="atrasar()">
+        Enviar atrás
+      </button>
+
+      <button
+        class="tool danger"
+        onclick="eliminarSeleccion()"
+      >
+        Eliminar elemento
+      </button>
+
+    </div>
+
+    <!-- CAPAS -->
+    <div id="panel-capas" class="panel hidden">
+
+      <h3>Capas del proyecto</h3>
+
+      <p class="hint">
+        Seleccioná una capa para editarla,
+        moverla o cambiar su posición.
+      </p>
+
+      <div id="listaCapas"></div>
+
+    </div>
+
+    <!-- VIDEO -->
+    <div id="panel-video" class="panel hidden">
+
+      <h3>Herramientas de video</h3>
+
+      <label>Inicio del recorte (segundos)</label>
+
+      <input
+        id="inicioVideo"
+        type="number"
+        min="0"
+        step="0.1"
+        value="0"
+      >
+
+      <label>Final del recorte (segundos)</label>
+
+      <input
+        id="finVideo"
+        type="number"
+        min="0"
+        step="0.1"
+        value="0"
+      >
+
+      <button
+        class="tool"
+        onclick="aplicarRecorte()"
+      >
+        ✂ Aplicar recorte
+      </button>
+
+      <h3>Velocidad</h3>
+
+      <select
+        id="velocidad"
+        onchange="cambiarVelocidad()"
+      >
+        <option value="0.5">0.5x — Lento</option>
+        <option value="1" selected>1x — Normal</option>
+        <option value="1.5">1.5x — Rápido</option>
+        <option value="2">2x — Muy rápido</option>
+      </select>
+
+      <p class="hint">
+        La exportación de video es experimental
+        y todavía no incluye mezcla de audio.
+      </p>
+
+    </div>
+
+  </aside>
+
+  <!-- ESPACIO DE TRABAJO -->
+  <section class="workspace">
+
+    <!-- BARRA DE HERRAMIENTAS SUPERIOR -->
+    <div class="workspace-toolbar">
+
+      <div>
+        <button onclick="deshacer()" title="Deshacer">
+          ↶ Deshacer
+        </button>
+
+        <button onclick="rehacer()" title="Rehacer">
+          ↷ Rehacer
+        </button>
+      </div>
+
+      <span id="nombreProyecto">
+        Proyecto sin título
+      </span>
+
+      <div>
+        <button onclick="guardarProyecto()">
+          Guardar
+        </button>
+
+        <button
+          class="primary"
+          onclick="descargar()"
+        >
+          Exportar ↓
+        </button>
+      </div>
+
+    </div>
+
+    <!-- LIENZO -->
+    <div class="canvas-area">
+
+      <div id="lienzo" class="lienzo">
+
+        <div id="mensajeVacio">
+
+          <div class="empty-icon">✦</div>
+
+          <h2>Tu creatividad empieza acá</h2>
+
+          <p>
+            Importá una imagen o creá un diseño.
+          </p>
+
+          <button
+            class="primary"
+            onclick="mostrarPanel('archivos')"
+          >
+            Agregar archivo
+          </button>
+
+        </div>
+
+        <video
+          id="videoPreview"
+          class="hidden"
+          playsinline
+        ></video>
+
+      </div>
+
+    </div>
+
+    <!-- LÍNEA DE TIEMPO -->
+    <div id="timeline" class="timeline hidden">
+
+      <div class="timeline-header">
+
+        <strong>Línea de tiempo</strong>
+
+        <span id="tiempoActual">
+          00:00 / 00:00
+        </span>
+
+      </div>
+
+      <div class="video-controls">
+
+        <button onclick="reproducirVideo()">
+          ▶ / ❚❚
+        </button>
+
+        <input
+          id="barraVideo"
+          type="range"
+          min="0"
+          max="100"
+          value="0"
+          oninput="moverVideo(this.value)"
+        >
+
+      </div>
+
+    </div>
+
+    <!-- BARRA INFERIOR -->
+    <div class="bottom-bar">
+
+      <span id="estado">
+        Listo para crear
+      </span>
+
+      <div>
+
+        <button onclick="cambiarZoom(-0.1)">
+          −
+        </button>
+
+        <span id="zoomLabel">100%</span>
+
+        <button onclick="cambiarZoom(0.1)">
+          +
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</section>
 
 <script src="script.js"></script>
 
