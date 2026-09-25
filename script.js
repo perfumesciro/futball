@@ -1,523 +1,641 @@
+// =====================================================
+// NOVA AI — SCRIPT PRINCIPAL
+// =====================================================
 
-// ================================
-// NOVA AI - SCRIPT
-// ================================
+const $ = (id) => document.getElementById(id);
 
-let modoActual = "normal";
+const messagesEl = $("messages");
+const promptEl = $("prompt");
+const sendBtn = $("sendBtn");
+const historyEl = $("history");
+const sidebar = $("sidebar");
+const statusText = $("statusText");
+const statusDot = document.querySelector(".status-dot");
+
+const STORAGE_KEY = "nova_chats_v3";
+const THEME_KEY = "nova_theme";
+
+let chats = [];
+let currentChatId = null;
+let loading = false;
 
 
-// ================================
-// ELEMENTOS
-// ================================
+// =====================================================
+// INICIALIZACIÓN
+// =====================================================
 
-const input = document.getElementById("input");
-const chat = document.getElementById("chat");
-const inicio = document.getElementById("inicio");
-const herramientas = document.getElementById("herramientas");
-const botonEnviar = document.getElementById("botonEnviar");
-const listaChats = document.getElementById("listaChats");
+try {
+    chats = JSON.parse(
+        localStorage.getItem(STORAGE_KEY) || "[]"
+    );
+
+    if (!Array.isArray(chats)) {
+        chats = [];
+    }
+
+} catch {
+    chats = [];
+}
 
 
-// ================================
-// ENVIAR MENSAJE
-// ================================
+// =====================================================
+// GUARDAR DATOS
+// =====================================================
 
-function enviar() {
+function saveChats() {
 
-    const mensaje = input.value.trim();
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(chats)
+    );
+}
 
-    if (mensaje === "") {
+
+// =====================================================
+// OBTENER CHAT ACTUAL
+// =====================================================
+
+function getCurrentChat() {
+
+    return chats.find(
+        chat => chat.id === currentChatId
+    );
+}
+
+
+// =====================================================
+// CREAR NUEVO CHAT
+// =====================================================
+
+function createChat() {
+
+    const chat = {
+
+        id:
+            typeof crypto !== "undefined" &&
+            crypto.randomUUID
+                ? crypto.randomUUID()
+                : Date.now().toString(),
+
+        title: "Nueva conversación",
+
+        messages: [],
+
+        createdAt: Date.now()
+
+    };
+
+    chats.unshift(chat);
+
+    currentChatId = chat.id;
+
+    saveChats();
+
+    renderHistory();
+
+    renderMessages();
+
+    closeSidebar();
+}
+
+
+// =====================================================
+// ABRIR CHAT
+// =====================================================
+
+function openChat(id) {
+
+    if (loading) return;
+
+    currentChatId = id;
+
+    renderHistory();
+
+    renderMessages();
+
+    closeSidebar();
+}
+
+
+// =====================================================
+// ELIMINAR CHAT
+// =====================================================
+
+function deleteChat(id) {
+
+    if (loading) return;
+
+    const confirmDelete =
+        confirm(
+            "¿Querés eliminar esta conversación?"
+        );
+
+    if (!confirmDelete) return;
+
+    chats = chats.filter(
+        chat => chat.id !== id
+    );
+
+    if (currentChatId === id) {
+
+        currentChatId =
+            chats.length > 0
+                ? chats[0].id
+                : null;
+    }
+
+    saveChats();
+
+    renderHistory();
+
+    renderMessages();
+}
+
+
+// =====================================================
+// HISTORIAL
+// =====================================================
+
+function renderHistory() {
+
+    const searchInput = $("searchChats");
+
+    const search =
+        searchInput
+            ? searchInput.value
+                .toLowerCase()
+                .trim()
+            : "";
+
+    historyEl.innerHTML = "";
+
+    const filteredChats =
+        chats.filter(chat =>
+            chat.title
+                .toLowerCase()
+                .includes(search)
+        );
+
+
+    if (filteredChats.length === 0) {
+
+        const empty = document.createElement("div");
+
+        empty.style.padding = "15px";
+        empty.style.color = "var(--muted)";
+        empty.style.fontSize = "13px";
+
+        empty.textContent =
+            search
+                ? "No se encontraron chats."
+                : "Todavía no hay conversaciones.";
+
+        historyEl.appendChild(empty);
+
         return;
     }
 
-    agregarMensaje(mensaje, "usuario");
 
-    input.value = "";
+    filteredChats.forEach(chat => {
 
-    input.style.height = "auto";
+        const item =
+            document.createElement("div");
 
-    mostrarChat();
+        item.className =
+            "history-item" +
+            (
+                chat.id === currentChatId
+                    ? " active"
+                    : ""
+            );
 
-    botonEnviar.disabled = true;
 
-    setTimeout(function () {
+        const icon =
+            document.createElement("i");
 
-        const respuesta = responder(mensaje);
+        icon.className =
+            "fa-regular fa-message";
 
-        agregarMensaje(respuesta, "nova");
 
-        botonEnviar.disabled = false;
+        const title =
+            document.createElement("span");
 
-    }, 400);
+        title.textContent =
+            chat.title;
+
+
+        const deleteButton =
+            document.createElement("button");
+
+        deleteButton.className =
+            "delete-chat";
+
+        deleteButton.title =
+            "Eliminar conversación";
+
+
+        const trash =
+            document.createElement("i");
+
+        trash.className =
+            "fa-solid fa-trash";
+
+
+        deleteButton.appendChild(trash);
+
+
+        deleteButton.addEventListener(
+            "click",
+            (event) => {
+
+                event.stopPropagation();
+
+                deleteChat(chat.id);
+
+            }
+        );
+
+
+        item.appendChild(icon);
+
+        item.appendChild(title);
+
+        item.appendChild(deleteButton);
+
+
+        item.addEventListener(
+            "click",
+            () => openChat(chat.id)
+        );
+
+
+        historyEl.appendChild(item);
+
+    });
 }
 
 
-// ================================
-// ENTER
-// ================================
+// =====================================================
+// PANTALLA DE BIENVENIDA
+// =====================================================
 
-function manejarEnter(event) {
+function createWelcome() {
 
-    if (event.key === "Enter" && !event.shiftKey) {
+    const welcome =
+        document.createElement("div");
 
-        event.preventDefault();
+    welcome.className = "welcome";
 
-        enviar();
-    }
+
+    welcome.innerHTML = `
+
+        <div class="welcome-logo">
+            ✦
+        </div>
+
+        <h1>
+            Hola, soy NOVA.
+        </h1>
+
+        <p>
+            Tu asistente inteligente.
+            ¿Qué hacemos hoy?
+        </p>
+
+        <div class="suggestions">
+
+            <button data-prompt="Ayudame a crear una página web moderna">
+
+                <i class="fa-solid fa-code"></i>
+
+                Crear una página web
+
+            </button>
+
+
+            <button data-prompt="Explicame un tema interesante de forma sencilla">
+
+                <i class="fa-solid fa-lightbulb"></i>
+
+                Aprender algo nuevo
+
+            </button>
+
+
+            <button data-prompt="Dame ideas para crear un proyecto">
+
+                <i class="fa-solid fa-rocket"></i>
+
+                Crear un proyecto
+
+            </button>
+
+
+            <button data-prompt="Ayudame a estudiar para una prueba">
+
+                <i class="fa-solid fa-book"></i>
+
+                Estudiar
+
+            </button>
+
+        </div>
+
+    `;
+
+
+    welcome
+        .querySelectorAll("[data-prompt]")
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    promptEl.value =
+                        button.dataset.prompt;
+
+                    autoResize();
+
+                    sendMessage();
+
+                }
+            );
+
+        });
+
+
+    return welcome;
 }
 
 
-// ================================
-// AGREGAR MENSAJE
-// ================================
+// =====================================================
+// MOSTRAR MENSAJES
+// =====================================================
 
-function agregarMensaje(texto, tipo) {
+function renderMessages() {
 
-    const mensaje = document.createElement("div");
-
-    if (tipo === "usuario") {
-
-        mensaje.className = "mensaje usuario";
-
-    } else {
-
-        mensaje.className = "mensaje nova";
-
-    }
-
-    mensaje.textContent = texto;
-
-    chat.appendChild(mensaje);
-
-    chat.scrollTop = chat.scrollHeight;
-}
+    const chat =
+        getCurrentChat();
 
 
-// ================================
-// RESPUESTAS DE NOVA
-// ================================
+    messagesEl.innerHTML = "";
 
-function responder(mensaje) {
-
-    const texto = mensaje.toLowerCase().trim();
-
-
-    // SALUDO
 
     if (
-        texto === "hola" ||
-        texto === "holaa" ||
-        texto === "buenas" ||
-        texto.includes("hola nova")
+        !chat ||
+        chat.messages.length === 0
     ) {
 
-        return "¡Hola! 👋 Soy NOVA. ¿En qué puedo ayudarte?";
+        messagesEl.appendChild(
+            createWelcome()
+        );
 
+        return;
     }
 
 
-    // CÓMO ESTÁ
-
-    if (
-        texto.includes("cómo estás") ||
-        texto.includes("como estas")
-    ) {
-
-        return "¡Todo bien! Estoy lista para ayudarte. 😎";
-
-    }
-
-
-    // QUIÉN ES
-
-    if (
-        texto.includes("quién sos") ||
-        texto.includes("quien sos") ||
-        texto.includes("quién eres") ||
-        texto.includes("quien eres")
-    ) {
-
-        return "Soy NOVA AI, un asistente virtual creado para ayudarte con estudio, programación, ideas y tareas.";
-
-    }
-
-
-    // QUÉ PUEDE HACER
-
-    if (
-        texto.includes("qué podés hacer") ||
-        texto.includes("que podes hacer") ||
-        texto.includes("qué puedes hacer") ||
-        texto.includes("funciones")
-    ) {
-
-        return "Puedo ayudarte con matemática, programación, ideas, estudio, organización y cálculos.";
-
-    }
-
-
-    // AYUDA
-
-    if (texto === "ayuda" || texto === "help") {
-
-        return "Podés decirme, por ejemplo: «25 + 30», «ayudame a estudiar» o «ayudame a programar».";
-
-    }
-
-
-    // CALCULADORA
-
-    const resultado = calcular(texto);
-
-    if (resultado !== null) {
-
-        return "🧮 El resultado es " + resultado;
-
-    }
-
-
-    // CUÁNTO ES
-
-    if (
-        texto.startsWith("cuánto es") ||
-        texto.startsWith("cuanto es")
-    ) {
-
-        let operacion = texto
-            .replace("cuánto es", "")
-            .replace("cuanto es", "")
-            .trim();
-
-        const resultadoOperacion = calcular(operacion);
-
-        if (resultadoOperacion !== null) {
-
-            return "🧮 El resultado es " + resultadoOperacion;
-
-        }
-
-    }
-
-
-    // ESTUDIO
-
-    if (
-        texto.includes("estudiar") ||
-        texto.includes("examen") ||
-        texto.includes("tarea")
-    ) {
-
-        return "📚 Claro. Decime qué materia o tema estás estudiando y te ayudo paso a paso.";
-
-    }
-
-
-    // PROGRAMACIÓN
-
-    if (
-        texto.includes("programar") ||
-        texto.includes("programación") ||
-        texto.includes("programacion") ||
-        texto.includes("código") ||
-        texto.includes("codigo")
-    ) {
-
-        return "💻 Claro. Puedo ayudarte con HTML, CSS y JavaScript paso a paso.";
-
-    }
-
-
-    // IDEAS
-
-    if (
-        texto.includes("idea") ||
-        texto.includes("ideas")
-    ) {
-
-        return "💡 Una idea podría ser crear una app de tareas, una calculadora, un calendario o un pequeño juego.";
-
-    }
-
-
-    // ORGANIZAR
-
-    if (
-        texto.includes("organizar") ||
-        texto.includes("organizar mi día") ||
-        texto.includes("organizar mi dia")
-    ) {
-
-        return "📋 Podemos organizar tu día dividiendo tus tareas en: importantes, normales y para después.";
-
-    }
-
-
-    // DESPEDIDA
-
-    if (
-        texto === "chau" ||
-        texto === "adios" ||
-        texto === "adiós"
-    ) {
-
-        return "¡Nos vemos! 👋";
-
-    }
-
-
-    // RESPUESTA GENERAL
-
-    return "Todavía estoy aprendiendo. Probá escribiendo «ayuda» para ver algunas cosas que puedo hacer.";
-
-}
-
-
-// ================================
-// CALCULADORA
-// ================================
-
-function calcular(texto) {
-
-    let expresion = texto
-        .replace(/x/gi, "*")
-        .replace(/÷/g, "/")
-        .replace(/,/g, ".");
-
-    // Solo permite números y operaciones matemáticas
-
-    if (!/^[0-9+\-*/().%\s]+$/.test(expresion)) {
-
-        return null;
-
-    }
-
-    try {
-
-        const resultado = Function(
-            '"use strict"; return (' + expresion + ")"
-        )();
-
-        if (
-            typeof resultado === "number" &&
-            Number.isFinite(resultado)
-        ) {
-
-            return resultado;
-
-        }
-
-    } catch (error) {
-
-        return null;
-
-    }
-
-    return null;
-}
-
-
-// ================================
-// MOSTRAR CHAT
-// ================================
-
-function mostrarChat() {
-
-    inicio.style.display = "none";
-
-    herramientas.classList.add("oculto");
-
-    chat.style.display = "flex";
-
-}
-
-
-// ================================
-// NUEVO CHAT
-// ================================
-
-function nuevoChat() {
-
-    chat.innerHTML = "";
-
-    inicio.style.display = "flex";
-
-    herramientas.classList.add("oculto");
-
-    chat.style.display = "none";
-
-    input.value = "";
-
-}
-
-
-// ================================
-// INICIO
-// ================================
-
-function mostrarInicio() {
-
-    inicio.style.display = "flex";
-
-    herramientas.classList.add("oculto");
-
-    chat.style.display = "none";
-
-}
-
-
-// ================================
-// HISTORIAL
-// ================================
-
-function mostrarHistorial() {
-
-    inicio.style.display = "none";
-
-    herramientas.classList.add("oculto");
-
-    chat.style.display = "flex";
-
-}
-
-
-// ================================
-// HERRAMIENTAS
-// ================================
-
-function mostrarHerramientas() {
-
-    inicio.style.display = "none";
-
-    chat.style.display = "none";
-
-    herramientas.classList.remove("oculto");
-
-}
-
-
-// ================================
-// SUGERENCIAS
-// ================================
-
-function usarSugerencia(texto) {
-
-    input.value = texto;
-
-    enviar();
-
-}
-
-
-// ================================
-// CAMBIAR MODO
-// ================================
-
-function cambiarModo(modo, boton) {
-
-    modoActual = modo;
-
-    const botones = document.querySelectorAll(".modo");
-
-    botones.forEach(function (b) {
-
-        b.classList.remove("activo");
+    chat.messages.forEach(message => {
+
+        messagesEl.appendChild(
+            createMessageElement(message)
+        );
 
     });
 
-    boton.classList.add("activo");
 
+    scrollToBottom();
 }
 
 
-// ================================
-// HERRAMIENTAS INDIVIDUALES
-// ================================
+// =====================================================
+// CREAR MENSAJE
+// =====================================================
 
-function abrirHerramienta(herramienta) {
+function createMessageElement(message) {
 
-    mostrarChat();
+    const element =
+        document.createElement("div");
 
-    let mensaje = "";
 
-    if (herramienta === "calculadora") {
+    element.className =
+        "message " + message.role;
 
-        mensaje = "🧮 Calculadora abierta. Escribí una operación como 25 + 30.";
+
+    const avatar =
+        document.createElement("div");
+
+    avatar.className =
+        "message-avatar";
+
+
+    avatar.textContent =
+        message.role === "assistant"
+            ? "✦"
+            : "U";
+
+
+    const content =
+        document.createElement("div");
+
+    content.className =
+        "message-content";
+
+
+    formatMessage(
+        message.content,
+        content
+    );
+
+
+    if (message.role === "assistant") {
+
+        const copyButton =
+            document.createElement("button");
+
+        copyButton.className =
+            "copy-message";
+
+
+        copyButton.innerHTML =
+            `
+            <i class="fa-regular fa-copy"></i>
+            Copiar respuesta
+            `;
+
+
+        copyButton.addEventListener(
+            "click",
+            async () => {
+
+                try {
+
+                    await navigator.clipboard.writeText(
+                        message.content
+                    );
+
+                    copyButton.innerHTML =
+                        `
+                        <i class="fa-solid fa-check"></i>
+                        ¡Copiado!
+                        `;
+
+                    setTimeout(() => {
+
+                        copyButton.innerHTML =
+                            `
+                            <i class="fa-regular fa-copy"></i>
+                            Copiar respuesta
+                            `;
+
+                    }, 1500);
+
+                } catch {
+
+                    alert(
+                        "No se pudo copiar la respuesta."
+                    );
+
+                }
+
+            }
+        );
+
+
+        content.appendChild(copyButton);
 
     }
 
-    if (herramienta === "estudio") {
 
-        mensaje = "📚 NOVA Tutor. Decime qué tema querés estudiar.";
+    if (message.role === "user") {
 
-    }
+        element.appendChild(content);
 
-    if (herramienta === "ideas") {
+        element.appendChild(avatar);
 
-        mensaje = "💡 NOVA Ideas. Decime qué tipo de proyecto querés crear.";
+    } else {
 
-    }
+        element.appendChild(avatar);
 
-    if (herramienta === "codigo") {
-
-        mensaje = "💻 NOVA Code. Decime qué código querés crear o corregir.";
+        element.appendChild(content);
 
     }
 
-    if (herramienta === "planner") {
 
-        mensaje = "📅 NOVA Planner. Podemos organizar tus tareas y proyectos.";
-
-    }
-
-    if (herramienta === "notas") {
-
-        mensaje = "📝 Notas. Escribí la información que quieras guardar.";
-
-    }
-
-    agregarMensaje(mensaje, "nova");
-
+    return element;
 }
 
 
-// ================================
-// CONFIGURACIÓN
-// ================================
+// =====================================================
+// FORMATEAR RESPUESTAS
+// =====================================================
 
-function abrirConfiguracion() {
+function formatMessage(text, container) {
 
-    const modal = document.getElementById("modal");
-    const contenido = document.getElementById("modalContenido");
-
-    contenido.innerHTML = `
-        <h2>Configuración</h2>
-        <p>NOVA AI</p>
-        <p>Versión local</p>
-    `;
-
-    modal.classList.remove("oculto");
-
-}
+    if (!text) return;
 
 
-// ================================
-// CERRAR MODAL
-// ================================
+    /*
+        Detectamos bloques de código:
 
-function cerrarModal() {
+        ```html
+        código
+        ```
 
-    const modal = document.getElementById("modal");
-
-    modal.classList.add("oculto");
-
-}
+    */
 
 
-// ================================
-// INICIO
-// ================================
+    const parts =
+        text.split(
+            /(```[\s\S]*?```)/g
+        );
 
-chat.style.display = "none";
 
-console.log("NOVA AI funcionando correctamente.");
+    parts.forEach(part => {
 
+        if (
+            part.startsWith("```")
+        ) {
+
+            const content =
+                part.slice(3, -3);
+
+
+            const lines =
+                content.split("\n");
+
+
+            let language = "";
+
+
+            if (
+                lines.length > 0 &&
+                !lines[0].includes(" ")
+            ) {
+
+                language =
+                    lines.shift().trim();
+
+            }
+
+
+            const code =
+                lines.join("\n");
+
+
+            const pre =
+                document.createElement("pre");
+
+
+            const codeElement =
+                document.createElement("code");
+
+
+            codeElement.textContent =
+                code;
+
+
+            const copyButton =
+                document.createElement("button");
+
+
+            copyButton.className =
+                "copy-btn";
+
+
+            copyButton.textContent =
+                "Copiar";
+
+
+            copyButton.addEventListener(
+                "click",
+                async () => {
+
+                    try {
+
+                        await navigator.clipboard.writeText(
+                            code
+                        );
+
+                        copyButton.textContent =
+                            "¡Copiado!";
+
+                        setTimeout(() => {
+
+                            copyButton.textContent =
+                                "Copiar";
+
+                        }, 1500);
+
+                    } catch {
+
+                        copyButton.textContent =
+                            "Error";
+
+                    }
+
+                }
+            );
+
+
+            if (
