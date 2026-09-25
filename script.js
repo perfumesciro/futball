@@ -1,13 +1,18 @@
 
-/* ==========================================
-   NOVA STUDIO
+/* ============================================
+   NOVA STUDIO — SCRIPT PRINCIPAL
    Editor de fotos, videos y diseños
-========================================== */
+============================================ */
+
+"use strict";
 
 const $ = id => document.getElementById(id);
 
 const lienzo = $("lienzo");
 const video = $("videoPreview");
+
+const ANCHO = 800;
+const ALTO = 450;
 
 let modo = "foto";
 let elementos = [];
@@ -18,21 +23,23 @@ let historial = [];
 let futuros = [];
 
 let zoom = 1;
-
 let videoURL = null;
 let inicioRecorte = 0;
 let finRecorte = 0;
-let grabando = false;
+let exportando = false;
+let ajusteEnCurso = false;
 
-/* ==========================================
+/* ============================================
    NAVEGACIÓN
-========================================== */
+============================================ */
 
 function estado(mensaje) {
   $("estado").textContent = mensaje;
 }
 
 function irInicio() {
+  video.pause();
+
   $("inicio").classList.remove("hidden");
   $("editor").classList.add("hidden");
 }
@@ -43,11 +50,6 @@ function abrirEditor(tipo) {
   $("inicio").classList.add("hidden");
   $("editor").classList.remove("hidden");
 
-  $("timeline").classList.toggle(
-    "hidden",
-    tipo !== "video" || !videoURL
-  );
-
   const nombres = {
     foto: "Editor de fotos",
     video: "Editor de videos",
@@ -56,14 +58,22 @@ function abrirEditor(tipo) {
 
   $("nombreProyecto").textContent = nombres[tipo];
 
+  $("timeline").classList.toggle(
+    "hidden",
+    tipo !== "video" || !videoURL
+  );
+
+  lienzo.style.background =
+    tipo === "diseno" ? "#ffffff" : "#252b36";
+
   if (tipo === "diseno" && elementos.length === 0) {
     $("mensajeVacio").classList.add("hidden");
-    lienzo.style.background = "#ffffff";
   }
 
   mostrarPanel(tipo === "video" ? "video" : "archivos");
 
   renderizar();
+  estado(nombres[tipo] + " listo");
 }
 
 function mostrarPanel(nombre) {
@@ -71,7 +81,11 @@ function mostrarPanel(nombre) {
     panel.classList.add("hidden");
   });
 
-  $("panel-" + nombre).classList.remove("hidden");
+  const panel = $("panel-" + nombre);
+
+  if (!panel) return;
+
+  panel.classList.remove("hidden");
 
   const titulos = {
     archivos: "Mis archivos",
@@ -84,21 +98,29 @@ function mostrarPanel(nombre) {
 
   $("panelTitulo").textContent = titulos[nombre];
 
-  if (nombre === "capas") {
-    actualizarCapas();
-  }
+  document.querySelectorAll(".sidebar button")
+    .forEach(boton => {
+      boton.classList.remove("active");
+
+      if (
+        boton.getAttribute("onclick")
+          ?.includes("'" + nombre + "'")
+      ) {
+        boton.classList.add("active");
+      }
+    });
+
+  if (nombre === "capas") actualizarCapas();
 }
 
-/* ==========================================
+/* ============================================
    HISTORIAL
-========================================== */
+============================================ */
 
 function guardarHistorial() {
   historial.push(JSON.stringify(elementos));
 
-  if (historial.length > 40) {
-    historial.shift();
-  }
+  if (historial.length > 40) historial.shift();
 
   futuros = [];
 }
@@ -129,25 +151,26 @@ function rehacer() {
   estado("Cambio restaurado");
 }
 
-/* ==========================================
-   CREACIÓN DE ELEMENTOS
-========================================== */
+/* ============================================
+   ELEMENTOS
+============================================ */
 
 function crearElemento(datos) {
   guardarHistorial();
 
   const elemento = {
     id: siguienteId++,
+    tipo: "rect",
+    nombre: "Elemento",
     x: 100,
     y: 100,
-    w: 250,
+    w: 200,
     h: 150,
     rotacion: 0,
     ...datos
   };
 
   elementos.push(elemento);
-
   seleccionado = elemento.id;
 
   $("mensajeVacio").classList.add("hidden");
@@ -157,9 +180,30 @@ function crearElemento(datos) {
   return elemento;
 }
 
-/* ==========================================
+function obtenerSeleccion() {
+  return elementos.find(e => e.id === seleccionado);
+}
+
+function seleccionar(id) {
+  seleccionado = id;
+
+  const e = obtenerSeleccion();
+
+  if (e?.tipo === "imagen") {
+    ["brillo", "contraste", "saturacion", "blur"]
+      .forEach(k => {
+        $(k).value = e[k];
+      });
+
+    actualizarEtiquetas();
+  }
+
+  renderizar();
+}
+
+/* ============================================
    IMPORTAR IMÁGENES
-========================================== */
+============================================ */
 
 function cargarImagen(evento) {
   const archivo = evento.target.files[0];
@@ -183,20 +227,17 @@ function cargarImagen(evento) {
         1
       );
 
-      const ancho = imagen.width * escala;
-      const alto = imagen.height * escala;
+      const w = imagen.width * escala;
+      const h = imagen.height * escala;
 
       crearElemento({
         tipo: "imagen",
         nombre: archivo.name,
         src: lector.result,
-
-        x: (800 - ancho) / 2,
-        y: (450 - alto) / 2,
-
-        w: ancho,
-        h: alto,
-
+        x: (ANCHO - w) / 2,
+        y: (ALTO - h) / 2,
+        w,
+        h,
         brillo: 100,
         contraste: 100,
         saturacion: 100,
@@ -204,7 +245,7 @@ function cargarImagen(evento) {
         extra: ""
       });
 
-      estado("Imagen agregada correctamente");
+      estado("Imagen importada: " + archivo.name);
     };
 
     imagen.onerror = () => {
@@ -215,19 +256,18 @@ function cargarImagen(evento) {
   };
 
   lector.readAsDataURL(archivo);
-
   evento.target.value = "";
 }
 
-/* ==========================================
-   AGREGAR TEXTOS
-========================================== */
+/* ============================================
+   TEXTO Y FORMAS
+============================================ */
 
 function agregarTexto() {
   const contenido = $("nuevoTexto").value.trim();
 
   if (!contenido) {
-    alert("Primero escribí un texto.");
+    alert("Escribí un texto primero.");
     return;
   }
 
@@ -235,15 +275,12 @@ function agregarTexto() {
 
   crearElemento({
     tipo: "texto",
-    nombre: "Texto",
-    contenido: contenido,
-
+    nombre: contenido.slice(0, 25),
+    contenido,
     color: $("colorTexto").value,
-    tamano: tamano,
-
-    x: 180,
+    tamano,
+    x: 170,
     y: 160,
-
     w: 420,
     h: Math.max(80, tamano * 2)
   });
@@ -251,24 +288,13 @@ function agregarTexto() {
   estado("Texto agregado");
 }
 
-/* ==========================================
-   AGREGAR FORMAS
-========================================== */
-
 function agregarForma(tipo) {
   crearElemento({
-    tipo: tipo,
-
-    nombre:
-      tipo === "circle"
-        ? "Círculo"
-        : "Rectángulo",
-
+    tipo,
+    nombre: tipo === "circle" ? "Círculo" : "Rectángulo",
     color: $("colorForma").value,
-
     x: 300,
     y: 150,
-
     w: 180,
     h: 150
   });
@@ -276,143 +302,92 @@ function agregarForma(tipo) {
   estado("Forma agregada");
 }
 
-/* ==========================================
-   SELECCIÓN
-========================================== */
-
-function obtenerSeleccion() {
-  return elementos.find(
-    elemento => elemento.id === seleccionado
-  );
-}
-
-function seleccionar(id) {
-  seleccionado = id;
-
-  const elemento = obtenerSeleccion();
-
-  if (elemento && elemento.tipo === "imagen") {
-    ["brillo", "contraste", "saturacion", "blur"]
-      .forEach(propiedad => {
-        $(propiedad).value = elemento[propiedad];
-      });
-
-    actualizarEtiquetas();
-  }
-
-  renderizar();
-}
-
-/* ==========================================
-   RENDERIZAR ELEMENTOS
-========================================== */
+/* ============================================
+   DIBUJAR ELEMENTOS EN EL EDITOR
+============================================ */
 
 function renderizar() {
-  lienzo.querySelectorAll(".elemento").forEach(nodo => {
-    nodo.remove();
-  });
+  lienzo.querySelectorAll(".elemento")
+    .forEach(nodo => nodo.remove());
 
-  elementos.forEach(elemento => {
+  elementos.forEach(e => {
     const div = document.createElement("div");
 
     div.className = "elemento";
-    div.dataset.id = elemento.id;
+    div.dataset.id = e.id;
 
-    div.style.left = elemento.x + "px";
-    div.style.top = elemento.y + "px";
+    div.style.left = e.x + "px";
+    div.style.top = e.y + "px";
+    div.style.width = e.w + "px";
+    div.style.height = e.h + "px";
+    div.style.transform = `rotate(${e.rotacion}deg)`;
 
-    div.style.width = elemento.w + "px";
-    div.style.height = elemento.h + "px";
-
-    div.style.transform =
-      `rotate(${elemento.rotacion}deg)`;
-
-    if (elemento.id === seleccionado) {
+    if (e.id === seleccionado) {
       div.classList.add("seleccionado");
     }
 
-    // IMAGEN
+    if (e.tipo === "imagen") {
+      const img = document.createElement("img");
 
-    if (elemento.tipo === "imagen") {
-      const imagen = document.createElement("img");
+      img.src = e.src;
+      img.draggable = false;
 
-      imagen.src = elemento.src;
-
-      imagen.style.filter = `
-        brightness(${elemento.brillo}%)
-        contrast(${elemento.contraste}%)
-        saturate(${elemento.saturacion}%)
-        blur(${elemento.blur}px)
-        ${elemento.extra || ""}
+      img.style.filter = `
+        brightness(${e.brillo}%)
+        contrast(${e.contraste}%)
+        saturate(${e.saturacion}%)
+        blur(${e.blur}px)
+        ${e.extra || ""}
       `;
 
-      div.appendChild(imagen);
+      div.appendChild(img);
     }
 
-    // TEXTO
-
-    if (elemento.tipo === "texto") {
+    if (e.tipo === "texto") {
       div.classList.add("texto");
-
-      div.textContent = elemento.contenido;
-
-      div.style.color = elemento.color;
-      div.style.fontSize = elemento.tamano + "px";
+      div.textContent = e.contenido;
+      div.style.color = e.color;
+      div.style.fontSize = e.tamano + "px";
     }
 
-    // FORMAS
+    if (e.tipo === "rect" || e.tipo === "circle") {
+      div.style.background = e.color;
 
-    if (
-      elemento.tipo === "rect" ||
-      elemento.tipo === "circle"
-    ) {
-      div.style.background = elemento.color;
-
-      if (elemento.tipo === "circle") {
+      if (e.tipo === "circle") {
         div.classList.add("circulo");
       }
     }
 
-    // MOVIMIENTO
-
     div.addEventListener("pointerdown", evento => {
       if (
         evento.target.classList.contains("resize-handle")
-      ) {
-        return;
-      }
+      ) return;
 
-      iniciarMovimiento(evento, elemento.id);
+      iniciarMovimiento(evento, e.id);
     });
 
-    // EDITAR TEXTO CON DOBLE CLIC
-
     div.addEventListener("dblclick", () => {
-      if (elemento.tipo !== "texto") return;
+      if (e.tipo !== "texto") return;
 
-      const nuevo = prompt(
-        "Editar texto:",
-        elemento.contenido
-      );
+      const nuevo = prompt("Editar texto:", e.contenido);
 
       if (nuevo === null) return;
 
       guardarHistorial();
 
-      elemento.contenido = nuevo;
+      e.contenido = nuevo;
+      e.nombre = nuevo.slice(0, 25);
 
       renderizar();
     });
 
-    // REDIMENSIONAR
-
-    if (elemento.id === seleccionado) {
+    if (e.id === seleccionado) {
       const handle = document.createElement("div");
 
       handle.className = "resize-handle";
 
       handle.addEventListener("pointerdown", evento => {
-        iniciarRedimension(evento, elemento.id);
+        iniciarRedimension(evento, e.id);
       });
 
       div.appendChild(handle);
@@ -424,44 +399,39 @@ function renderizar() {
   actualizarCapas();
 }
 
-/* ==========================================
+/* ============================================
    MOVER ELEMENTOS
-========================================== */
+============================================ */
 
 function iniciarMovimiento(evento, id) {
   evento.preventDefault();
 
-  if (seleccionado !== id) {
-    seleccionar(id);
-  }
+  if (seleccionado !== id) seleccionar(id);
 
-  const elemento = obtenerSeleccion();
+  const e = obtenerSeleccion();
 
-  if (!elemento) return;
+  if (!e) return;
 
   guardarHistorial();
-
-  const inicialX = evento.clientX;
-  const inicialY = evento.clientY;
-
-  const originalX = elemento.x;
-  const originalY = elemento.y;
 
   const nodo = lienzo.querySelector(
     `[data-id="${id}"]`
   );
 
+  const inicioX = evento.clientX;
+  const inicioY = evento.clientY;
+
+  const originalX = e.x;
+  const originalY = e.y;
+
   nodo.setPointerCapture(evento.pointerId);
 
   function mover(ev) {
-    elemento.x =
-      originalX + (ev.clientX - inicialX) / zoom;
+    e.x = originalX + (ev.clientX - inicioX) / zoom;
+    e.y = originalY + (ev.clientY - inicioY) / zoom;
 
-    elemento.y =
-      originalY + (ev.clientY - inicialY) / zoom;
-
-    nodo.style.left = elemento.x + "px";
-    nodo.style.top = elemento.y + "px";
+    nodo.style.left = e.x + "px";
+    nodo.style.top = e.y + "px";
   }
 
   function terminar() {
@@ -475,45 +445,45 @@ function iniciarMovimiento(evento, id) {
   nodo.addEventListener("pointercancel", terminar);
 }
 
-/* ==========================================
-   CAMBIAR TAMAÑO
-========================================== */
+/* ============================================
+   REDIMENSIONAR
+============================================ */
 
 function iniciarRedimension(evento, id) {
   evento.preventDefault();
   evento.stopPropagation();
 
-  const elemento = elementos.find(e => e.id === id);
+  const e = elementos.find(item => item.id === id);
 
-  if (!elemento) return;
+  if (!e) return;
 
   guardarHistorial();
 
-  const inicialX = evento.clientX;
-  const inicialY = evento.clientY;
-
-  const anchoOriginal = elemento.w;
-  const altoOriginal = elemento.h;
-
   const handle = evento.currentTarget;
+
+  const inicioX = evento.clientX;
+  const inicioY = evento.clientY;
+
+  const originalW = e.w;
+  const originalH = e.h;
 
   handle.setPointerCapture(evento.pointerId);
 
   function mover(ev) {
-    elemento.w = Math.max(
+    e.w = Math.max(
       30,
-      anchoOriginal + (ev.clientX - inicialX) / zoom
+      originalW + (ev.clientX - inicioX) / zoom
     );
 
-    elemento.h = Math.max(
+    e.h = Math.max(
       30,
-      altoOriginal + (ev.clientY - inicialY) / zoom
+      originalH + (ev.clientY - inicioY) / zoom
     );
 
     const nodo = handle.parentElement;
 
-    nodo.style.width = elemento.w + "px";
-    nodo.style.height = elemento.h + "px";
+    nodo.style.width = e.w + "px";
+    nodo.style.height = e.h + "px";
   }
 
   function terminar() {
@@ -529,34 +499,23 @@ function iniciarRedimension(evento, id) {
   handle.addEventListener("pointercancel", terminar);
 }
 
-/* ==========================================
-   AJUSTES Y FILTROS
-========================================== */
+/* ============================================
+   FILTROS Y AJUSTES
+============================================ */
 
 function actualizarEtiquetas() {
-  $("vBrillo").textContent =
-    $("brillo").value + "%";
-
-  $("vContraste").textContent =
-    $("contraste").value + "%";
-
-  $("vSaturacion").textContent =
-    $("saturacion").value + "%";
-
-  $("vBlur").textContent =
-    $("blur").value + "px";
+  $("vBrillo").textContent = $("brillo").value + "%";
+  $("vContraste").textContent = $("contraste").value + "%";
+  $("vSaturacion").textContent = $("saturacion").value + "%";
+  $("vBlur").textContent = $("blur").value + "px";
 }
-
-let ajusteEnCurso = false;
 
 function actualizarFiltros() {
   actualizarEtiquetas();
 
-  const elemento = obtenerSeleccion();
+  const e = obtenerSeleccion();
 
-  if (!elemento || elemento.tipo !== "imagen") {
-    return;
-  }
+  if (!e || e.tipo !== "imagen") return;
 
   if (!ajusteEnCurso) {
     guardarHistorial();
@@ -564,24 +523,24 @@ function actualizarFiltros() {
   }
 
   ["brillo", "contraste", "saturacion", "blur"]
-    .forEach(propiedad => {
-      elemento[propiedad] = Number($(propiedad).value);
+    .forEach(k => {
+      e[k] = Number($(k).value);
     });
 
   renderizar();
 }
 
 ["brillo", "contraste", "saturacion", "blur"]
-  .forEach(propiedad => {
-    $(propiedad).addEventListener("change", () => {
+  .forEach(k => {
+    $(k).addEventListener("change", () => {
       ajusteEnCurso = false;
     });
   });
 
 function filtroRapido(tipo) {
-  const elemento = obtenerSeleccion();
+  const e = obtenerSeleccion();
 
-  if (!elemento || elemento.tipo !== "imagen") {
+  if (!e || e.tipo !== "imagen") {
     alert("Primero seleccioná una imagen.");
     return;
   }
@@ -595,26 +554,24 @@ function filtroRapido(tipo) {
     vivo: "saturate(1.6)"
   };
 
-  elemento.extra = filtros[tipo] || "";
+  e.extra = filtros[tipo] || "";
 
   renderizar();
-
   estado("Filtro aplicado");
 }
 
-/* ==========================================
-   TRANSFORMACIONES
-========================================== */
+/* ============================================
+   CAPAS Y TRANSFORMACIONES
+============================================ */
 
 function rotarSeleccion() {
-  const elemento = obtenerSeleccion();
+  const e = obtenerSeleccion();
 
-  if (!elemento) return;
+  if (!e) return;
 
   guardarHistorial();
 
-  elemento.rotacion =
-    (elemento.rotacion + 90) % 360;
+  e.rotacion = (e.rotacion + 90) % 360;
 
   renderizar();
 }
@@ -625,116 +582,91 @@ function eliminarSeleccion() {
   guardarHistorial();
 
   elementos = elementos.filter(
-    elemento => elemento.id !== seleccionado
+    e => e.id !== seleccionado
   );
 
   seleccionado = null;
 
   renderizar();
-
   estado("Elemento eliminado");
 }
 
 function duplicarSeleccion() {
-  const elemento = obtenerSeleccion();
+  const e = obtenerSeleccion();
 
-  if (!elemento) return;
+  if (!e) return;
 
-  const copia = JSON.parse(
-    JSON.stringify(elemento)
-  );
+  const copia = structuredClone(e);
 
   delete copia.id;
 
   copia.x += 25;
   copia.y += 25;
-
   copia.nombre += " copia";
 
   crearElemento(copia);
 }
 
 function adelantar() {
-  const indice = elementos.findIndex(
-    elemento => elemento.id === seleccionado
+  const i = elementos.findIndex(
+    e => e.id === seleccionado
   );
 
-  if (
-    indice < 0 ||
-    indice === elementos.length - 1
-  ) {
-    return;
-  }
+  if (i < 0 || i >= elementos.length - 1) return;
 
   guardarHistorial();
 
-  [
-    elementos[indice],
-    elementos[indice + 1]
-  ] = [
-    elementos[indice + 1],
-    elementos[indice]
-  ];
+  [elementos[i], elementos[i + 1]] =
+    [elementos[i + 1], elementos[i]];
 
   renderizar();
 }
 
 function atrasar() {
-  const indice = elementos.findIndex(
-    elemento => elemento.id === seleccionado
+  const i = elementos.findIndex(
+    e => e.id === seleccionado
   );
 
-  if (indice <= 0) return;
+  if (i <= 0) return;
 
   guardarHistorial();
 
-  [
-    elementos[indice],
-    elementos[indice - 1]
-  ] = [
-    elementos[indice - 1],
-    elementos[indice]
-  ];
+  [elementos[i], elementos[i - 1]] =
+    [elementos[i - 1], elementos[i]];
 
   renderizar();
 }
-
-/* ==========================================
-   CAPAS
-========================================== */
 
 function actualizarCapas() {
   const lista = $("listaCapas");
 
   lista.innerHTML = "";
 
-  [...elementos].reverse().forEach(elemento => {
+  [...elementos].reverse().forEach(e => {
     const boton = document.createElement("button");
 
     boton.className = "capa";
 
-    if (elemento.id === seleccionado) {
+    if (e.id === seleccionado) {
       boton.classList.add("activa");
     }
 
-    boton.textContent = "▤ " + elemento.nombre;
+    boton.textContent = "▤ " + e.nombre;
 
-    boton.onclick = () => {
-      seleccionar(elemento.id);
-    };
+    boton.onclick = () => seleccionar(e.id);
 
     lista.appendChild(boton);
   });
 }
 
-/* ==========================================
+/* ============================================
    ZOOM
-========================================== */
+============================================ */
 
 function cambiarZoom(cantidad) {
   zoom = Math.max(
     0.3,
-    Math.min(2, zoom + cantidad)
+    Math.min(2, Math.round((zoom + cantidad) * 10) / 10)
   );
 
   lienzo.style.transform = `scale(${zoom})`;
@@ -743,9 +675,9 @@ function cambiarZoom(cantidad) {
     Math.round(zoom * 100) + "%";
 }
 
-/* ==========================================
-   PROYECTO VACÍO
-========================================== */
+/* ============================================
+   LIMPIAR PROYECTO
+============================================ */
 
 function limpiarLienzo() {
   if (!confirm("¿Querés crear un proyecto vacío?")) {
@@ -757,16 +689,14 @@ function limpiarLienzo() {
   elementos = [];
   seleccionado = null;
 
-  if (videoURL) {
-    URL.revokeObjectURL(videoURL);
-  }
+  video.pause();
+
+  if (videoURL) URL.revokeObjectURL(videoURL);
 
   videoURL = null;
 
-  video.pause();
   video.removeAttribute("src");
   video.load();
-
   video.classList.add("hidden");
 
   $("timeline").classList.add("hidden");
@@ -780,13 +710,12 @@ function limpiarLienzo() {
     modo === "diseno" ? "#ffffff" : "#252b36";
 
   renderizar();
-
   estado("Proyecto vacío");
 }
 
-/* ==========================================
+/* ============================================
    EDITOR DE VIDEO
-========================================== */
+============================================ */
 
 function cargarVideo(evento) {
   const archivo = evento.target.files[0];
@@ -800,21 +729,20 @@ function cargarVideo(evento) {
 
   video.pause();
 
-  if (videoURL) {
-    URL.revokeObjectURL(videoURL);
-  }
+  if (videoURL) URL.revokeObjectURL(videoURL);
 
   videoURL = URL.createObjectURL(archivo);
 
   video.src = videoURL;
   video.classList.remove("hidden");
 
-  video.controls = false;
-
   $("mensajeVacio").classList.add("hidden");
   $("timeline").classList.remove("hidden");
 
   modo = "video";
+
+  $("nombreProyecto").textContent =
+    "Editor de videos";
 
   mostrarPanel("video");
 
@@ -836,9 +764,7 @@ function cargarVideo(evento) {
 }
 
 function formatoTiempo(segundos) {
-  if (!Number.isFinite(segundos)) {
-    return "00:00";
-  }
+  if (!Number.isFinite(segundos)) return "00:00";
 
   const minutos = Math.floor(segundos / 60);
   const resto = Math.floor(segundos % 60);
@@ -886,7 +812,7 @@ function moverVideo(valor) {
 video.addEventListener("timeupdate", () => {
   actualizarTiempo();
 
-  if (!grabando && video.duration) {
+  if (!exportando && video.duration) {
     $("barraVideo").value =
       video.currentTime / video.duration * 100;
 
@@ -909,6 +835,8 @@ function aplicarRecorte() {
   const fin = Number($("finVideo").value);
 
   if (
+    !Number.isFinite(inicio) ||
+    !Number.isFinite(fin) ||
     inicio < 0 ||
     fin > video.duration ||
     inicio >= fin
@@ -932,122 +860,107 @@ function cambiarVelocidad() {
   estado("Velocidad modificada");
 }
 
-/* ==========================================
-   EXPORTACIÓN DE IMÁGENES
-========================================== */
+/* ============================================
+   DIBUJAR PROYECTO PARA EXPORTAR
+============================================ */
 
 function esperarImagen(src) {
   return new Promise((resolve, reject) => {
-    const imagen = new Image();
+    const img = new Image();
 
-    imagen.onload = () => resolve(imagen);
-    imagen.onerror = reject;
+    img.onload = () => resolve(img);
+    img.onerror = reject;
 
-    imagen.src = src;
+    img.src = src;
   });
 }
 
+function dibujarElemento(ctx, e, imagen = null) {
+  ctx.save();
+
+  ctx.translate(
+    e.x + e.w / 2,
+    e.y + e.h / 2
+  );
+
+  ctx.rotate(e.rotacion * Math.PI / 180);
+
+  ctx.translate(-e.w / 2, -e.h / 2);
+
+  if (e.tipo === "imagen" && imagen) {
+    ctx.filter = `
+      brightness(${e.brillo}%)
+      contrast(${e.contraste}%)
+      saturate(${e.saturacion}%)
+      blur(${e.blur}px)
+      ${e.extra || ""}
+    `;
+
+    ctx.drawImage(imagen, 0, 0, e.w, e.h);
+    ctx.filter = "none";
+  }
+
+  if (e.tipo === "rect") {
+    ctx.fillStyle = e.color;
+    ctx.fillRect(0, 0, e.w, e.h);
+  }
+
+  if (e.tipo === "circle") {
+    ctx.fillStyle = e.color;
+    ctx.beginPath();
+
+    ctx.ellipse(
+      e.w / 2,
+      e.h / 2,
+      e.w / 2,
+      e.h / 2,
+      0,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fill();
+  }
+
+  if (e.tipo === "texto") {
+    ctx.fillStyle = e.color;
+    ctx.font = `bold ${e.tamano}px Arial`;
+    ctx.textBaseline = "top";
+
+    e.contenido.split("\n").forEach((linea, i) => {
+      ctx.fillText(
+        linea,
+        0,
+        i * e.tamano * 1.2,
+        e.w
+      );
+    });
+  }
+
+  ctx.restore();
+}
+
 async function dibujarProyecto(ctx) {
-  ctx.clearRect(0, 0, 800, 450);
+  ctx.clearRect(0, 0, ANCHO, ALTO);
 
   ctx.fillStyle =
     modo === "diseno" ? "#ffffff" : "#252b36";
 
-  ctx.fillRect(0, 0, 800, 450);
+  ctx.fillRect(0, 0, ANCHO, ALTO);
 
-  for (const elemento of elementos) {
-    ctx.save();
+  for (const e of elementos) {
+    const imagen =
+      e.tipo === "imagen"
+        ? await esperarImagen(e.src)
+        : null;
 
-    ctx.translate(
-      elemento.x + elemento.w / 2,
-      elemento.y + elemento.h / 2
-    );
-
-    ctx.rotate(
-      elemento.rotacion * Math.PI / 180
-    );
-
-    ctx.translate(
-      -elemento.w / 2,
-      -elemento.h / 2
-    );
-
-    if (elemento.tipo === "imagen") {
-      const imagen = await esperarImagen(
-        elemento.src
-      );
-
-      ctx.filter = `
-        brightness(${elemento.brillo}%)
-        contrast(${elemento.contraste}%)
-        saturate(${elemento.saturacion}%)
-        blur(${elemento.blur}px)
-        ${elemento.extra || ""}
-      `;
-
-      ctx.drawImage(
-        imagen,
-        0,
-        0,
-        elemento.w,
-        elemento.h
-      );
-
-      ctx.filter = "none";
-    }
-
-    if (elemento.tipo === "rect") {
-      ctx.fillStyle = elemento.color;
-
-      ctx.fillRect(
-        0,
-        0,
-        elemento.w,
-        elemento.h
-      );
-    }
-
-    if (elemento.tipo === "circle") {
-      ctx.fillStyle = elemento.color;
-
-      ctx.beginPath();
-
-      ctx.ellipse(
-        elemento.w / 2,
-        elemento.h / 2,
-        elemento.w / 2,
-        elemento.h / 2,
-        0,
-        0,
-        Math.PI * 2
-      );
-
-      ctx.fill();
-    }
-
-    if (elemento.tipo === "texto") {
-      ctx.fillStyle = elemento.color;
-
-      ctx.font =
-        `bold ${elemento.tamano}px Arial`;
-
-      ctx.textBaseline = "top";
-
-      elemento.contenido
-        .split("\n")
-        .forEach((linea, indice) => {
-          ctx.fillText(
-            linea,
-            0,
-            indice * elemento.tamano * 1.2,
-            elemento.w
-          );
-        });
-    }
-
-    ctx.restore();
+    dibujarElemento(ctx, e, imagen);
   }
 }
+
+/* ============================================
+   DESCARGAR ARCHIVOS
+============================================ */
 
 function descargarBlob(blob, nombre) {
   const url = URL.createObjectURL(blob);
@@ -1058,7 +971,6 @@ function descargarBlob(blob, nombre) {
   enlace.download = nombre;
 
   document.body.appendChild(enlace);
-
   enlace.click();
   enlace.remove();
 
@@ -1070,39 +982,38 @@ function descargarBlob(blob, nombre) {
 async function descargarImagen() {
   const canvas = document.createElement("canvas");
 
-  canvas.width = 800;
-  canvas.height = 450;
+  canvas.width = ANCHO;
+  canvas.height = ALTO;
 
   const ctx = canvas.getContext("2d");
 
   await dibujarProyecto(ctx);
 
-  canvas.toBlob(blob => {
-    if (blob) {
-      descargarBlob(
-        blob,
-        "nova-studio.png"
-      );
+  const blob = await new Promise(resolve => {
+    canvas.toBlob(resolve, "image/png");
+  });
 
-      estado("Imagen exportada");
-    }
-  }, "image/png");
+  if (!blob) {
+    throw new Error("No se pudo generar el PNG");
+  }
+
+  descargarBlob(blob, "nova-studio.png");
+
+  estado("Imagen exportada correctamente");
 }
 
-/* ==========================================
+/* ============================================
    EXPORTACIÓN EXPERIMENTAL DE VIDEO
-========================================== */
+============================================ */
 
 async function exportarVideo() {
-  if (!videoURL || grabando) return;
+  if (!videoURL || exportando) return;
 
   if (
     !window.MediaRecorder ||
     !HTMLCanvasElement.prototype.captureStream
   ) {
-    alert(
-      "Tu navegador no admite esta exportación."
-    );
+    alert("Tu navegador no admite esta exportación.");
     return;
   }
 
@@ -1110,28 +1021,24 @@ async function exportarVideo() {
     "video/webm;codecs=vp9",
     "video/webm;codecs=vp8",
     "video/webm"
-  ].find(formato =>
-    MediaRecorder.isTypeSupported(formato)
-  );
+  ].find(t => MediaRecorder.isTypeSupported(t));
 
   if (!tipo) {
-    alert("Tu navegador no admite exportar WebM.");
+    alert("Este navegador no admite exportar WebM.");
     return;
   }
 
+  exportando = true;
   video.pause();
-  grabando = true;
-
-  estado("Preparando exportación...");
 
   const canvas = document.createElement("canvas");
 
-  canvas.width = 800;
-  canvas.height = 450;
+  canvas.width = ANCHO;
+  canvas.height = ALTO;
 
   const ctx = canvas.getContext("2d");
-
   const stream = canvas.captureStream(30);
+
   const partes = [];
 
   const recorder = new MediaRecorder(stream, {
@@ -1146,45 +1053,22 @@ async function exportarVideo() {
   };
 
   recorder.onstop = () => {
-    if (partes.length) {
-      const blob = new Blob(
-        partes,
-        { type: tipo }
-      );
+    stream.getTracks().forEach(track => track.stop());
 
+    if (partes.length > 0) {
       descargarBlob(
-        blob,
+        new Blob(partes, { type: tipo }),
         "nova-video.webm"
       );
 
       estado("Video exportado");
     }
 
-    stream.getTracks().forEach(track => {
-      track.stop();
-    });
-
-    grabando = false;
+    exportando = false;
   };
 
   try {
-    video.currentTime = inicioRecorte;
-
-    await new Promise(resolve => {
-      if (
-        Math.abs(
-          video.currentTime - inicioRecorte
-        ) < 0.05
-      ) {
-        resolve();
-      } else {
-        video.addEventListener(
-          "seeked",
-          resolve,
-          { once: true }
-        );
-      }
-    });
+    estado("Preparando exportación...");
 
     const imagenes = await Promise.all(
       elementos
@@ -1199,108 +1083,38 @@ async function exportarVideo() {
 
     function dibujarFrame() {
       ctx.fillStyle = "#000000";
-
-      ctx.fillRect(0, 0, 800, 450);
+      ctx.fillRect(0, 0, ANCHO, ALTO);
 
       if (video.readyState >= 2) {
         ctx.drawImage(
           video,
           0,
           0,
-          800,
-          450
+          ANCHO,
+          ALTO
         );
       }
 
-      for (const elemento of elementos) {
-        ctx.save();
-
-        ctx.translate(
-          elemento.x + elemento.w / 2,
-          elemento.y + elemento.h / 2
-        );
-
-        ctx.rotate(
-          elemento.rotacion * Math.PI / 180
-        );
-
-        ctx.translate(
-          -elemento.w / 2,
-          -elemento.h / 2
-        );
-
-        if (elemento.tipo === "imagen") {
-          ctx.filter = `
-            brightness(${elemento.brillo}%)
-            contrast(${elemento.contraste}%)
-            saturate(${elemento.saturacion}%)
-            blur(${elemento.blur}px)
-            ${elemento.extra || ""}
-          `;
-
-          ctx.drawImage(
-            mapa.get(elemento.id),
-            0,
-            0,
-            elemento.w,
-            elemento.h
-          );
-
-          ctx.filter = "none";
-        }
-
-        if (elemento.tipo === "texto") {
-          ctx.fillStyle = elemento.color;
-
-          ctx.font =
-            `bold ${elemento.tamano}px Arial`;
-
-          ctx.textBaseline = "top";
-
-          elemento.contenido
-            .split("\n")
-            .forEach((linea, indice) => {
-              ctx.fillText(
-                linea,
-                0,
-                indice * elemento.tamano * 1.2,
-                elemento.w
-              );
-            });
-        }
-
-        if (elemento.tipo === "rect") {
-          ctx.fillStyle = elemento.color;
-
-          ctx.fillRect(
-            0,
-            0,
-            elemento.w,
-            elemento.h
-          );
-        }
-
-        if (elemento.tipo === "circle") {
-          ctx.fillStyle = elemento.color;
-
-          ctx.beginPath();
-
-          ctx.ellipse(
-            elemento.w / 2,
-            elemento.h / 2,
-            elemento.w / 2,
-            elemento.h / 2,
-            0,
-            0,
-            Math.PI * 2
-          );
-
-          ctx.fill();
-        }
-
-        ctx.restore();
-      }
+      elementos.forEach(e => {
+        dibujarElemento(ctx, e, mapa.get(e.id));
+      });
     }
+
+    video.currentTime = inicioRecorte;
+
+    await new Promise(resolve => {
+      if (
+        Math.abs(video.currentTime - inicioRecorte) < 0.05
+      ) {
+        resolve();
+      } else {
+        video.addEventListener(
+          "seeked",
+          resolve,
+          { once: true }
+        );
+      }
+    });
 
     dibujarFrame();
 
@@ -1329,98 +1143,88 @@ async function exportarVideo() {
       requestAnimationFrame(frame);
     });
 
-    recorder.stop();
+    if (recorder.state === "recording") {
+      recorder.stop();
+    }
 
   } catch (error) {
     console.error(error);
 
     video.pause();
 
-    if (recorder.state !== "inactive") {
+    if (recorder.state === "recording") {
       recorder.stop();
+    } else {
+      stream.getTracks().forEach(track => track.stop());
+      exportando = false;
     }
 
-    estado("Error al exportar video");
-
-    alert(
-      "No se pudo exportar este video."
-    );
+    estado("Error al exportar");
+    alert("No se pudo exportar este video.");
   }
 }
 
-/* ==========================================
-   BOTÓN EXPORTAR
-========================================== */
+/* ============================================
+   EXPORTACIÓN GENERAL
+============================================ */
 
 function descargar() {
+  if ($("editor").classList.contains("hidden")) {
+    alert("Primero abrí un editor.");
+    return;
+  }
+
   if (modo === "video" && videoURL) {
     exportarVideo();
   } else {
     descargarImagen().catch(error => {
       console.error(error);
-
-      alert(
-        "No se pudo exportar la imagen."
-      );
+      alert("No se pudo exportar la imagen.");
     });
   }
 }
 
-/* ==========================================
+/* ============================================
    GUARDAR PROYECTOS
-========================================== */
+============================================ */
 
 function guardarProyecto() {
   const proyecto = {
-    version: 1,
-    modo: modo,
-    elementos: elementos,
-    ancho: 800,
-    alto: 450
+    version: 2,
+    nombre: $("nombreProyecto").textContent,
+    modo,
+    ancho: ANCHO,
+    alto: ALTO,
+    elementos
   };
 
   const blob = new Blob(
-    [
-      JSON.stringify(
-        proyecto,
-        null,
-        2
-      )
-    ],
-    {
-      type: "application/json"
-    }
+    [JSON.stringify(proyecto, null, 2)],
+    { type: "application/json" }
   );
 
-  descargarBlob(
-    blob,
-    "nova-proyecto.json"
-  );
+  descargarBlob(blob, "nova-proyecto.json");
 
   if (videoURL) {
     alert(
-      "Se guardaron las capas del proyecto. " +
-      "Conservá el video original por separado."
+      "Se guardaron las capas. Conservá el video " +
+      "original por separado."
     );
   }
 
   estado("Proyecto guardado");
 }
 
-/* ==========================================
-   ATAJOS DE TECLADO
-========================================== */
+/* ============================================
+   ATAJOS
+============================================ */
 
 document.addEventListener("keydown", evento => {
-  const escribiendo = [
-    "INPUT",
-    "TEXTAREA",
-    "SELECT"
-  ].includes(
-    document.activeElement.tagName
-  );
+  const etiqueta = document.activeElement.tagName;
 
-  if (escribiendo) return;
+  if (
+    ["INPUT", "TEXTAREA", "SELECT"].includes(etiqueta)
+  ) return;
 
   if (
     evento.key === "Delete" ||
@@ -1430,7 +1234,7 @@ document.addEventListener("keydown", evento => {
   }
 
   if (
-    evento.ctrlKey &&
+    (evento.ctrlKey || evento.metaKey) &&
     evento.key.toLowerCase() === "z"
   ) {
     evento.preventDefault();
@@ -1443,19 +1247,17 @@ document.addEventListener("keydown", evento => {
   }
 
   if (
-    evento.ctrlKey &&
+    (evento.ctrlKey || evento.metaKey) &&
     evento.key.toLowerCase() === "y"
   ) {
     evento.preventDefault();
-
     rehacer();
   }
 });
 
-/* ==========================================
+/* ============================================
    INICIALIZACIÓN
-========================================== */
+============================================ */
 
 actualizarEtiquetas();
-
 estado("NOVA STUDIO está listo");
