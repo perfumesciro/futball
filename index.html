@@ -1,327 +1,433 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>NOVA AI</title>
+    <title>NOVA AI</title>
+    <meta
+        name="description"
+        content="NOVA AI - Tu asistente inteligente"
+    >
 
-  <meta
-    name="description"
-    content="NOVA AI - Tu asistente inteligente"
-  >
+    <link rel="stylesheet" href="style.css">
 
-  <link rel="stylesheet" href="style.css">
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
 
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-  >
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
 </head>
 
 <body>
 
-  <div class="app">
+<div class="app">
 
-    <!-- =========================
-         BARRA LATERAL
-    ========================== -->
+    <!-- ================= SIDEBAR ================= -->
 
     <aside class="sidebar" id="sidebar">
 
-      <div class="sidebar-top">
+        <div class="sidebar-top">
 
-        <div class="logo">
+            <div class="brand">
+                <div class="brand-logo">
+                    N
+                </div>
 
-          <div class="logo-icon">
-            ✦
-          </div>
+                <div class="brand-info">
+                    <strong>NOVA</strong>
+                    <span>AI Assistant</span>
+                </div>
+            </div>
 
-          <span>NOVA AI</span>
-
-        </div>
-
-        <button
-          class="icon-btn"
-          id="closeSidebar"
-          aria-label="Cerrar menú"
-        >
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-
-      </div>
-
-
-      <!-- NUEVO CHAT -->
-
-      <button
-        class="new-chat"
-        id="newChat"
-      >
-        <i class="fa-solid fa-plus"></i>
-
-        <span>
-          Nuevo chat
-        </span>
-      </button>
-
-
-      <!-- BUSCADOR -->
-
-      <div class="search-box">
-
-        <i class="fa-solid fa-magnifying-glass"></i>
-
-        <input
-          type="text"
-          id="searchChats"
-          placeholder="Buscar conversaciones..."
-          autocomplete="off"
-        >
-
-      </div>
-
-
-      <!-- HISTORIAL -->
-
-      <div class="history-title">
-        HISTORIAL
-      </div>
-
-      <div
-        class="history"
-        id="history"
-      ></div>
-
-
-      <!-- PARTE INFERIOR -->
-
-      <div class="sidebar-bottom">
-
-        <button id="themeBtn">
-
-          <i class="fa-solid fa-moon"></i>
-
-          <span>
-            Cambiar tema
-          </span>
-
-        </button>
-
-
-        <button id="clearBtn">
-
-          <i class="fa-solid fa-broom"></i>
-
-          <span>
-            Limpiar conversación
-          </span>
-
-        </button>
-
-
-        <div class="profile">
-
-          <div class="avatar">
-            U
-          </div>
-
-          <div class="profile-info">
-
-            <strong>
-              Usuario
-            </strong>
-
-            <small>
-              NOVA AI
-            </small>
-
-          </div>
+            <button
+                class="icon-btn close-sidebar"
+                id="closeSidebar"
+                title="Cerrar menú"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
 
         </div>
 
-      </div>
+
+        <!-- NUEVO CHAT -->
+
+        <button class="new-chat-btn" id="newChat">
+            <i class="fa-solid fa-plus"></i>
+            <span>Nuevo chat</span>
+        </button>
+
+
+        <!-- BUSCADOR -->
+
+        <div class="search-box">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+                type="text"
+                id="searchChats"
+                placeholder="Buscar chats..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <!-- HISTORIAL -->
+
+        <div class="history-container">
+
+            <div class="history-title">
+                <span>Conversaciones</span>
+            </div>
+
+            <div id="history" class="history">
+                <!-- JS agrega los chats -->
+            </div>
+
+        </div>
+
+
+        <!-- SIDEBAR BOTTOM -->
+
+        <div class="sidebar-bottom">
+
+            <button
+                class="sidebar-btn"
+                id="themeBtn"
+            >
+                <i class="fa-solid fa-moon"></i>
+                <span>Cambiar tema</span>
+            </button>
+
+
+            <button
+                class="sidebar-btn danger"
+                id="clearBtn"
+            >
+                <i class="fa-solid fa-trash"></i>
+                <span>Limpiar chat</span>
+            </button>
+
+
+            <div class="profile">
+
+                <div class="profile-avatar">
+                    T
+                </div>
+
+                <div class="profile-info">
+                    <strong>Usuario</strong>
+                    <span>NOVA AI</span>
+                </div>
+
+                <i class="fa-solid fa-ellipsis"></i>
+
+            </div>
+
+        </div>
 
     </aside>
 
 
-    <!-- =========================
-         CONTENIDO PRINCIPAL
-    ========================== -->
+    <!-- ================= MAIN ================= -->
 
     <main class="main">
 
+        <!-- TOPBAR -->
 
-      <!-- BARRA SUPERIOR -->
+        <header class="topbar">
 
-      <header class="topbar">
+            <div class="topbar-left">
 
-        <button
-          class="icon-btn menu-btn"
-          id="menuBtn"
-          aria-label="Abrir menú"
-        >
-          <i class="fa-solid fa-bars"></i>
-        </button>
-
-
-        <div class="model-title">
-
-          <div class="model-name">
-
-            <span>
-              NOVA AI
-            </span>
-
-            <i class="fa-solid fa-chevron-down"></i>
-
-          </div>
-
-          <span class="model-subtitle">
-            Asistente inteligente
-          </span>
-
-        </div>
+                <button
+                    class="icon-btn menu-btn"
+                    id="menuBtn"
+                    title="Menú"
+                >
+                    <i class="fa-solid fa-bars"></i>
+                </button>
 
 
-        <!-- ESTADO -->
+                <div class="mobile-brand">
 
-        <div class="status">
+                    <div class="brand-logo small">
+                        N
+                    </div>
 
-          <span
-            class="status-dot"
-          ></span>
+                    <strong>NOVA AI</strong>
 
-          <span id="statusText">
-            Conectando...
-          </span>
-
-        </div>
-
-      </header>
-
-
-      <!-- =========================
-           ZONA DE MENSAJES
-      ========================== -->
-
-      <section
-        class="messages"
-        id="messages"
-      >
-
-        <!--
-
-          Si no hay conversaciones,
-          JavaScript mostrará la pantalla
-          de bienvenida.
-
-        -->
-
-      </section>
-
-
-      <!-- =========================
-           COMPOSITOR
-      ========================== -->
-
-      <div class="composer-area">
-
-        <div class="composer">
-
-
-          <!-- CAJA DE TEXTO -->
-
-          <textarea
-            id="prompt"
-            rows="1"
-            maxlength="20000"
-            placeholder="Preguntale lo que quieras a NOVA..."
-            autocomplete="off"
-          ></textarea>
-
-
-          <!-- BOTONES -->
-
-          <div class="composer-bottom">
-
-
-            <div class="tools">
-
-
-              <!-- VOZ -->
-
-              <button
-                id="voiceBtn"
-                title="Hablar con NOVA"
-                aria-label="Hablar"
-              >
-                <i class="fa-solid fa-microphone"></i>
-              </button>
-
-
-              <!-- ADJUNTAR -->
-
-              <button
-                id="attachBtn"
-                title="Adjuntar archivo"
-                aria-label="Adjuntar archivo"
-              >
-                <i class="fa-solid fa-paperclip"></i>
-              </button>
-
-
-              <!-- INPUT OCULTO -->
-
-              <input
-                type="file"
-                id="fileInput"
-                hidden
-                multiple
-              >
+                </div>
 
             </div>
 
 
-            <!-- ENVIAR -->
+            <div class="topbar-center">
 
-            <button
-              class="send-btn"
-              id="sendBtn"
-              title="Enviar mensaje"
-              aria-label="Enviar mensaje"
+                <div class="nova-status">
+
+                    <span class="status-dot"></span>
+
+                    <span id="statusText">
+                        Comprobando IA...
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="topbar-right">
+
+                <button
+                    class="icon-btn"
+                    id="topNewChat"
+                    title="Nuevo chat"
+                >
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- ================= CHAT ================= -->
+
+        <section
+            class="chat"
+            id="chat"
+        >
+
+            <div
+                class="messages"
+                id="messages"
             >
 
-              <i class="fa-solid fa-arrow-up"></i>
+                <!-- ================= WELCOME ================= -->
 
-            </button>
+                <div
+                    class="welcome"
+                    id="welcome"
+                >
 
-          </div>
+                    <div class="welcome-logo">
+                        N
+                    </div>
+
+                    <h1>
+                        Hola, soy <span>NOVA</span>
+                    </h1>
+
+                    <p>
+                        Tu asistente inteligente.
+                        Preguntame lo que quieras.
+                    </p>
+
+
+                    <!-- SUGERENCIAS -->
+
+                    <div class="suggestions">
+
+                        <button
+                            class="suggestion"
+                            data-prompt="Explicame qué cosas podés hacer."
+                        >
+
+                            <div class="suggestion-icon">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            </div>
+
+                            <div>
+                                <strong>¿Qué podés hacer?</strong>
+                                <span>Conocé las funciones de NOVA</span>
+                            </div>
+
+                        </button>
+
+
+                        <button
+                            class="suggestion"
+                            data-prompt="Ayudame a crear una página web moderna."
+                        >
+
+                            <div class="suggestion-icon">
+                                <i class="fa-solid fa-code"></i>
+                            </div>
+
+                            <div>
+                                <strong>Programación</strong>
+                                <span>Creá una página web conmigo</span>
+                            </div>
+
+                        </button>
+
+
+                        <button
+                            class="suggestion"
+                            data-prompt="Explicame algo interesante que probablemente no conozca."
+                        >
+
+                            <div class="suggestion-icon">
+                                <i class="fa-solid fa-lightbulb"></i>
+                            </div>
+
+                            <div>
+                                <strong>Aprender algo</strong>
+                                <span>Descubrí algo nuevo</span>
+                            </div>
+
+                        </button>
+
+
+                        <button
+                            class="suggestion"
+                            data-prompt="Ayudame a tener una idea para un proyecto."
+                        >
+
+                            <div class="suggestion-icon">
+                                <i class="fa-solid fa-rocket"></i>
+                            </div>
+
+                            <div>
+                                <strong>Crear un proyecto</strong>
+                                <span>Empecemos una idea nueva</span>
+                            </div>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= COMPOSER ================= -->
+
+        <div class="composer-area">
+
+            <div class="composer">
+
+                <!-- BOTÓN ARCHIVO -->
+
+                <button
+                    class="composer-btn"
+                    id="attachBtn"
+                    title="Adjuntar archivo"
+                    type="button"
+                >
+                    <i class="fa-solid fa-paperclip"></i>
+                </button>
+
+
+                <input
+                    type="file"
+                    id="fileInput"
+                    hidden
+                    multiple
+                >
+
+
+                <!-- INPUT -->
+
+                <textarea
+                    id="prompt"
+                    rows="1"
+                    placeholder="Escribile a NOVA..."
+                    autocomplete="off"
+                    spellcheck="true"
+                ></textarea>
+
+
+                <!-- MICRÓFONO -->
+
+                <button
+                    class="composer-btn"
+                    id="voiceBtn"
+                    title="Hablar con NOVA"
+                    type="button"
+                >
+                    <i class="fa-solid fa-microphone"></i>
+                </button>
+
+
+                <!-- ENVIAR -->
+
+                <button
+                    class="send-btn"
+                    id="sendBtn"
+                    title="Enviar"
+                    type="button"
+                >
+                    <i class="fa-solid fa-arrow-up"></i>
+                </button>
+
+            </div>
+
+
+            <div class="composer-footer">
+
+                <span>
+                    NOVA puede cometer errores. Verificá información importante.
+                </span>
+
+            </div>
 
         </div>
 
-
-        <!-- AVISO -->
-
-        <p class="disclaimer">
-
-          NOVA puede cometer errores.
-          Verificá la información importante.
-
-        </p>
-
-      </div>
-
     </main>
 
-  </div>
+</div>
 
 
-  <!-- =========================
-       SCRIPT
-  ========================== -->
+<!-- ================= TEMPLATE MENSAJE ================= -->
 
-  <script src="script.js"></script>
+<template id="messageTemplate">
+
+    <div class="message">
+
+        <div class="message-avatar">
+            N
+        </div>
+
+        <div class="message-content">
+
+            <div class="message-header">
+                <strong>NOVA</strong>
+            </div>
+
+            <div class="message-text"></div>
+
+        </div>
+
+    </div>
+
+</template>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script src="script.js"></script>
 
 </body>
 </html>
