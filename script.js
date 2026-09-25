@@ -1,8 +1,8 @@
 
-/* ============================================
-   NOVA STUDIO — SCRIPT PRINCIPAL
+/* ==========================================
+   NOVA STUDIO PRO
    Editor de fotos, videos y diseños
-============================================ */
+========================================== */
 
 "use strict";
 
@@ -23,15 +23,18 @@ let historial = [];
 let futuros = [];
 
 let zoom = 1;
+let videos = [];
+let videoActual = null;
 let videoURL = null;
+
 let inicioRecorte = 0;
 let finRecorte = 0;
 let exportando = false;
 let ajusteEnCurso = false;
 
-/* ============================================
+/* ==========================================
    NAVEGACIÓN
-============================================ */
+========================================== */
 
 function estado(mensaje) {
   $("estado").textContent = mensaje;
@@ -53,20 +56,20 @@ function abrirEditor(tipo) {
   const nombres = {
     foto: "Editor de fotos",
     video: "Editor de videos",
-    diseno: "Editor de diseños"
+    diseno: "Diseño gráfico"
   };
 
   $("nombreProyecto").textContent = nombres[tipo];
+
+  lienzo.style.background =
+    tipo === "diseno" ? "#ffffff" : "#252b36";
 
   $("timeline").classList.toggle(
     "hidden",
     tipo !== "video" || !videoURL
   );
 
-  lienzo.style.background =
-    tipo === "diseno" ? "#ffffff" : "#252b36";
-
-  if (tipo === "diseno" && elementos.length === 0) {
+  if (tipo === "diseno" && !elementos.length) {
     $("mensajeVacio").classList.add("hidden");
   }
 
@@ -100,22 +103,19 @@ function mostrarPanel(nombre) {
 
   document.querySelectorAll(".sidebar button")
     .forEach(boton => {
-      boton.classList.remove("active");
-
-      if (
+      boton.classList.toggle(
+        "active",
         boton.getAttribute("onclick")
           ?.includes("'" + nombre + "'")
-      ) {
-        boton.classList.add("active");
-      }
+      );
     });
 
   if (nombre === "capas") actualizarCapas();
 }
 
-/* ============================================
+/* ==========================================
    HISTORIAL
-============================================ */
+========================================== */
 
 function guardarHistorial() {
   historial.push(JSON.stringify(elementos));
@@ -131,7 +131,6 @@ function deshacer() {
   futuros.push(JSON.stringify(elementos));
 
   elementos = JSON.parse(historial.pop());
-
   seleccionado = null;
 
   renderizar();
@@ -144,16 +143,15 @@ function rehacer() {
   historial.push(JSON.stringify(elementos));
 
   elementos = JSON.parse(futuros.pop());
-
   seleccionado = null;
 
   renderizar();
   estado("Cambio restaurado");
 }
 
-/* ============================================
+/* ==========================================
    ELEMENTOS
-============================================ */
+========================================== */
 
 function crearElemento(datos) {
   guardarHistorial();
@@ -167,6 +165,8 @@ function crearElemento(datos) {
     w: 200,
     h: 150,
     rotacion: 0,
+    visible: true,
+    opacidad: 100,
     ...datos
   };
 
@@ -201,67 +201,241 @@ function seleccionar(id) {
   renderizar();
 }
 
-/* ============================================
-   IMPORTAR IMÁGENES
-============================================ */
+/* ==========================================
+   IMPORTAR FOTOGRAFÍAS
+========================================== */
 
-function cargarImagen(evento) {
-  const archivo = evento.target.files[0];
+function importarFotos(evento) {
+  const archivos = [...evento.target.files];
 
-  if (!archivo) return;
+  cargarFotos(archivos);
 
-  if (!archivo.type.startsWith("image/")) {
-    alert("Seleccioná una imagen válida.");
-    return;
-  }
-
-  const lector = new FileReader();
-
-  lector.onload = () => {
-    const imagen = new Image();
-
-    imagen.onload = () => {
-      const escala = Math.min(
-        700 / imagen.width,
-        400 / imagen.height,
-        1
-      );
-
-      const w = imagen.width * escala;
-      const h = imagen.height * escala;
-
-      crearElemento({
-        tipo: "imagen",
-        nombre: archivo.name,
-        src: lector.result,
-        x: (ANCHO - w) / 2,
-        y: (ALTO - h) / 2,
-        w,
-        h,
-        brillo: 100,
-        contraste: 100,
-        saturacion: 100,
-        blur: 0,
-        extra: ""
-      });
-
-      estado("Imagen importada: " + archivo.name);
-    };
-
-    imagen.onerror = () => {
-      alert("No se pudo abrir la imagen.");
-    };
-
-    imagen.src = lector.result;
-  };
-
-  lector.readAsDataURL(archivo);
   evento.target.value = "";
 }
 
-/* ============================================
+function cargarFotos(archivos) {
+  archivos.forEach(archivo => {
+    if (!archivo.type.startsWith("image/")) return;
+
+    const lector = new FileReader();
+
+    lector.onload = () => {
+      const imagen = new Image();
+
+      imagen.onload = () => {
+        const escala = Math.min(
+          700 / imagen.width,
+          400 / imagen.height,
+          1
+        );
+
+        const w = imagen.width * escala;
+        const h = imagen.height * escala;
+
+        crearElemento({
+          tipo: "imagen",
+          nombre: archivo.name,
+          src: lector.result,
+          x: (ANCHO - w) / 2,
+          y: (ALTO - h) / 2,
+          w,
+          h,
+          brillo: 100,
+          contraste: 100,
+          saturacion: 100,
+          blur: 0,
+          extra: ""
+        });
+
+        actualizarArchivos();
+
+        estado("Foto importada: " + archivo.name);
+      };
+
+      imagen.onerror = () => {
+        estado("No se pudo abrir " + archivo.name);
+      };
+
+      imagen.src = lector.result;
+    };
+
+    lector.readAsDataURL(archivo);
+  });
+}
+
+/* ==========================================
+   IMPORTAR VIDEOS
+========================================== */
+
+function importarVideos(evento) {
+  const archivos = [...evento.target.files];
+
+  cargarVideos(archivos);
+
+  evento.target.value = "";
+}
+
+function cargarVideos(archivos) {
+  archivos.forEach(archivo => {
+    if (!archivo.type.startsWith("video/")) return;
+
+    const url = URL.createObjectURL(archivo);
+
+    const item = {
+      id: siguienteId++,
+      nombre: archivo.name,
+      url,
+      archivo
+    };
+
+    videos.push(item);
+
+    actualizarArchivos();
+
+    if (!videoActual) {
+      seleccionarVideo(item.id);
+    }
+  });
+}
+
+function seleccionarVideo(id) {
+  const item = videos.find(v => v.id === id);
+
+  if (!item) return;
+
+  video.pause();
+
+  videoActual = item;
+  videoURL = item.url;
+
+  video.src = videoURL;
+  video.classList.remove("hidden");
+
+  $("mensajeVacio").classList.add("hidden");
+  $("timeline").classList.remove("hidden");
+
+  modo = "video";
+
+  $("nombreProyecto").textContent = item.nombre;
+
+  video.onloadedmetadata = () => {
+    inicioRecorte = 0;
+    finRecorte = video.duration;
+
+    $("inicioVideo").value = 0;
+    $("finVideo").value = video.duration.toFixed(1);
+
+    $("barraVideo").value = 0;
+
+    actualizarTiempo();
+    actualizarPistas();
+  };
+
+  mostrarPanel("video");
+
+  estado("Video seleccionado: " + item.nombre);
+}
+
+/* ==========================================
+   ARRASTRAR Y SOLTAR
+========================================== */
+
+const zonaTrabajo = $("zonaTrabajo");
+const dropZone = $("dropZone");
+
+function procesarArchivos(archivos) {
+  const fotos = archivos.filter(
+    archivo => archivo.type.startsWith("image/")
+  );
+
+  const clips = archivos.filter(
+    archivo => archivo.type.startsWith("video/")
+  );
+
+  if (fotos.length) cargarFotos(fotos);
+  if (clips.length) cargarVideos(clips);
+}
+
+[zonaTrabajo, dropZone].forEach(zona => {
+  zona.addEventListener("dragover", evento => {
+    evento.preventDefault();
+    zona.classList.add("drag-over");
+  });
+
+  zona.addEventListener("dragleave", () => {
+    zona.classList.remove("drag-over");
+  });
+
+  zona.addEventListener("drop", evento => {
+    evento.preventDefault();
+
+    zona.classList.remove("drag-over");
+
+    procesarArchivos([...evento.dataTransfer.files]);
+  });
+});
+
+/* ==========================================
+   LISTA DE ARCHIVOS
+========================================== */
+
+function actualizarArchivos() {
+  const lista = $("listaArchivos");
+
+  lista.innerHTML = "";
+
+  elementos
+    .filter(e => e.tipo === "imagen")
+    .forEach(e => {
+      const boton = document.createElement("button");
+
+      boton.className = "archivo-item";
+
+      const miniatura = document.createElement("img");
+
+      miniatura.src = e.src;
+      miniatura.alt = "";
+
+      const nombre = document.createElement("span");
+
+      nombre.textContent = e.nombre;
+
+      boton.append(miniatura, nombre);
+
+      boton.onclick = () => seleccionar(e.id);
+
+      lista.appendChild(boton);
+    });
+
+  videos.forEach(v => {
+    const boton = document.createElement("button");
+
+    boton.className = "archivo-item";
+
+    const icono = document.createElement("span");
+
+    icono.textContent = "🎬";
+
+    const nombre = document.createElement("span");
+
+    nombre.textContent = v.nombre;
+
+    boton.append(icono, nombre);
+
+    boton.onclick = () => seleccionarVideo(v.id);
+
+    lista.appendChild(boton);
+  });
+
+  if (!lista.children.length) {
+    lista.innerHTML =
+      '<p class="hint">Todavía no importaste archivos.</p>';
+  }
+}
+
+/* ==========================================
    TEXTO Y FORMAS
-============================================ */
+========================================== */
 
 function agregarTexto() {
   const contenido = $("nuevoTexto").value.trim();
@@ -302,15 +476,17 @@ function agregarForma(tipo) {
   estado("Forma agregada");
 }
 
-/* ============================================
-   DIBUJAR ELEMENTOS EN EL EDITOR
-============================================ */
+/* ==========================================
+   RENDERIZAR LIENZO
+========================================== */
 
 function renderizar() {
   lienzo.querySelectorAll(".elemento")
     .forEach(nodo => nodo.remove());
 
   elementos.forEach(e => {
+    if (!e.visible) return;
+
     const div = document.createElement("div");
 
     div.className = "elemento";
@@ -320,7 +496,11 @@ function renderizar() {
     div.style.top = e.y + "px";
     div.style.width = e.w + "px";
     div.style.height = e.h + "px";
-    div.style.transform = `rotate(${e.rotacion}deg)`;
+
+    div.style.transform =
+      `rotate(${e.rotacion}deg)`;
+
+    div.style.opacity = e.opacidad / 100;
 
     if (e.id === seleccionado) {
       div.classList.add("seleccionado");
@@ -397,11 +577,12 @@ function renderizar() {
   });
 
   actualizarCapas();
+  actualizarPropiedades();
 }
 
-/* ============================================
+/* ==========================================
    MOVER ELEMENTOS
-============================================ */
+========================================== */
 
 function iniciarMovimiento(evento, id) {
   evento.preventDefault();
@@ -438,6 +619,8 @@ function iniciarMovimiento(evento, id) {
     nodo.removeEventListener("pointermove", mover);
     nodo.removeEventListener("pointerup", terminar);
     nodo.removeEventListener("pointercancel", terminar);
+
+    actualizarPropiedades();
   }
 
   nodo.addEventListener("pointermove", mover);
@@ -445,9 +628,9 @@ function iniciarMovimiento(evento, id) {
   nodo.addEventListener("pointercancel", terminar);
 }
 
-/* ============================================
+/* ==========================================
    REDIMENSIONAR
-============================================ */
+========================================== */
 
 function iniciarRedimension(evento, id) {
   evento.preventDefault();
@@ -499,9 +682,9 @@ function iniciarRedimension(evento, id) {
   handle.addEventListener("pointercancel", terminar);
 }
 
-/* ============================================
-   FILTROS Y AJUSTES
-============================================ */
+/* ==========================================
+   FILTROS
+========================================== */
 
 function actualizarEtiquetas() {
   $("vBrillo").textContent = $("brillo").value + "%";
@@ -515,7 +698,10 @@ function actualizarFiltros() {
 
   const e = obtenerSeleccion();
 
-  if (!e || e.tipo !== "imagen") return;
+  if (!e || e.tipo !== "imagen") {
+    estado("Seleccioná una imagen para aplicar ajustes");
+    return;
+  }
 
   if (!ajusteEnCurso) {
     guardarHistorial();
@@ -560,20 +746,49 @@ function filtroRapido(tipo) {
   estado("Filtro aplicado");
 }
 
-/* ============================================
-   CAPAS Y TRANSFORMACIONES
-============================================ */
+/* ==========================================
+   CAPAS
+========================================== */
 
-function rotarSeleccion() {
-  const e = obtenerSeleccion();
+function actualizarCapas() {
+  const listas = [
+    $("listaCapas"),
+    $("capasDerecha")
+  ];
 
-  if (!e) return;
+  listas.forEach(lista => {
+    lista.innerHTML = "";
 
-  guardarHistorial();
+    [...elementos].reverse().forEach(e => {
+      const fila = document.createElement("div");
 
-  e.rotacion = (e.rotacion + 90) % 360;
+      fila.className = "capa";
 
-  renderizar();
+      if (e.id === seleccionado) {
+        fila.classList.add("activa");
+      }
+
+      const ojo = document.createElement("button");
+
+      ojo.textContent = e.visible ? "👁" : "○";
+      ojo.title = "Mostrar u ocultar capa";
+
+      ojo.onclick = () => {
+        guardarHistorial();
+        e.visible = !e.visible;
+        renderizar();
+      };
+
+      const nombre = document.createElement("button");
+
+      nombre.textContent = e.nombre;
+      nombre.onclick = () => seleccionar(e.id);
+
+      fila.append(ojo, nombre);
+
+      lista.appendChild(fila);
+    });
+  });
 }
 
 function eliminarSeleccion() {
@@ -588,6 +803,8 @@ function eliminarSeleccion() {
   seleccionado = null;
 
   renderizar();
+  actualizarArchivos();
+
   estado("Elemento eliminado");
 }
 
@@ -637,31 +854,99 @@ function atrasar() {
   renderizar();
 }
 
-function actualizarCapas() {
-  const lista = $("listaCapas");
+function rotarSeleccion() {
+  const e = obtenerSeleccion();
 
-  lista.innerHTML = "";
+  if (!e) return;
 
-  [...elementos].reverse().forEach(e => {
-    const boton = document.createElement("button");
+  guardarHistorial();
 
-    boton.className = "capa";
+  e.rotacion = (e.rotacion + 90) % 360;
 
-    if (e.id === seleccionado) {
-      boton.classList.add("activa");
-    }
+  renderizar();
+}
 
-    boton.textContent = "▤ " + e.nombre;
+/* ==========================================
+   PROPIEDADES DERECHAS
+========================================== */
 
-    boton.onclick = () => seleccionar(e.id);
+function actualizarPropiedades() {
+  const panel = $("propiedadesSeleccion");
 
-    lista.appendChild(boton);
+  const e = obtenerSeleccion();
+
+  if (!e) {
+    panel.innerHTML =
+      '<p class="hint">Seleccioná un elemento.</p>';
+    return;
+  }
+
+  panel.innerHTML = `
+    <div class="propiedad">
+      <label>Posición X</label>
+      <input id="propX" type="number" value="${Math.round(e.x)}">
+    </div>
+
+    <div class="propiedad">
+      <label>Posición Y</label>
+      <input id="propY" type="number" value="${Math.round(e.y)}">
+    </div>
+
+    <div class="propiedad">
+      <label>Ancho</label>
+      <input id="propW" type="number" min="1" value="${Math.round(e.w)}">
+    </div>
+
+    <div class="propiedad">
+      <label>Alto</label>
+      <input id="propH" type="number" min="1" value="${Math.round(e.h)}">
+    </div>
+
+    <div class="propiedad">
+      <label>Rotación</label>
+      <input id="propRotacion" type="number" value="${e.rotacion}">
+    </div>
+
+    <div class="propiedad">
+      <label>Opacidad</label>
+      <input id="propOpacidad"
+             type="range"
+             min="0"
+             max="100"
+             value="${e.opacidad}">
+    </div>
+  `;
+
+  const campos = {
+    propX: "x",
+    propY: "y",
+    propW: "w",
+    propH: "h",
+    propRotacion: "rotacion",
+    propOpacidad: "opacidad"
+  };
+
+  Object.entries(campos).forEach(([id, propiedad]) => {
+    $(id).addEventListener("change", evento => {
+      const valor = Number(evento.target.value);
+
+      if (!Number.isFinite(valor)) return;
+
+      guardarHistorial();
+
+      e[propiedad] =
+        ["w", "h"].includes(propiedad)
+          ? Math.max(1, valor)
+          : valor;
+
+      renderizar();
+    });
   });
 }
 
-/* ============================================
+/* ==========================================
    ZOOM
-============================================ */
+========================================== */
 
 function cambiarZoom(cantidad) {
   zoom = Math.max(
@@ -675,14 +960,12 @@ function cambiarZoom(cantidad) {
     Math.round(zoom * 100) + "%";
 }
 
-/* ============================================
-   LIMPIAR PROYECTO
-============================================ */
+/* ==========================================
+   NUEVO PROYECTO
+========================================== */
 
 function limpiarLienzo() {
-  if (!confirm("¿Querés crear un proyecto vacío?")) {
-    return;
-  }
+  if (!confirm("¿Crear un proyecto vacío?")) return;
 
   guardarHistorial();
 
@@ -690,14 +973,16 @@ function limpiarLienzo() {
   seleccionado = null;
 
   video.pause();
+  video.classList.add("hidden");
 
-  if (videoURL) URL.revokeObjectURL(videoURL);
-
+  videoActual = null;
   videoURL = null;
+
+  videos.forEach(v => URL.revokeObjectURL(v.url));
+  videos = [];
 
   video.removeAttribute("src");
   video.load();
-  video.classList.add("hidden");
 
   $("timeline").classList.add("hidden");
 
@@ -706,61 +991,36 @@ function limpiarLienzo() {
     modo === "diseno"
   );
 
-  lienzo.style.background =
-    modo === "diseno" ? "#ffffff" : "#252b36";
-
   renderizar();
+  actualizarArchivos();
+
   estado("Proyecto vacío");
 }
 
-/* ============================================
-   EDITOR DE VIDEO
-============================================ */
+/* ==========================================
+   LÍNEA DE TIEMPO
+========================================== */
 
-function cargarVideo(evento) {
-  const archivo = evento.target.files[0];
+function actualizarPistas() {
+  const pistas = $("pistasVideo");
 
-  if (!archivo) return;
+  pistas.innerHTML = "";
 
-  if (!archivo.type.startsWith("video/")) {
-    alert("Seleccioná un video válido.");
-    return;
-  }
+  videos.forEach(v => {
+    const pista = document.createElement("button");
 
-  video.pause();
+    pista.className = "video-track";
 
-  if (videoURL) URL.revokeObjectURL(videoURL);
+    if (videoActual?.id === v.id) {
+      pista.classList.add("active");
+    }
 
-  videoURL = URL.createObjectURL(archivo);
+    pista.textContent = "🎬 " + v.nombre;
 
-  video.src = videoURL;
-  video.classList.remove("hidden");
+    pista.onclick = () => seleccionarVideo(v.id);
 
-  $("mensajeVacio").classList.add("hidden");
-  $("timeline").classList.remove("hidden");
-
-  modo = "video";
-
-  $("nombreProyecto").textContent =
-    "Editor de videos";
-
-  mostrarPanel("video");
-
-  video.onloadedmetadata = () => {
-    inicioRecorte = 0;
-    finRecorte = video.duration;
-
-    $("inicioVideo").value = 0;
-    $("finVideo").value = video.duration.toFixed(1);
-
-    $("barraVideo").value = 0;
-
-    actualizarTiempo();
-  };
-
-  estado("Video cargado: " + archivo.name);
-
-  evento.target.value = "";
+    pistas.appendChild(pista);
+  });
 }
 
 function formatoTiempo(segundos) {
@@ -784,7 +1044,7 @@ function actualizarTiempo() {
 }
 
 function reproducirVideo() {
-  if (!videoURL) {
+  if (!videoActual) {
     alert("Primero importá un video.");
     return;
   }
@@ -803,7 +1063,7 @@ function reproducirVideo() {
 }
 
 function moverVideo(valor) {
-  if (!videoURL || !video.duration) return;
+  if (!videoActual || !video.duration) return;
 
   video.currentTime =
     video.duration * Number(valor) / 100;
@@ -826,7 +1086,7 @@ video.addEventListener("timeupdate", () => {
 });
 
 function aplicarRecorte() {
-  if (!videoURL) {
+  if (!videoActual) {
     alert("Primero importá un video.");
     return;
   }
@@ -854,15 +1114,14 @@ function aplicarRecorte() {
 }
 
 function cambiarVelocidad() {
-  video.playbackRate =
-    Number($("velocidad").value);
+  video.playbackRate = Number($("velocidad").value);
 
   estado("Velocidad modificada");
 }
 
-/* ============================================
-   DIBUJAR PROYECTO PARA EXPORTAR
-============================================ */
+/* ==========================================
+   EXPORTACIÓN DE IMÁGENES
+========================================== */
 
 function esperarImagen(src) {
   return new Promise((resolve, reject) => {
@@ -876,7 +1135,11 @@ function esperarImagen(src) {
 }
 
 function dibujarElemento(ctx, e, imagen = null) {
+  if (!e.visible) return;
+
   ctx.save();
+
+  ctx.globalAlpha = e.opacidad / 100;
 
   ctx.translate(
     e.x + e.w / 2,
@@ -907,6 +1170,7 @@ function dibujarElemento(ctx, e, imagen = null) {
 
   if (e.tipo === "circle") {
     ctx.fillStyle = e.color;
+
     ctx.beginPath();
 
     ctx.ellipse(
@@ -958,10 +1222,6 @@ async function dibujarProyecto(ctx) {
   }
 }
 
-/* ============================================
-   DESCARGAR ARCHIVOS
-============================================ */
-
 function descargarBlob(blob, nombre) {
   const url = URL.createObjectURL(blob);
 
@@ -974,9 +1234,7 @@ function descargarBlob(blob, nombre) {
   enlace.click();
   enlace.remove();
 
-  setTimeout(() => {
-    URL.revokeObjectURL(url);
-  }, 10000);
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
 }
 
 async function descargarImagen() {
@@ -993,27 +1251,25 @@ async function descargarImagen() {
     canvas.toBlob(resolve, "image/png");
   });
 
-  if (!blob) {
-    throw new Error("No se pudo generar el PNG");
-  }
+  if (!blob) throw new Error("No se pudo generar el PNG");
 
   descargarBlob(blob, "nova-studio.png");
 
   estado("Imagen exportada correctamente");
 }
 
-/* ============================================
-   EXPORTACIÓN EXPERIMENTAL DE VIDEO
-============================================ */
+/* ==========================================
+   EXPORTACIÓN DE VIDEO
+========================================== */
 
 async function exportarVideo() {
-  if (!videoURL || exportando) return;
+  if (!videoActual || exportando) return;
 
   if (
     !window.MediaRecorder ||
     !HTMLCanvasElement.prototype.captureStream
   ) {
-    alert("Tu navegador no admite esta exportación.");
+    alert("Tu navegador no admite exportar videos.");
     return;
   }
 
@@ -1024,7 +1280,7 @@ async function exportarVideo() {
   ].find(t => MediaRecorder.isTypeSupported(t));
 
   if (!tipo) {
-    alert("Este navegador no admite exportar WebM.");
+    alert("Este navegador no admite WebM.");
     return;
   }
 
@@ -1055,7 +1311,7 @@ async function exportarVideo() {
   recorder.onstop = () => {
     stream.getTracks().forEach(track => track.stop());
 
-    if (partes.length > 0) {
+    if (partes.length) {
       descargarBlob(
         new Blob(partes, { type: tipo }),
         "nova-video.webm"
@@ -1082,17 +1338,11 @@ async function exportarVideo() {
     const mapa = new Map(imagenes);
 
     function dibujarFrame() {
-      ctx.fillStyle = "#000000";
+      ctx.fillStyle = "#000";
       ctx.fillRect(0, 0, ANCHO, ALTO);
 
       if (video.readyState >= 2) {
-        ctx.drawImage(
-          video,
-          0,
-          0,
-          ANCHO,
-          ALTO
-        );
+        ctx.drawImage(video, 0, 0, ANCHO, ALTO);
       }
 
       elementos.forEach(e => {
@@ -1149,7 +1399,6 @@ async function exportarVideo() {
 
   } catch (error) {
     console.error(error);
-
     video.pause();
 
     if (recorder.state === "recording") {
@@ -1164,9 +1413,9 @@ async function exportarVideo() {
   }
 }
 
-/* ============================================
-   EXPORTACIÓN GENERAL
-============================================ */
+/* ==========================================
+   EXPORTAR
+========================================== */
 
 function descargar() {
   if ($("editor").classList.contains("hidden")) {
@@ -1174,7 +1423,7 @@ function descargar() {
     return;
   }
 
-  if (modo === "video" && videoURL) {
+  if (modo === "video" && videoActual) {
     exportarVideo();
   } else {
     descargarImagen().catch(error => {
@@ -1184,18 +1433,21 @@ function descargar() {
   }
 }
 
-/* ============================================
-   GUARDAR PROYECTOS
-============================================ */
+/* ==========================================
+   GUARDAR PROYECTO
+========================================== */
 
 function guardarProyecto() {
   const proyecto = {
-    version: 2,
+    version: 3,
     nombre: $("nombreProyecto").textContent,
     modo,
     ancho: ANCHO,
     alto: ALTO,
-    elementos
+    elementos,
+    videos: videos.map(v => ({
+      nombre: v.nombre
+    }))
   };
 
   const blob = new Blob(
@@ -1205,19 +1457,19 @@ function guardarProyecto() {
 
   descargarBlob(blob, "nova-proyecto.json");
 
-  if (videoURL) {
+  if (videos.length) {
     alert(
-      "Se guardaron las capas. Conservá el video " +
-      "original por separado."
+      "Se guardaron las capas y los nombres de los videos. " +
+      "Conservá los archivos originales por separado."
     );
   }
 
   estado("Proyecto guardado");
 }
 
-/* ============================================
-   ATAJOS
-============================================ */
+/* ==========================================
+   ATAJOS DE TECLADO
+========================================== */
 
 document.addEventListener("keydown", evento => {
   const etiqueta = document.activeElement.tagName;
@@ -1239,11 +1491,8 @@ document.addEventListener("keydown", evento => {
   ) {
     evento.preventDefault();
 
-    if (evento.shiftKey) {
-      rehacer();
-    } else {
-      deshacer();
-    }
+    if (evento.shiftKey) rehacer();
+    else deshacer();
   }
 
   if (
@@ -1255,9 +1504,13 @@ document.addEventListener("keydown", evento => {
   }
 });
 
-/* ============================================
+/* ==========================================
    INICIALIZACIÓN
-============================================ */
+========================================== */
 
 actualizarEtiquetas();
-estado("NOVA STUDIO está listo");
+actualizarArchivos();
+actualizarCapas();
+actualizarPropiedades();
+
+estado("NOVA STUDIO PRO está listo");
