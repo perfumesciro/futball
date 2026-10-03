@@ -1,1608 +1,648 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ChinaMarket Scout</title>
+    <title>ChinaMarket Scout</title>
 
-<style>
-
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
-
-body{
-    font-family:Arial, Helvetica, sans-serif;
-    background:#0b0d10;
-    color:#f5f5f5;
-}
-
-/* HEADER */
-
-header{
-    background:#11151b;
-    border-bottom:1px solid #242a33;
-    padding:22px 35px;
-    position:sticky;
-    top:0;
-    z-index:100;
-}
-
-.header-content{
-    max-width:1450px;
-    margin:auto;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:20px;
-}
-
-.logo{
-    font-size:25px;
-    font-weight:800;
-}
-
-.logo span{
-    color:#39e58c;
-}
-
-.subtitle{
-    color:#8f98a5;
-    font-size:13px;
-    margin-top:4px;
-}
-
-/* MAIN */
-
-.container{
-    max-width:1450px;
-    margin:auto;
-    padding:30px;
-}
-
-/* DASHBOARD */
-
-.dashboard{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:15px;
-    margin-bottom:25px;
-}
-
-.stat{
-    background:#11151b;
-    border:1px solid #252b34;
-    border-radius:15px;
-    padding:20px;
-}
-
-.stat-title{
-    color:#8e97a5;
-    font-size:13px;
-    margin-bottom:9px;
-}
-
-.stat-number{
-    font-size:27px;
-    font-weight:800;
-}
-
-.green{
-    color:#39e58c;
-}
-
-.yellow{
-    color:#ffd166;
-}
-
-.red{
-    color:#ff5d73;
-}
-
-.blue{
-    color:#62a8ff;
-}
-
-/* CONTROLS */
-
-.controls{
-    background:#11151b;
-    border:1px solid #252b34;
-    border-radius:15px;
-    padding:18px;
-    display:flex;
-    gap:12px;
-    flex-wrap:wrap;
-    margin-bottom:25px;
-}
-
-input,
-select{
-    background:#0b0d10;
-    border:1px solid #303743;
-    color:white;
-    border-radius:9px;
-    padding:12px 14px;
-    outline:none;
-}
-
-input{
-    flex:1;
-    min-width:230px;
-}
-
-select{
-    min-width:170px;
-}
-
-button{
-    border:0;
-    cursor:pointer;
-    border-radius:9px;
-    padding:12px 17px;
-    font-weight:bold;
-}
-
-.btn-green{
-    background:#39e58c;
-    color:#07120c;
-}
-
-/* PRODUCTS */
-
-.products{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:18px;
-}
-
-.card{
-    background:#11151b;
-    border:1px solid #272e38;
-    border-radius:17px;
-    overflow:hidden;
-    transition:.2s;
-}
-
-.card:hover{
-    transform:translateY(-3px);
-    border-color:#3a4451;
-}
-
-.card-top{
-    padding:18px;
-    display:flex;
-    justify-content:space-between;
-    gap:10px;
-}
-
-.category{
-    color:#8d97a5;
-    font-size:12px;
-    margin-bottom:7px;
-}
-
-.product-name{
-    font-size:19px;
-    font-weight:800;
-}
-
-.badge{
-    padding:7px 10px;
-    border-radius:20px;
-    font-size:11px;
-    font-weight:800;
-    height:max-content;
-}
-
-.badge.green-bg{
-    background:#123d29;
-    color:#4cf39a;
-}
-
-.badge.yellow-bg{
-    background:#403614;
-    color:#ffd76b;
-}
-
-.badge.orange-bg{
-    background:#432719;
-    color:#ff9c64;
-}
-
-.badge.red-bg{
-    background:#411b24;
-    color:#ff6d81;
-}
-
-.card-body{
-    padding:0 18px 18px;
-}
-
-.price-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin-top:15px;
-}
-
-.price-box{
-    background:#0b0d10;
-    border:1px solid #222832;
-    padding:12px;
-    border-radius:10px;
-}
-
-.price-label{
-    font-size:11px;
-    color:#7f8997;
-}
-
-.price{
-    font-size:17px;
-    font-weight:bold;
-    margin-top:4px;
-}
-
-.margin{
-    margin-top:15px;
-    background:#0b0d10;
-    border-radius:10px;
-    padding:13px;
-}
-
-.margin-head{
-    display:flex;
-    justify-content:space-between;
-    margin-bottom:8px;
-}
-
-.progress{
-    width:100%;
-    height:8px;
-    background:#252b33;
-    border-radius:20px;
-    overflow:hidden;
-}
-
-.progress-bar{
-    height:100%;
-    border-radius:20px;
-}
-
-.reason{
-    color:#a9b1bd;
-    font-size:13px;
-    line-height:1.5;
-    margin-top:14px;
-}
-
-.tags{
-    display:flex;
-    flex-wrap:wrap;
-    gap:6px;
-    margin-top:13px;
-}
-
-.tag{
-    background:#1a2028;
-    border:1px solid #292f39;
-    color:#aeb7c3;
-    padding:5px 8px;
-    border-radius:7px;
-    font-size:11px;
-}
-
-.stats-btn{
-    width:100%;
-    margin-top:15px;
-    background:#1b222b;
-    color:white;
-    border:1px solid #303844;
-}
-
-.stats-btn:hover{
-    background:#252e39;
-}
-
-/* MODAL */
-
-.modal{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.75);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-    z-index:200;
-}
-
-.modal.active{
-    display:flex;
-}
-
-.modal-content{
-    width:min(900px,100%);
-    max-height:90vh;
-    overflow:auto;
-    background:#11151b;
-    border:1px solid #303742;
-    border-radius:18px;
-    padding:25px;
-}
-
-.modal-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:15px;
-}
-
-.close{
-    background:#242b34;
-    color:white;
-    font-size:18px;
-}
-
-.detail-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:12px;
-    margin-top:20px;
-}
-
-.detail{
-    background:#0b0d10;
-    border:1px solid #252c35;
-    border-radius:10px;
-    padding:15px;
-}
-
-.detail small{
-    color:#7f8997;
-}
-
-.detail strong{
-    display:block;
-    font-size:18px;
-    margin-top:5px;
-}
-
-.explanation{
-    margin-top:20px;
-    background:#151b22;
-    padding:18px;
-    border-radius:12px;
-    line-height:1.6;
-    color:#b7c0cc;
-}
-
-.settings{
-    margin-top:20px;
-    background:#0b0d10;
-    border:1px solid #272e37;
-    padding:18px;
-    border-radius:12px;
-}
-
-.settings-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:10px;
-    margin-top:12px;
-}
-
-.settings label{
-    font-size:11px;
-    color:#7e8996;
-}
-
-.settings input{
-    width:100%;
-    margin-top:5px;
-}
-
-/* FOOTER */
-
-footer{
-    text-align:center;
-    color:#697380;
-    padding:40px 20px;
-    font-size:12px;
-}
-
-/* RESPONSIVE */
-
-@media(max-width:1050px){
-
-    .products{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .dashboard{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-}
-
-@media(max-width:700px){
-
-    header{
-        padding:18px;
-    }
-
-    .container{
-        padding:18px;
-    }
-
-    .products{
-        grid-template-columns:1fr;
-    }
-
-    .dashboard{
-        grid-template-columns:1fr 1fr;
-    }
-
-    .detail-grid{
-        grid-template-columns:1fr 1fr;
-    }
-
-    .settings-grid{
-        grid-template-columns:1fr 1fr;
-    }
-
-}
-
-</style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<header>
+<!-- ================= HEADER ================= -->
 
-<div class="header-content">
+<header class="top-header">
 
-<div>
-    <div class="logo">China<span>Market</span> Scout</div>
-    <div class="subtitle">
-        Productos China → Mercado Libre Argentina
+    <div class="header-main">
+
+        <div class="brand">
+            <div class="brand-logo">CM</div>
+
+            <div>
+                <h1>ChinaMarket</h1>
+                <span>Scout</span>
+            </div>
+        </div>
+
+        <div class="search-container">
+
+            <input
+                id="searchInput"
+                type="text"
+                placeholder="Buscar productos, categorías o proveedores..."
+            >
+
+            <button id="searchButton">
+                🔍
+            </button>
+
+        </div>
+
+        <div class="header-actions">
+
+            <button class="header-button" id="favoritesButton">
+                ♡
+                <span>Favoritos</span>
+                <b id="favoriteCount">0</b>
+            </button>
+
+            <button class="header-button" id="cartButton">
+                🛒
+                <span>Mi selección</span>
+                <b id="cartCount">0</b>
+            </button>
+
+        </div>
+
     </div>
-</div>
 
-<button class="btn-green" onclick="abrirConfiguracion()">
-    ⚙ Configuración
-</button>
+    <div class="nav-bar">
 
-</div>
+        <div class="nav-content">
+
+            <button id="categoryButton">
+                ☰ Categorías
+            </button>
+
+            <button data-category="Todos">
+                Todos los productos
+            </button>
+
+            <button data-category="Hogar">
+                Hogar
+            </button>
+
+            <button data-category="Auto">
+                Auto
+            </button>
+
+            <button data-category="Mascotas">
+                Mascotas
+            </button>
+
+            <button data-category="Fitness">
+                Fitness
+            </button>
+
+            <button data-category="Oficina">
+                Oficina
+            </button>
+
+            <button data-category="Lavandería">
+                Lavandería
+            </button>
+
+        </div>
+
+    </div>
 
 </header>
 
 
-<main class="container">
+<!-- ================= CONTENIDO ================= -->
 
-<!-- DASHBOARD -->
+<main class="main-container">
 
-<section class="dashboard">
+    <!-- HERO -->
 
-<div class="stat">
-    <div class="stat-title">Productos analizados</div>
-    <div class="stat-number blue" id="totalProductos">0</div>
-</div>
+    <section class="hero">
 
-<div class="stat">
-    <div class="stat-title">Buenas oportunidades</div>
-    <div class="stat-number green" id="buenosProductos">0</div>
-</div>
+        <div>
 
-<div class="stat">
-    <div class="stat-title">Margen promedio</div>
-    <div class="stat-number yellow" id="margenPromedio">0%</div>
-</div>
+            <div class="hero-tag">
+                🇨🇳 Investigación China → 🇦🇷 Argentina
+            </div>
 
-<div class="stat">
-    <div class="stat-title">Mayor margen</div>
-    <div class="stat-number green" id="mayorMargen">0%</div>
-</div>
+            <h2>
+                Encontrá productos para vender
+                <strong>antes que los demás.</strong>
+            </h2>
 
-</section>
+            <p>
+                Analizá precios, margen estimado, demanda,
+                competencia, MOQ y costos de importación
+                desde un solo lugar.
+            </p>
 
+            <button id="heroButton" class="yellow-button">
+                Explorar productos →
+            </button>
 
-<!-- CONTROLES -->
+        </div>
 
-<section class="controls">
+        <div class="hero-box">
 
-<input
-    type="text"
-    id="search"
-    placeholder="🔎 Buscar producto..."
-    oninput="renderProductos()"
->
+            <div class="hero-stat">
+                <span>Productos analizados</span>
+                <strong id="heroProducts">0</strong>
+            </div>
 
-<select id="categoria" onchange="renderProductos()">
-    <option value="todos">Todas las categorías</option>
-    <option value="hogar">Hogar</option>
-    <option value="auto">Auto</option>
-    <option value="mascotas">Mascotas</option>
-    <option value="fitness">Fitness</option>
-    <option value="lavanderia">Lavandería</option>
-</select>
+            <div class="hero-stat">
+                <span>Mejor margen</span>
+                <strong id="heroMargin">0%</strong>
+            </div>
 
-<select id="estado" onchange="renderProductos()">
-    <option value="todos">Todos los estados</option>
-    <option value="verde">🟢 Buenas oportunidades</option>
-    <option value="amarillo">🟡 Observar</option>
-    <option value="naranja">🟠 Precaución</option>
-    <option value="rojo">🔴 Descartar</option>
-</select>
+            <div class="hero-stat">
+                <span>Oportunidades</span>
+                <strong id="heroOpportunities">0</strong>
+            </div>
 
-<select id="orden" onchange="renderProductos()">
-    <option value="margen">Mayor margen</option>
-    <option value="precio">Mayor precio ML</option>
-    <option value="china">Menor precio China</option>
-    <option value="demanda">Mayor demanda</option>
-</select>
+        </div>
 
-</section>
+    </section>
 
 
-<!-- PRODUCTOS -->
+    <!-- FILTROS -->
 
-<section class="products" id="products"></section>
+    <section class="filter-section">
+
+        <div class="filter-top">
+
+            <div>
+                <h2>Productos encontrados</h2>
+
+                <p id="resultsText">
+                    0 productos
+                </p>
+            </div>
+
+            <div class="sort-container">
+
+                <label>Ordenar por</label>
+
+                <select id="sortSelect">
+
+                    <option value="margin">
+                        Mejor margen
+                    </option>
+
+                    <option value="demand">
+                        Mayor demanda
+                    </option>
+
+                    <option value="priceLow">
+                        Menor precio ML
+                    </option>
+
+                    <option value="priceHigh">
+                        Mayor precio ML
+                    </option>
+
+                    <option value="competition">
+                        Menor competencia
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div class="filters">
+
+            <button
+                class="filter active"
+                data-status="all">
+
+                Todos
+
+            </button>
+
+            <button
+                class="filter green-filter"
+                data-status="green">
+
+                🟢 Buen margen
+
+            </button>
+
+            <button
+                class="filter yellow-filter"
+                data-status="yellow">
+
+                🟡 Para analizar
+
+            </button>
+
+            <button
+                class="filter orange-filter"
+                data-status="orange">
+
+                🟠 Precaución
+
+            </button>
+
+            <button
+                class="filter red-filter"
+                data-status="red">
+
+                🔴 Descartados
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- LAYOUT -->
+
+    <div class="content-layout">
+
+
+        <!-- SIDEBAR -->
+
+        <aside class="sidebar">
+
+            <div class="sidebar-title">
+                <span>Filtros</span>
+
+                <button id="clearFilters">
+                    Limpiar
+                </button>
+            </div>
+
+
+            <div class="side-block">
+
+                <h3>Categoría</h3>
+
+                <label>
+                    <input
+                        type="radio"
+                        name="category"
+                        value="Todos"
+                        checked
+                    >
+                    Todos
+                </label>
+
+                <label>
+                    <input
+                        type="radio"
+                        name="category"
+                        value="Hogar"
+                    >
+                    Hogar
+                </label>
+
+                <label>
+                    <input
+                        type="radio"
+                        name="category"
+                        value="Auto"
+                    >
+                    Auto
+                </label>
+
+                <label>
+                    <input
+                        type="radio"
+                        name="category"
+                        value="Mascotas"
+                    >
+                    Mascotas
+                </label>
+
+                <label>
+                    <input
+                        type="radio"
+                        name="category"
+                        value="Fitness"
+                    >
+                    Fitness
+                </label>
+
+                <label>
+                    <input
+                        type="radio"
+                        name="category"
+                        value="Oficina"
+                    >
+                    Oficina
+                </label>
+
+                <label>
+                    <input
+                        type="radio"
+                        name="category"
+                        value="Lavandería"
+                    >
+                    Lavandería
+                </label>
+
+            </div>
+
+
+            <div class="side-block">
+
+                <h3>Margen mínimo</h3>
+
+                <input
+                    type="range"
+                    id="marginRange"
+                    min="0"
+                    max="80"
+                    value="0"
+                >
+
+                <div class="range-value">
+                    <span>0%</span>
+
+                    <strong id="marginValue">
+                        0%
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <div class="side-block">
+
+                <h3>Demanda mínima</h3>
+
+                <input
+                    type="range"
+                    id="demandRange"
+                    min="0"
+                    max="100"
+                    value="0"
+                >
+
+                <div class="range-value">
+                    <span>0</span>
+
+                    <strong id="demandValue">
+                        0/100
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <div class="side-block">
+
+                <h3>Estado</h3>
+
+                <label>
+                    <input
+                        type="checkbox"
+                        id="onlyOpportunities"
+                    >
+
+                    Solo oportunidades
+                </label>
+
+            </div>
+
+
+            <button
+                id="configButton"
+                class="config-button">
+
+                ⚙️ Configurar costos
+
+            </button>
+
+        </aside>
+
+
+        <!-- PRODUCTOS -->
+
+        <section class="products-section">
+
+            <div
+                id="productsGrid"
+                class="products-grid">
+            </div>
+
+            <div
+                id="emptyState"
+                class="empty-state hidden">
+
+                <div>🔎</div>
+
+                <h2>
+                    No encontramos productos
+                </h2>
+
+                <p>
+                    Probá cambiando los filtros o la búsqueda.
+                </p>
+
+                <button
+                    id="emptyClear"
+                    class="yellow-button">
+
+                    Limpiar filtros
+
+                </button>
+
+            </div>
+
+        </section>
+
+    </div>
 
 </main>
 
 
-<!-- MODAL ESTADÍSTICAS -->
+<!-- ================= MODAL PRODUCTO ================= -->
 
-<div class="modal" id="modal">
+<div
+    id="productModal"
+    class="modal">
 
-<div class="modal-content">
+    <div class="modal-window">
 
-<div class="modal-header">
+        <button
+            class="modal-close"
+            data-close="productModal">
 
-<div>
-    <div class="category" id="modalCategoria"></div>
-    <h2 id="modalNombre"></h2>
-</div>
+            ×
 
-<button class="close" onclick="cerrarModal()">✕</button>
+        </button>
 
-</div>
+        <div id="modalProductContent"></div>
 
-<div class="detail-grid">
-
-<div class="detail">
-    <small>Precio Mercado Libre</small>
-    <strong id="modalML"></strong>
-</div>
-
-<div class="detail">
-    <small>Precio fábrica</small>
-    <strong id="modalChina"></strong>
-</div>
-
-<div class="detail">
-    <small>MOQ</small>
-    <strong id="modalMOQ"></strong>
-</div>
-
-<div class="detail">
-    <small>Costo importación</small>
-    <strong id="modalImportacion"></strong>
-</div>
-
-<div class="detail">
-    <small>Costo total</small>
-    <strong id="modalCosto"></strong>
-</div>
-
-<div class="detail">
-    <small>Ganancia estimada</small>
-    <strong id="modalGanancia"></strong>
-</div>
-
-<div class="detail">
-    <small>Margen</small>
-    <strong id="modalMargen"></strong>
-</div>
-
-<div class="detail">
-    <small>Demanda</small>
-    <strong id="modalDemanda"></strong>
-</div>
-
-<div class="detail">
-    <small>Competencia</small>
-    <strong id="modalCompetencia"></strong>
-</div>
+    </div>
 
 </div>
 
 
-<div class="explanation">
+<!-- ================= MODAL CONFIG ================= -->
 
-<h3>🧠 ¿Por qué podría funcionar?</h3>
+<div
+    id="configModal"
+    class="modal">
 
-<p id="modalRazon"></p>
+    <div class="modal-window small-modal">
 
-<br>
+        <button
+            class="modal-close"
+            data-close="configModal">
 
-<h3>⚠️ Qué revisar antes de comprar</h3>
+            ×
 
-<p id="modalRiesgo"></p>
+        </button>
+
+        <h2>⚙️ Configuración</h2>
+
+        <p class="modal-description">
+            Modificá estos valores para simular diferentes escenarios.
+        </p>
+
+
+        <div class="config-grid">
+
+            <div class="config-input">
+
+                <label>
+                    Dólar
+                </label>
+
+                <div class="input-money">
+
+                    <span>$</span>
+
+                    <input
+                        id="usdInput"
+                        type="number"
+                        value="1540"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="config-input">
+
+                <label>
+                    Envío por unidad USD
+                </label>
+
+                <input
+                    id="shippingInput"
+                    type="number"
+                    value="2"
+                    step="0.1"
+                >
+
+            </div>
+
+
+            <div class="config-input">
+
+                <label>
+                    Importación %
+                </label>
+
+                <input
+                    id="importInput"
+                    type="number"
+                    value="20"
+                >
+
+            </div>
+
+
+            <div class="config-input">
+
+                <label>
+                    Comisión ML %
+                </label>
+
+                <input
+                    id="commissionInput"
+                    type="number"
+                    value="15"
+                >
+
+            </div>
+
+        </div>
+
+
+        <button
+            id="saveConfig"
+            class="yellow-button full-button">
+
+            Guardar configuración
+
+        </button>
+
+    </div>
 
 </div>
 
-</div>
+
+<!-- ================= MODAL FAVORITOS ================= -->
+
+<div
+    id="favoritesModal"
+    class="modal">
+
+    <div class="modal-window">
+
+        <button
+            class="modal-close"
+            data-close="favoritesModal">
+
+            ×
+
+        </button>
+
+        <h2>♡ Mis favoritos</h2>
+
+        <div id="favoritesContent"></div>
+
+    </div>
 
 </div>
 
 
-<!-- CONFIGURACIÓN -->
+<!-- ================= MODAL CARRITO ================= -->
 
-<div class="modal" id="configModal">
+<div
+    id="cartModal"
+    class="modal">
 
-<div class="modal-content">
+    <div class="modal-window">
 
-<div class="modal-header">
+        <button
+            class="modal-close"
+            data-close="cartModal">
 
-<h2>⚙ Configuración del cálculo</h2>
+            ×
 
-<button class="close" onclick="cerrarConfiguracion()">✕</button>
+        </button>
 
-</div>
+        <h2>🛒 Mi selección</h2>
 
-<div class="settings">
+        <div id="cartContent"></div>
 
-<p style="color:#8993a0;font-size:13px;">
-Estos valores sirven para hacer simulaciones. Cambialos cuando tengas
-una cotización real del proveedor o del transporte.
-</p>
-
-<div class="settings-grid">
-
-<div>
-<label>Dólar</label>
-<input id="dolar" type="number" value="1540" onchange="renderProductos()">
-</div>
-
-<div>
-<label>Envío por unidad USD</label>
-<input id="envio" type="number" value="2" step="0.1" onchange="renderProductos()">
-</div>
-
-<div>
-<label>Importación %</label>
-<input id="importacion" type="number" value="20" onchange="renderProductos()">
-</div>
-
-<div>
-<label>Comisión ML %</label>
-<input id="comision" type="number" value="15" onchange="renderProductos()">
-</div>
-
-</div>
-
-</div>
-
-</div>
+    </div>
 
 </div>
 
 
 <footer>
 
-ChinaMarket Scout · Panel de investigación de productos
+    <strong>ChinaMarket Scout</strong>
 
-<br><br>
-
-Los márgenes son estimaciones de trabajo y deben verificarse con
-cotizaciones reales antes de comprar o importar.
+    <p>
+        Herramienta de análisis. Los márgenes son estimaciones
+        y deben verificarse con costos reales antes de realizar una compra.
+    </p>
 
 </footer>
 
 
-<script>
-
-/* =====================================================
-   PRODUCTOS
-===================================================== */
-
-const productos = [
-
-{
-    nombre:"Bolsa para lavar zapatillas",
-    categoria:"lavanderia",
-
-    ml:19999,
-    china:1.00,
-    moq:20,
-
-    demanda:82,
-    competencia:55,
-
-    ventas:"+100 / publicaciones con cientos de opiniones",
-
-    razon:
-    "Es pequeña, reutilizable, fácil de explicar y resuelve un problema concreto: lavar zapatillas en lavarropas reduciendo golpes y suciedad. Además, existen publicaciones argentinas con precios y movimiento comprobable.",
-
-    riesgo:
-    "Hay varias publicaciones similares. Para competir conviene diferenciarla mediante mejor material, presentación, pack de 2 unidades o un diseño con interior acolchado.",
-
-    fuente:"Mercado Libre + proveedores chinos"
-},
-
-{
-    nombre:"Organizador de asiento / baúl para auto",
-    categoria:"auto",
-
-    ml:14890,
-    china:1.30,
-    moq:4,
-
-    demanda:86,
-    competencia:67,
-
-    ventas:"+1.000 vendidos en publicaciones similares",
-
-    razon:
-    "El mercado argentino muestra publicaciones con más de 1.000 unidades vendidas. Es útil, ocupa relativamente poco y tiene una función clara: mantener objetos organizados dentro del vehículo.",
-
-    riesgo:
-    "Hay bastante competencia. El modelo elegido y el tamaño del paquete afectan mucho el costo de transporte.",
-
-    fuente:"Mercado Libre + proveedores chinos"
-},
-
-{
-    nombre:"Organizador plegable de cajones",
-    categoria:"hogar",
-
-    ml:12990,
-    china:0.85,
-    moq:50,
-
-    demanda:76,
-    competencia:58,
-
-    ventas:"Categoría activa",
-
-    razon:
-    "Es un producto simple, liviano y fácil de almacenar. Puede venderse individualmente o en packs, lo que permite aumentar el ticket promedio.",
-
-    riesgo:
-    "Muchos productos nacionales e importados compiten en esta categoría. Hay que encontrar una medida o diseño diferenciador.",
-
-    fuente:"Mercado Libre + Alibaba"
-},
-
-{
-    nombre:"Bolsas de almacenamiento al vacío",
-    categoria:"hogar",
-
-    ml:13990,
-    china:0.30,
-    moq:10,
-
-    demanda:73,
-    competencia:51,
-
-    ventas:"Categoría activa",
-
-    razon:
-    "El costo de fabricación puede ser muy bajo y el producto ocupa poco espacio cuando está vacío. Se puede vender como pack de distintos tamaños.",
-
-    riesgo:
-    "Hay que verificar la calidad del plástico, las válvulas y que realmente mantenga el vacío.",
-
-    fuente:"Mercado Libre + Alibaba"
-},
-
-{
-    nombre:"Kit de bandas elásticas",
-    categoria:"fitness",
-
-    ml:19990,
-    china:1.75,
-    moq:50,
-
-    demanda:84,
-    competencia:79,
-
-    ventas:"Categoría de alta actividad",
-
-    razon:
-    "Es compacto, liviano y tiene un público amplio. Un kit permite vender varias unidades como un único producto.",
-
-    riesgo:
-    "La competencia es elevada. Un kit genérico puede terminar compitiendo solamente por precio.",
-
-    fuente:"Mercado Libre + Alibaba"
-},
-
-{
-    nombre:"Rascador compacto para gatos",
-    categoria:"mascotas",
-
-    ml:15990,
-    china:2.60,
-    moq:2,
-
-    demanda:69,
-    competencia:54,
-
-    ventas:"Categoría activa",
-
-    razon:
-    "Los dueños de gatos necesitan productos de desgaste y entretenimiento. Un modelo compacto reduce el problema de almacenamiento y envío.",
-
-    riesgo:
-    "Los modelos grandes pueden ser caros de transportar. Conviene priorizar cartón o modelos plegables.",
-
-    fuente:"Mercado Libre + Alibaba"
-},
-
-{
-    nombre:"Organizador de ducha",
-    categoria:"hogar",
-
-    ml:20699,
-    china:2.00,
-    moq:50,
-
-    demanda:71,
-    competencia:62,
-
-    ventas:"Categoría activa",
-
-    razon:
-    "Resuelve un problema cotidiano y se puede vender como pack de dos. Es fácil mostrar su utilidad mediante fotos o videos.",
-
-    riesgo:
-    "Hay que comprobar resistencia del adhesivo y calidad del plástico antes de comprar cantidad.",
-
-    fuente:"Mercado Libre + proveedores chinos"
-},
-
-{
-    nombre:"Alfombra de baño antideslizante",
-    categoria:"hogar",
-
-    ml:10990,
-    china:1.97,
-    moq:50,
-
-    demanda:68,
-    competencia:63,
-
-    ventas:"Categoría activa",
-
-    razon:
-    "Producto de uso cotidiano con un público grande. Diferentes diseños, tamaños y materiales permiten crear variantes.",
-
-    riesgo:
-    "Es más voluminosa que otros productos de la lista, por lo que el flete puede reducir considerablemente el margen.",
-
-    fuente:"Mercado Libre + Alibaba"
-},
-
-{
-    nombre:"Organizador de baúl plegable",
-    categoria:"auto",
-
-    ml:16468,
-    china:2.50,
-    moq:10,
-
-    demanda:79,
-    competencia:65,
-
-    ventas:"+1.000 vendidos en publicaciones similares",
-
-    razon:
-    "Los organizadores de baúl tienen una necesidad clara y hay publicaciones argentinas con más de 1.000 ventas. Un modelo plegable facilita almacenamiento.",
-
-    riesgo:
-    "El volumen cuando está desplegado puede afectar el costo logístico.",
-
-    fuente:"Mercado Libre + proveedores chinos"
-},
-
-{
-    nombre:"Bolsa organizadora para zapatos de viaje",
-    categoria:"hogar",
-
-    ml:21011,
-    china:0.90,
-    moq:25,
-
-    demanda:63,
-    competencia:48,
-
-    ventas:"Nicho de organización y viaje",
-
-    razon:
-    "Es liviana y permite vender un pack de varias unidades. Puede orientarse a viajes, organización del placard o almacenamiento.",
-
-    riesgo:
-    "La demanda puede ser menor que la de productos de uso diario.",
-
-    fuente:"Mercado Libre + China"
-},
-
-{
-    nombre:"Cesto organizador pequeño",
-    categoria:"hogar",
-
-    ml:6800,
-    china:0.70,
-    moq:50,
-
-    demanda:64,
-    competencia:70,
-
-    ventas:"Categoría activa",
-
-    razon:
-    "Tiene una utilidad muy fácil de entender y puede venderse en packs de 2, 3 o 4 para mejorar el valor del pedido.",
-
-    riesgo:
-    "El precio individual bajo hace que las comisiones y el envío tengan mayor impacto proporcional.",
-
-    fuente:"Mercado Libre + China"
-},
-
-{
-    nombre:"Alfombra rascadora para gatos",
-    categoria:"mascotas",
-
-    ml:13500,
-    china:1.80,
-    moq:20,
-
-    demanda:66,
-    competencia:57,
-
-    ventas:"Nicho de mascotas",
-
-    razon:
-    "Es una alternativa compacta a los rascadores grandes y puede utilizarse sobre muebles. Su tamaño puede facilitar el almacenamiento.",
-
-    riesgo:
-    "Hay que comprobar que el material sea resistente y seguro para mascotas.",
-
-    fuente:"Mercado Libre + China"
-},
-
-{
-    nombre:"Organizador de escritorio",
-    categoria:"hogar",
-
-    ml:12990,
-    china:1.20,
-    moq:50,
-
-    demanda:67,
-    competencia:64,
-
-    ventas:"Categoría activa",
-
-    razon:
-    "Tiene público de estudiantes, oficinas y personas que trabajan desde casa. Es sencillo de mostrar y vender online.",
-
-    riesgo:
-    "La competencia es amplia y hay muchos productos económicos.",
-
-    fuente:"Mercado Libre + China"
-},
-
-{
-    nombre:"Pack de bolsas para zapatos",
-    categoria:"hogar",
-
-    ml:21011,
-    china:0.85,
-    moq:25,
-
-    demanda:61,
-    competencia:49,
-
-    ventas:"Nicho de organización",
-
-    razon:
-    "El formato pack aumenta el valor percibido y el costo de fabricación es relativamente bajo. También permite vender diferentes colores.",
-
-    riesgo:
-    "La demanda puede depender bastante de cómo se presente el producto.",
-
-    fuente:"Mercado Libre + China"
-},
-
-{
-    nombre:"Bolsa de lavado para ropa delicada",
-    categoria:"lavanderia",
-
-    ml:5200,
-    china:0.35,
-    moq:50,
-
-    demanda:70,
-    competencia:61,
-
-    ventas:"Categoría activa",
-
-    razon:
-    "Producto muy pequeño y liviano. Puede venderse en packs para aumentar el valor de cada operación.",
-
-    riesgo:
-    "El precio individual es bajo, por lo que conviene vender packs.",
-
-    fuente:"Mercado Libre + China"
-}
-
-];
-
-
-/* =====================================================
-   CONFIGURACIÓN
-===================================================== */
-
-function obtenerConfiguracion(){
-
-    return {
-
-        dolar:Number(document.getElementById("dolar").value) || 1540,
-
-        envio:Number(document.getElementById("envio").value) || 2,
-
-        importacion:Number(document.getElementById("importacion").value) || 20,
-
-        comision:Number(document.getElementById("comision").value) || 15
-
-    };
-
-}
-
-
-/* =====================================================
-   CÁLCULO
-===================================================== */
-
-function calcularProducto(p){
-
-    const c = obtenerConfiguracion();
-
-    const productoARS = p.china * c.dolar;
-
-    const envioARS = c.envio * c.dolar;
-
-    const base = productoARS + envioARS;
-
-    const impuestos = base * (c.importacion / 100);
-
-    const costoTotal = base + impuestos;
-
-    const comision = p.ml * (c.comision / 100);
-
-    const ganancia = p.ml - costoTotal - comision;
-
-    const margen = (ganancia / p.ml) * 100;
-
-    return {
-
-        productoARS,
-        envioARS,
-        impuestos,
-        costoTotal,
-        comision,
-        ganancia,
-        margen
-
-    };
-
-}
-
-
-/* =====================================================
-   COLOR
-===================================================== */
-
-function obtenerEstado(margen, p){
-
-    if(margen >= 30 && p.competencia <= 65){
-
-        return {
-
-            codigo:"verde",
-            texto:"BUENA OPORTUNIDAD",
-            clase:"green-bg"
-
-        };
-
-    }
-
-    if(margen >= 20){
-
-        return {
-
-            codigo:"amarillo",
-            texto:"OBSERVAR",
-            clase:"yellow-bg"
-
-        };
-
-    }
-
-    if(margen >= 10){
-
-        return {
-
-            codigo:"naranja",
-            texto:"PRECAUCIÓN",
-            clase:"orange-bg"
-
-        };
-
-    }
-
-    return {
-
-        codigo:"rojo",
-        texto:"DESCARTAR",
-        clase:"red-bg"
-
-    };
-
-}
-
-
-/* =====================================================
-   FORMATO DINERO
-===================================================== */
-
-function dinero(valor){
-
-    return "$" + Math.round(valor).toLocaleString("es-AR");
-
-}
-
-
-/* =====================================================
-   RENDER
-===================================================== */
-
-function renderProductos(){
-
-    const contenedor = document.getElementById("products");
-
-    const busqueda =
-        document.getElementById("search").value.toLowerCase();
-
-    const categoria =
-        document.getElementById("categoria").value;
-
-    const filtroEstado =
-        document.getElementById("estado").value;
-
-    const orden =
-        document.getElementById("orden").value;
-
-
-    let lista = productos.filter(p => {
-
-        const coincideTexto =
-            p.nombre.toLowerCase().includes(busqueda);
-
-        const coincideCategoria =
-            categoria === "todos" ||
-            p.categoria === categoria;
-
-        return coincideTexto && coincideCategoria;
-
-    });
-
-
-    lista = lista.map(p => {
-
-        return {
-
-            ...p,
-
-            calculo:calcularProducto(p)
-
-        };
-
-    });
-
-
-    lista.forEach(p => {
-
-        p.estado = obtenerEstado(
-            p.calculo.margen,
-            p
-        );
-
-    });
-
-
-    if(filtroEstado !== "todos"){
-
-        lista = lista.filter(
-            p => p.estado.codigo === filtroEstado
-        );
-
-    }
-
-
-    lista.sort((a,b)=>{
-
-        if(orden === "margen")
-            return b.calculo.margen - a.calculo.margen;
-
-        if(orden === "precio")
-            return b.ml - a.ml;
-
-        if(orden === "china")
-            return a.china - b.china;
-
-        if(orden === "demanda")
-            return b.demanda - a.demanda;
-
-    });
-
-
-    contenedor.innerHTML = "";
-
-
-    lista.forEach((p,index)=>{
-
-        const margen =
-            Math.max(0,Math.min(100,p.calculo.margen));
-
-        const card = document.createElement("article");
-
-        card.className = "card";
-
-
-        card.innerHTML = `
-
-        <div class="card-top">
-
-            <div>
-
-                <div class="category">
-                    ${capitalizar(p.categoria)}
-                </div>
-
-                <div class="product-name">
-                    ${p.nombre}
-                </div>
-
-            </div>
-
-            <div class="badge ${p.estado.clase}">
-                ${p.estado.texto}
-            </div>
-
-        </div>
-
-
-        <div class="card-body">
-
-            <div class="price-grid">
-
-                <div class="price-box">
-
-                    <div class="price-label">
-                        Mercado Libre
-                    </div>
-
-                    <div class="price">
-                        ${dinero(p.ml)}
-                    </div>
-
-                </div>
-
-
-                <div class="price-box">
-
-                    <div class="price-label">
-                        Fábrica China
-                    </div>
-
-                    <div class="price">
-                        US$ ${p.china.toFixed(2)}
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="margin">
-
-                <div class="margin-head">
-
-                    <span>
-                        Margen estimado
-                    </span>
-
-                    <strong>
-                        ${p.calculo.margen.toFixed(1)}%
-                    </strong>
-
-                </div>
-
-                <div class="progress">
-
-                    <div
-                        class="progress-bar"
-                        style="
-                        width:${margen}%;
-                        background:${colorBarra(p.estado.codigo)}
-                        ">
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="tags">
-
-                <span class="tag">
-                    📦 MOQ ${p.moq}
-                </span>
-
-                <span class="tag">
-                    🔥 Demanda ${p.demanda}/100
-                </span>
-
-                <span class="tag">
-                    👥 Competencia ${p.competencia}/100
-                </span>
-
-            </div>
-
-
-            <div class="reason">
-
-                <strong>¿Por qué podría funcionar?</strong>
-
-                <br>
-
-                ${p.razon}
-
-            </div>
-
-
-            <button
-                class="stats-btn"
-                onclick="abrirEstadisticas(${productos.indexOf(p)})">
-
-                📊 Ver estadísticas completas
-
-            </button>
-
-        </div>
-
-        `;
-
-
-        contenedor.appendChild(card);
-
-    });
-
-
-    actualizarDashboard();
-
-}
-
-
-/* =====================================================
-   DASHBOARD
-===================================================== */
-
-function actualizarDashboard(){
-
-    const calculados =
-        productos.map(p => calcularProducto(p));
-
-    document.getElementById("totalProductos")
-        .textContent = productos.length;
-
-
-    const buenos =
-        productos.filter((p,i)=>{
-
-            const calc = calculados[i];
-
-            return calc.margen >= 30 &&
-                   p.competencia <= 65;
-
-        }).length;
-
-
-    document.getElementById("buenosProductos")
-        .textContent = buenos;
-
-
-    const promedio =
-        calculados.reduce(
-            (s,p)=>s+p.margen,0
-        ) / calculados.length;
-
-
-    document.getElementById("margenPromedio")
-        .textContent =
-        promedio.toFixed(1) + "%";
-
-
-    const mayor =
-        Math.max(
-            ...calculados.map(p=>p.margen)
-        );
-
-
-    document.getElementById("mayorMargen")
-        .textContent =
-        mayor.toFixed(1) + "%";
-
-}
-
-
-/* =====================================================
-   ESTADÍSTICAS
-===================================================== */
-
-function abrirEstadisticas(index){
-
-    const p = productos[index];
-
-    const calc = calcularProducto(p);
-
-    const estado =
-        obtenerEstado(calc.margen,p);
-
-
-    document.getElementById("modalCategoria")
-        .textContent =
-        capitalizar(p.categoria);
-
-
-    document.getElementById("modalNombre")
-        .textContent =
-        p.nombre;
-
-
-    document.getElementById("modalML")
-        .textContent =
-        dinero(p.ml);
-
-
-    document.getElementById("modalChina")
-        .textContent =
-        "US$ " + p.china.toFixed(2);
-
-
-    document.getElementById("modalMOQ")
-        .textContent =
-        p.moq + " unidades";
-
-
-    document.getElementById("modalImportacion")
-        .textContent =
-        dinero(calc.impuestos);
-
-
-    document.getElementById("modalCosto")
-        .textContent =
-        dinero(calc.costoTotal);
-
-
-    document.getElementById("modalGanancia")
-        .textContent =
-        dinero(calc.ganancia);
-
-
-    document.getElementById("modalMargen")
-        .textContent =
-        calc.margen.toFixed(1) + "%";
-
-
-    document.getElementById("modalDemanda")
-        .textContent =
-        p.demanda + "/100";
-
-
-    document.getElementById("modalCompetencia")
-        .textContent =
-        p.competencia + "/100";
-
-
-    document.getElementById("modalRazon")
-        .textContent =
-        p.razon;
-
-
-    document.getElementById("modalRiesgo")
-        .textContent =
-        p.riesgo;
-
-
-    document.getElementById("modal")
-        .classList.add("active");
-
-}
-
-
-function cerrarModal(){
-
-    document.getElementById("modal")
-        .classList.remove("active");
-
-}
-
-
-/* =====================================================
-   CONFIGURACIÓN
-===================================================== */
-
-function abrirConfiguracion(){
-
-    document.getElementById("configModal")
-        .classList.add("active");
-
-}
-
-
-function cerrarConfiguracion(){
-
-    document.getElementById("configModal")
-        .classList.remove("active");
-
-}
-
-
-/* =====================================================
-   UTILIDADES
-===================================================== */
-
-function capitalizar(texto){
-
-    return texto.charAt(0).toUpperCase() +
-           texto.slice(1);
-
-}
-
-
-function colorBarra(estado){
-
-    if(estado === "verde")
-        return "#39e58c";
-
-    if(estado === "amarillo")
-        return "#ffd166";
-
-    if(estado === "naranja")
-        return "#ff9c64";
-
-    return "#ff5d73";
-
-}
-
-
-/* =====================================================
-   INICIO
-===================================================== */
-
-renderProductos();
-
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>
