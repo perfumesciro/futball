@@ -1,643 +1,270 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>ChinaMarket Scout</title>
+  <title>Mercado Scout — Productos para importar</title>
 
-    <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css">
+
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
 </head>
 
 <body>
 
-<!-- ================= HEADER ================= -->
+<header class="topbar">
 
-<header class="top-header">
+  <div class="logo">
+    Mercado<span>Scout</span>
+  </div>
 
-    <div class="header-main">
+  <div class="search">
+    <input
+      id="searchInput"
+      type="text"
+      placeholder="Buscar productos..."
+    >
 
-        <div class="brand">
-            <div class="brand-logo">CM</div>
+    <button onclick="buscar()">
+      🔍
+    </button>
+  </div>
 
-            <div>
-                <h1>ChinaMarket</h1>
-                <span>Scout</span>
-            </div>
-        </div>
+  <div class="header-actions">
+    <button onclick="mostrarSeleccion()">
+      ⭐ Mi selección
+      <span id="selectionCount">0</span>
+    </button>
 
-        <div class="search-container">
-
-            <input
-                id="searchInput"
-                type="text"
-                placeholder="Buscar productos, categorías o proveedores..."
-            >
-
-            <button id="searchButton">
-                🔍
-            </button>
-
-        </div>
-
-        <div class="header-actions">
-
-            <button class="header-button" id="favoritesButton">
-                ♡
-                <span>Favoritos</span>
-                <b id="favoriteCount">0</b>
-            </button>
-
-            <button class="header-button" id="cartButton">
-                🛒
-                <span>Mi selección</span>
-                <b id="cartCount">0</b>
-            </button>
-
-        </div>
-
-    </div>
-
-    <div class="nav-bar">
-
-        <div class="nav-content">
-
-            <button id="categoryButton">
-                ☰ Categorías
-            </button>
-
-            <button data-category="Todos">
-                Todos los productos
-            </button>
-
-            <button data-category="Hogar">
-                Hogar
-            </button>
-
-            <button data-category="Auto">
-                Auto
-            </button>
-
-            <button data-category="Mascotas">
-                Mascotas
-            </button>
-
-            <button data-category="Fitness">
-                Fitness
-            </button>
-
-            <button data-category="Oficina">
-                Oficina
-            </button>
-
-            <button data-category="Lavandería">
-                Lavandería
-            </button>
-
-        </div>
-
-    </div>
+    <button onclick="mostrarInfo()">
+      ⚙️
+    </button>
+  </div>
 
 </header>
 
 
-<!-- ================= CONTENIDO ================= -->
+<nav class="nav">
 
-<main class="main-container">
+  <button onclick="filtrar('todos')">
+    Todos
+  </button>
 
-    <!-- HERO -->
+  <button onclick="filtrar('alto')">
+    🔥 Alta demanda
+  </button>
 
-    <section class="hero">
+  <button onclick="filtrar('medio')">
+    📊 Demanda media
+  </button>
 
-        <div>
+  <button onclick="filtrar('importar')">
+    🌎 Para importar
+  </button>
 
-            <div class="hero-tag">
-                🇨🇳 Investigación China → 🇦🇷 Argentina
-            </div>
+</nav>
 
-            <h2>
-                Encontrá productos para vender
-                <strong>antes que los demás.</strong>
-            </h2>
 
-            <p>
-                Analizá precios, margen estimado, demanda,
-                competencia, MOQ y costos de importación
-                desde un solo lugar.
-            </p>
+<section class="hero">
 
-            <button id="heroButton" class="yellow-button">
-                Explorar productos →
-            </button>
+  <div>
 
-        </div>
+    <span class="verified">
+      ● DATOS VERIFICADOS
+    </span>
 
-        <div class="hero-box">
+    <h1>
+      Encontrá productos reales
+      para vender
+    </h1>
 
-            <div class="hero-stat">
-                <span>Productos analizados</span>
-                <strong id="heroProducts">0</strong>
-            </div>
+    <p>
+      Precios y ventas observadas en publicaciones
+      reales. Los cálculos de rentabilidad están
+      separados de los datos originales.
+    </p>
 
-            <div class="hero-stat">
-                <span>Mejor margen</span>
-                <strong id="heroMargin">0%</strong>
-            </div>
+  </div>
 
-            <div class="hero-stat">
-                <span>Oportunidades</span>
-                <strong id="heroOpportunities">0</strong>
-            </div>
+  <div class="hero-stat">
 
-        </div>
+    <strong id="totalProducts">
+      10
+    </strong>
 
-    </section>
+    <span>
+      productos analizados
+    </span>
 
+  </div>
 
-    <!-- FILTROS -->
+</section>
 
-    <section class="filter-section">
 
-        <div class="filter-top">
+<main>
 
-            <div>
-                <h2>Productos encontrados</h2>
+  <aside class="sidebar">
 
-                <p id="resultsText">
-                    0 productos
-                </p>
-            </div>
+    <h3>Filtros</h3>
 
-            <div class="sort-container">
+    <label>
+      Precio máximo
+    </label>
 
-                <label>Ordenar por</label>
+    <input
+      type="range"
+      id="priceFilter"
+      min="5000"
+      max="50000"
+      value="50000"
+      oninput="actualizarPrecio()"
+    >
 
-                <select id="sortSelect">
+    <div class="range-value">
+      Hasta $<span id="priceValue">50.000</span>
+    </div>
 
-                    <option value="margin">
-                        Mejor margen
-                    </option>
 
-                    <option value="demand">
-                        Mayor demanda
-                    </option>
+    <label>
+      Ventas mínimas
+    </label>
 
-                    <option value="priceLow">
-                        Menor precio ML
-                    </option>
+    <select id="salesFilter" onchange="renderProducts()">
 
-                    <option value="priceHigh">
-                        Mayor precio ML
-                    </option>
+      <option value="0">
+        Cualquier cantidad
+      </option>
 
-                    <option value="competition">
-                        Menor competencia
-                    </option>
+      <option value="100">
+        +100 vendidos
+      </option>
 
-                </select>
+      <option value="500">
+        +500 vendidos
+      </option>
 
-            </div>
+      <option value="1000">
+        +1000 vendidos
+      </option>
 
-        </div>
+      <option value="5000">
+        +5000 vendidos
+      </option>
 
+    </select>
 
-        <div class="filters">
 
-            <button
-                class="filter active"
-                data-status="all">
+    <label>
+      Ordenar
+    </label>
 
-                Todos
+    <select id="sortFilter" onchange="renderProducts()">
 
-            </button>
+      <option value="sales">
+        Más vendidos
+      </option>
 
-            <button
-                class="filter green-filter"
-                data-status="green">
+      <option value="priceLow">
+        Menor precio
+      </option>
 
-                🟢 Buen margen
+      <option value="priceHigh">
+        Mayor precio
+      </option>
 
-            </button>
+      <option value="rating">
+        Mejor valoración
+      </option>
 
-            <button
-                class="filter yellow-filter"
-                data-status="yellow">
+    </select>
 
-                🟡 Para analizar
 
-            </button>
+    <button
+      class="clear"
+      onclick="limpiarFiltros()"
+    >
+      Limpiar filtros
+    </button>
 
-            <button
-                class="filter orange-filter"
-                data-status="orange">
+  </aside>
 
-                🟠 Precaución
 
-            </button>
+  <section class="products-area">
 
-            <button
-                class="filter red-filter"
-                data-status="red">
+    <div class="products-header">
 
-                🔴 Descartados
+      <div>
 
-            </button>
+        <h2>
+          Productos encontrados
+        </h2>
 
-        </div>
+        <span id="results">
+          10 productos
+        </span>
 
-    </section>
+      </div>
 
-
-    <!-- LAYOUT -->
-
-    <div class="content-layout">
-
-
-        <!-- SIDEBAR -->
-
-        <aside class="sidebar">
-
-            <div class="sidebar-title">
-                <span>Filtros</span>
-
-                <button id="clearFilters">
-                    Limpiar
-                </button>
-            </div>
-
-
-            <div class="side-block">
-
-                <h3>Categoría</h3>
-
-                <label>
-                    <input
-                        type="radio"
-                        name="category"
-                        value="Todos"
-                        checked
-                    >
-                    Todos
-                </label>
-
-                <label>
-                    <input
-                        type="radio"
-                        name="category"
-                        value="Hogar"
-                    >
-                    Hogar
-                </label>
-
-                <label>
-                    <input
-                        type="radio"
-                        name="category"
-                        value="Auto"
-                    >
-                    Auto
-                </label>
-
-                <label>
-                    <input
-                        type="radio"
-                        name="category"
-                        value="Mascotas"
-                    >
-                    Mascotas
-                </label>
-
-                <label>
-                    <input
-                        type="radio"
-                        name="category"
-                        value="Fitness"
-                    >
-                    Fitness
-                </label>
-
-                <label>
-                    <input
-                        type="radio"
-                        name="category"
-                        value="Oficina"
-                    >
-                    Oficina
-                </label>
-
-                <label>
-                    <input
-                        type="radio"
-                        name="category"
-                        value="Lavandería"
-                    >
-                    Lavandería
-                </label>
-
-            </div>
-
-
-            <div class="side-block">
-
-                <h3>Margen mínimo</h3>
-
-                <input
-                    type="range"
-                    id="marginRange"
-                    min="0"
-                    max="80"
-                    value="0"
-                >
-
-                <div class="range-value">
-                    <span>0%</span>
-
-                    <strong id="marginValue">
-                        0%
-                    </strong>
-                </div>
-
-            </div>
-
-
-            <div class="side-block">
-
-                <h3>Demanda mínima</h3>
-
-                <input
-                    type="range"
-                    id="demandRange"
-                    min="0"
-                    max="100"
-                    value="0"
-                >
-
-                <div class="range-value">
-                    <span>0</span>
-
-                    <strong id="demandValue">
-                        0/100
-                    </strong>
-                </div>
-
-            </div>
-
-
-            <div class="side-block">
-
-                <h3>Estado</h3>
-
-                <label>
-                    <input
-                        type="checkbox"
-                        id="onlyOpportunities"
-                    >
-
-                    Solo oportunidades
-                </label>
-
-            </div>
-
-
-            <button
-                id="configButton"
-                class="config-button">
-
-                ⚙️ Configurar costos
-
-            </button>
-
-        </aside>
-
-
-        <!-- PRODUCTOS -->
-
-        <section class="products-section">
-
-            <div
-                id="productsGrid"
-                class="products-grid">
-            </div>
-
-            <div
-                id="emptyState"
-                class="empty-state hidden">
-
-                <div>🔎</div>
-
-                <h2>
-                    No encontramos productos
-                </h2>
-
-                <p>
-                    Probá cambiando los filtros o la búsqueda.
-                </p>
-
-                <button
-                    id="emptyClear"
-                    class="yellow-button">
-
-                    Limpiar filtros
-
-                </button>
-
-            </div>
-
-        </section>
+      <span class="real-data">
+        ✓ Datos comprobados
+      </span>
 
     </div>
+
+
+    <div
+      id="products"
+      class="products"
+    ></div>
+
+  </section>
 
 </main>
 
 
-<!-- ================= MODAL PRODUCTO ================= -->
-
 <div
-    id="productModal"
-    class="modal">
+  id="modal"
+  class="modal hidden"
+>
 
-    <div class="modal-window">
+  <div class="modal-box">
 
-        <button
-            class="modal-close"
-            data-close="productModal">
+    <button
+      class="close"
+      onclick="cerrarModal()"
+    >
+      ×
+    </button>
 
-            ×
+    <div id="modalContent"></div>
 
-        </button>
-
-        <div id="modalProductContent"></div>
-
-    </div>
-
-</div>
-
-
-<!-- ================= MODAL CONFIG ================= -->
-
-<div
-    id="configModal"
-    class="modal">
-
-    <div class="modal-window small-modal">
-
-        <button
-            class="modal-close"
-            data-close="configModal">
-
-            ×
-
-        </button>
-
-        <h2>⚙️ Configuración</h2>
-
-        <p class="modal-description">
-            Modificá estos valores para simular diferentes escenarios.
-        </p>
-
-
-        <div class="config-grid">
-
-            <div class="config-input">
-
-                <label>
-                    Dólar
-                </label>
-
-                <div class="input-money">
-
-                    <span>$</span>
-
-                    <input
-                        id="usdInput"
-                        type="number"
-                        value="1540"
-                    >
-
-                </div>
-
-            </div>
-
-
-            <div class="config-input">
-
-                <label>
-                    Envío por unidad USD
-                </label>
-
-                <input
-                    id="shippingInput"
-                    type="number"
-                    value="2"
-                    step="0.1"
-                >
-
-            </div>
-
-
-            <div class="config-input">
-
-                <label>
-                    Importación %
-                </label>
-
-                <input
-                    id="importInput"
-                    type="number"
-                    value="20"
-                >
-
-            </div>
-
-
-            <div class="config-input">
-
-                <label>
-                    Comisión ML %
-                </label>
-
-                <input
-                    id="commissionInput"
-                    type="number"
-                    value="15"
-                >
-
-            </div>
-
-        </div>
-
-
-        <button
-            id="saveConfig"
-            class="yellow-button full-button">
-
-            Guardar configuración
-
-        </button>
-
-    </div>
-
-</div>
-
-
-<!-- ================= MODAL FAVORITOS ================= -->
-
-<div
-    id="favoritesModal"
-    class="modal">
-
-    <div class="modal-window">
-
-        <button
-            class="modal-close"
-            data-close="favoritesModal">
-
-            ×
-
-        </button>
-
-        <h2>♡ Mis favoritos</h2>
-
-        <div id="favoritesContent"></div>
-
-    </div>
-
-</div>
-
-
-<!-- ================= MODAL CARRITO ================= -->
-
-<div
-    id="cartModal"
-    class="modal">
-
-    <div class="modal-window">
-
-        <button
-            class="modal-close"
-            data-close="cartModal">
-
-            ×
-
-        </button>
-
-        <h2>🛒 Mi selección</h2>
-
-        <div id="cartContent"></div>
-
-    </div>
+  </div>
 
 </div>
 
 
 <footer>
 
-    <strong>ChinaMarket Scout</strong>
+  <strong>Mercado Scout</strong>
 
-    <p>
-        Herramienta de análisis. Los márgenes son estimaciones
-        y deben verificarse con costos reales antes de realizar una compra.
-    </p>
+  <span>
+    Herramienta de investigación de productos
+  </span>
+
+  <small>
+    Los datos de mercado corresponden a publicaciones
+    observadas. Los márgenes son cálculos orientativos
+    y no constituyen una cotización de importación.
+  </small>
 
 </footer>
 
