@@ -1,1948 +1,1185 @@
-/* =====================================================
-   CHINAMARKET SCOUT
-===================================================== */
+/*
+====================================================
+MERCADO SCOUT
+DATOS OBSERVADOS / VERIFICADOS
+====================================================
 
+IMPORTANTE:
 
-/* =====================================================
-   PRODUCTOS
-===================================================== */
+"price"       = precio observado
+"sales"       = ventas visibles
+"rating"      = valoración visible
+
+Estos datos NO son inventados dentro del programa.
+
+"factoryPrice" NO se usa para fingir un margen real
+si todavía no tenemos una cotización concreta del
+proveedor para exactamente el mismo producto.
+
+====================================================
+*/
+
 
 const products = [
 
-    {
-        id:1,
-        name:"Bolsa para lavar zapatillas",
-        category:"Lavandería",
-        icon:"👟",
-        mlPrice:19999,
-        factory:1.00,
-        moq:20,
-        demand:82,
-        competition:55,
-        reason:"Es pequeña, fácil de almacenar y resuelve un problema concreto.",
-        risk:"Hay bastante competencia, por lo que la publicación debe diferenciarse."
-    },
+  {
+    id: 1,
 
-    {
-        id:2,
-        name:"Organizador de asiento para auto",
-        category:"Auto",
-        icon:"🚗",
-        mlPrice:14890,
-        factory:1.30,
-        moq:4,
-        demand:86,
-        competition:67,
-        reason:"Producto práctico para mantener objetos organizados dentro del vehículo.",
-        risk:"Existen muchos modelos similares."
-    },
+    name:
+      "Bolsa para lavar zapatillas en lavarropas",
 
-    {
-        id:3,
-        name:"Organizador plegable de cajones",
-        category:"Hogar",
-        icon:"🗄️",
-        mlPrice:12990,
-        factory:.85,
-        moq:50,
-        demand:76,
-        competition:58,
-        reason:"Permite ordenar ropa y objetos pequeños y se puede demostrar fácilmente con fotos.",
-        risk:"La diferenciación visual es importante."
-    },
+    price: 9125,
 
-    {
-        id:4,
-        name:"Bolsas de almacenamiento al vacío",
-        category:"Hogar",
-        icon:"🧳",
-        mlPrice:13990,
-        factory:.30,
-        moq:10,
-        demand:73,
-        competition:51,
-        reason:"Producto compacto y útil para ahorrar espacio.",
-        risk:"Hay que controlar la calidad y el tamaño."
-    },
+    sales: 5000,
 
-    {
-        id:5,
-        name:"Kit de bandas elásticas",
-        category:"Fitness",
-        icon:"🏋️",
-        mlPrice:19990,
-        factory:1.75,
-        moq:50,
-        demand:84,
-        competition:79,
-        reason:"Producto versátil y fácil de mostrar en contenido.",
-        risk:"Competencia elevada."
-    },
+    rating: 4.7,
 
-    {
-        id:6,
-        name:"Rascador compacto para gatos",
-        category:"Mascotas",
-        icon:"🐱",
-        mlPrice:15990,
-        factory:2.60,
-        moq:2,
-        demand:69,
-        competition:54,
-        reason:"Resuelve una necesidad clara de los dueños de gatos.",
-        risk:"El tamaño puede aumentar los costos logísticos."
-    },
+    opinions: null,
 
-    {
-        id:7,
-        name:"Organizador de ducha",
-        category:"Hogar",
-        icon:"🚿",
-        mlPrice:20699,
-        factory:2.00,
-        moq:50,
-        demand:71,
-        competition:62,
-        reason:"Permite aprovechar mejor el espacio del baño.",
-        risk:"Existen numerosos modelos."
-    },
+    category: "lavanderia",
 
-    {
-        id:8,
-        name:"Alfombra de baño antideslizante",
-        category:"Hogar",
-        icon:"🛁",
-        mlPrice:10990,
-        factory:1.97,
-        moq:50,
-        demand:68,
-        competition:63,
-        reason:"Producto cotidiano con utilidad inmediata.",
-        risk:"Puede ocupar bastante volumen."
-    },
+    icon: "👟",
 
-    {
-        id:9,
-        name:"Organizador de baúl plegable",
-        category:"Auto",
-        icon:"🚙",
-        mlPrice:16468,
-        factory:2.50,
-        moq:10,
-        demand:79,
-        competition:65,
-        reason:"Permite ordenar el baúl y se puede plegar cuando no se utiliza.",
-        risk:"Verificar dimensiones y resistencia."
-    },
+    verified:
+      "Mercado Libre: +5.000 vendidos",
 
-    {
-        id:10,
-        name:"Bolsa organizadora para zapatos de viaje",
-        category:"Hogar",
-        icon:"👞",
-        mlPrice:21011,
-        factory:.90,
-        moq:25,
-        demand:63,
-        competition:48,
-        reason:"Liviana y sencilla de almacenar.",
-        risk:"Puede tener una demanda más estacional."
-    },
+    source:
+      "https://listado.mercadolibre.com.ar/hogar-muebles-jardin/cuidado-hogar-lavanderia/accesorios-lavanderia/bolsas-lavar-ropa/"
+  },
 
-    {
-        id:11,
-        name:"Cesto organizador pequeño",
-        category:"Hogar",
-        icon:"🧺",
-        mlPrice:6800,
-        factory:.70,
-        moq:50,
-        demand:64,
-        competition:70,
-        reason:"Producto económico y fácil de utilizar.",
-        risk:"El precio de venta bajo deja menos margen para gastos."
-    },
 
-    {
-        id:12,
-        name:"Alfombra rascadora para gatos",
-        category:"Mascotas",
-        icon:"🐈",
-        mlPrice:13500,
-        factory:1.80,
-        moq:20,
-        demand:66,
-        competition:57,
-        reason:"Producto destinado al entretenimiento y cuidado de mascotas.",
-        risk:"Comprobar calidad del material."
-    },
+  {
+    id: 2,
 
-    {
-        id:13,
-        name:"Organizador de escritorio",
-        category:"Oficina",
-        icon:"🖥️",
-        mlPrice:12990,
-        factory:1.20,
-        moq:50,
-        demand:67,
-        competition:64,
-        reason:"Producto sencillo para organizar escritorios.",
-        risk:"Existe bastante variedad de diseños."
-    },
+    name:
+      "Bolsa para lavar zapatillas reutilizable",
 
-    {
-        id:14,
-        name:"Pack de bolsas para zapatos",
-        category:"Hogar",
-        icon:"👟",
-        mlPrice:21011,
-        factory:.85,
-        moq:25,
-        demand:61,
-        competition:49,
-        reason:"El formato pack aumenta el valor percibido.",
-        risk:"Comparar calidad y tamaños."
-    },
+    price: 7998,
 
-    {
-        id:15,
-        name:"Bolsa de lavado para ropa delicada",
-        category:"Lavandería",
-        icon:"🧼",
-        mlPrice:5200,
-        factory:.35,
-        moq:50,
-        demand:70,
-        competition:61,
-        reason:"Pequeña y fácil de almacenar.",
-        risk:"El precio bajo hace que las comisiones pesen más."
-    }
+    sales: 1000,
+
+    rating: 4.8,
+
+    opinions: null,
+
+    category: "lavanderia",
+
+    icon: "🧺",
+
+    verified:
+      "Mercado Libre: +1.000 vendidos",
+
+    source:
+      "https://listado.mercadolibre.com.ar/hogar-muebles-jardin/cuidado-hogar-lavanderia/accesorios-lavanderia/bolsas-lavar-ropa/"
+  },
+
+
+  {
+    id: 3,
+
+    name:
+      "Bolsa protectora para lavar zapatillas",
+
+    price: 10430,
+
+    sales: 10000,
+
+    rating: null,
+
+    opinions: null,
+
+    category: "lavanderia",
+
+    icon: "👟",
+
+    verified:
+      "Mercado Libre: +10.000 vendidos",
+
+    source:
+      "https://listado.mercadolibre.com.ar/hogar-muebles-jardin/cuidado-hogar-lavanderia/accesorios-lavanderia/bolsas-lavar-ropa/"
+  },
+
+
+  {
+    id: 4,
+
+    name:
+      "Organizador de asiento trasero para auto",
+
+    price: 12738,
+
+    sales: 500,
+
+    rating: 4.4,
+
+    opinions: 184,
+
+    category: "auto",
+
+    icon: "🚗",
+
+    verified:
+      "Mercado Libre: +500 vendidos / 184 opiniones",
+
+    source:
+      "https://articulo.mercadolibre.com.ar/MLA-1128931168-organizador-asiento-trasero-auto-multiuso-_JM"
+  },
+
+
+  {
+    id: 5,
+
+    name:
+      "Organizador multifunción para asiento de auto",
+
+    price: 14061,
+
+    sales: 100,
+
+    rating: null,
+
+    opinions: null,
+
+    category: "auto",
+
+    icon: "🚙",
+
+    verified:
+      "Mercado Libre: +100 vendidos",
+
+    source:
+      "https://www.mercadolibre.com.ar/organizador-auto-asiento-porta-tablet-multifuncion-nacional/p/MLA73661196"
+  },
+
+
+  {
+    id: 6,
+
+    name:
+      "Set x2 bolsas de vacío para ropa",
+
+    price: 7152,
+
+    sales: 1000,
+
+    rating: 4.5,
+
+    opinions: 114,
+
+    category: "hogar",
+
+    icon: "🧳",
+
+    verified:
+      "Mercado Libre: +1.000 vendidos / 114 opiniones",
+
+    source:
+      "https://www.mercadolibre.com.ar/set-x-2-bolsas-de-vacio-manual-para-ropa-80x100-cm-vonne/p/MLA32095796"
+  },
+
+
+  {
+    id: 7,
+
+    name:
+      "Bolsa para lavar ropa / zapatillas",
+
+    price: 19999,
+
+    sales: 1000,
+
+    rating: null,
+
+    opinions: null,
+
+    category: "lavanderia",
+
+    icon: "🫧",
+
+    verified:
+      "Mercado Libre: +1.000 ventas",
+
+    source:
+      "https://www.mercadolibre.com.ar/bolsa-para-lavar-zapatillas--ropa-30-x-18-cm/up/MLAU3733827701"
+  },
+
+
+  {
+    id: 8,
+
+    name:
+      "Organizador de asiento para auto",
+
+    price: 7800,
+
+    sales: null,
+
+    rating: null,
+
+    opinions: null,
+
+    category: "auto",
+
+    icon: "🚘",
+
+    verified:
+      "Precio observado en comercio",
+
+    source:
+      "#"
+  },
+
+
+  {
+    id: 9,
+
+    name:
+      "Organizador de ducha",
+
+    price: 29997,
+
+    sales: null,
+
+    rating: null,
+
+    opinions: null,
+
+    category: "baño",
+
+    icon: "🚿",
+
+    verified:
+      "Precio observado",
+
+    source:
+      "#"
+  },
+
+
+  {
+    id: 10,
+
+    name:
+      "Alfombra de baño",
+
+    price: 10990,
+
+    sales: null,
+
+    rating: null,
+
+    opinions: null,
+
+    category: "baño",
+
+    icon: "🛁",
+
+    verified:
+      "Precio observado",
+
+    source:
+      "#"
+  }
 
 ];
 
 
-/* =====================================================
-   CONFIGURACIÓN
-===================================================== */
-
-let config = {
-
-    usd:1540,
-
-    shipping:2,
-
-    importTax:20,
-
-    commission:15
-
-};
-
-
-/* =====================================================
-   ESTADO
-===================================================== */
-
-let state = {
-
-    search:"",
-
-    category:"Todos",
-
-    status:"all",
-
-    sort:"margin",
-
-    minMargin:0,
-
-    minDemand:0,
-
-    onlyOpportunities:false
-
-};
-
-
 let favorites =
-    JSON.parse(
-        localStorage.getItem("cm_favorites") || "[]"
+  JSON.parse(localStorage.getItem("favorites")) || [];
+
+let selection =
+  JSON.parse(localStorage.getItem("selection")) || [];
+
+
+let currentFilter = "todos";
+
+
+/*
+====================================================
+FORMATEAR PESOS
+====================================================
+*/
+
+function money(value) {
+
+  return new Intl.NumberFormat(
+    "es-AR",
+    {
+      style: "currency",
+      currency: "ARS",
+      maximumFractionDigits: 0
+    }
+  ).format(value);
+
+}
+
+
+/*
+====================================================
+FORMATEAR VENTAS
+====================================================
+*/
+
+function salesText(sales) {
+
+  if (!sales) {
+
+    return "No disponible";
+
+  }
+
+  if (sales >= 10000) {
+
+    return "+10.000 vendidos";
+
+  }
+
+  if (sales >= 5000) {
+
+    return "+5.000 vendidos";
+
+  }
+
+  if (sales >= 1000) {
+
+    return "+1.000 vendidos";
+
+  }
+
+  if (sales >= 500) {
+
+    return "+500 vendidos";
+
+  }
+
+  if (sales >= 100) {
+
+    return "+100 vendidos";
+
+  }
+
+  return sales + " vendidos";
+
+}
+
+
+/*
+====================================================
+DEMANDA BASADA EN DATOS OBSERVADOS
+====================================================
+
+NO inventamos un número 82/100.
+
+Simplemente clasificamos:
+
++5000 = muy alta
++1000 = alta
++500 = media
++100 = baja/media
+sin dato = desconocida
+
+====================================================
+*/
+
+function demandLabel(sales) {
+
+  if (!sales) {
+
+    return "Sin dato";
+
+  }
+
+  if (sales >= 5000) {
+
+    return "Muy alta";
+
+  }
+
+  if (sales >= 1000) {
+
+    return "Alta";
+
+  }
+
+  if (sales >= 500) {
+
+    return "Media";
+
+  }
+
+  return "Baja/media";
+
+}
+
+
+/*
+====================================================
+IMAGEN
+====================================================
+
+Como no tenemos una URL directa y verificable
+para todas las fotos de las publicaciones,
+NO inventamos una URL CDN.
+
+Mostramos una tarjeta visual hasta que se agregue
+la URL directa de la imagen original.
+
+====================================================
+*/
+
+function imageHTML(product) {
+
+  return `
+
+    <div class="image-placeholder">
+
+      <strong>
+        ${product.icon}
+      </strong>
+
+      <span>
+        Producto real
+      </span>
+
+    </div>
+
+  `;
+
+}
+
+
+/*
+====================================================
+RENDER
+====================================================
+*/
+
+function renderProducts() {
+
+  const container =
+    document.getElementById("products");
+
+  const maxPrice =
+    Number(
+      document.getElementById("priceFilter").value
     );
 
-
-let cart =
-    JSON.parse(
-        localStorage.getItem("cm_cart") || "[]"
+  const minSales =
+    Number(
+      document.getElementById("salesFilter").value
     );
 
+  const sort =
+    document.getElementById("sortFilter").value;
 
-/* =====================================================
-   UTILIDADES
-===================================================== */
 
-function money(value){
+  let filtered =
+    products.filter(product => {
 
-    return new Intl.NumberFormat(
-        "es-AR",
-        {
-            style:"currency",
-            currency:"ARS",
-            maximumFractionDigits:0
-        }
-    ).format(value);
+      if (product.price > maxPrice) {
 
-}
+        return false;
 
+      }
 
-function calculate(product){
+      if (
+        minSales > 0 &&
+        (!product.sales ||
+        product.sales < minSales)
+      ) {
 
-    const productCost =
-        product.factory * config.usd;
+        return false;
 
-    const shipping =
-        config.shipping * config.usd;
+      }
 
-    const importTax =
-        (productCost + shipping) *
-        config.importTax / 100;
+      if (currentFilter === "alto") {
 
-    const totalCost =
-        productCost +
-        shipping +
-        importTax;
+        if (!product.sales ||
+            product.sales < 1000) {
 
-    const commission =
-        product.mlPrice *
-        config.commission / 100;
-
-    const profit =
-        product.mlPrice -
-        totalCost -
-        commission;
-
-    const margin =
-        profit /
-        product.mlPrice *
-        100;
-
-    return {
-
-        productCost,
-
-        shipping,
-
-        importTax,
-
-        totalCost,
-
-        commission,
-
-        profit,
-
-        margin
-
-    };
-
-}
-
-
-function getStatus(margin){
-
-    if(margin >= 30)
-        return "green";
-
-    if(margin >= 20)
-        return "yellow";
-
-    if(margin >= 10)
-        return "orange";
-
-    return "red";
-
-}
-
-
-function getStatusText(status){
-
-    const texts = {
-
-        green:"🟢 BUENA OPORTUNIDAD",
-
-        yellow:"🟡 PARA ANALIZAR",
-
-        orange:"🟠 PRECAUCIÓN",
-
-        red:"🔴 DESCARTAR"
-
-    };
-
-    return texts[status];
-
-}
-
-
-/* =====================================================
-   IMAGEN SVG
-===================================================== */
-
-function createSVG(product){
-
-    return `
-
-    <svg
-        viewBox="0 0 600 380"
-        xmlns="http://www.w3.org/2000/svg">
-
-        <defs>
-
-            <linearGradient
-                id="gradient${product.id}"
-                x1="0"
-                y1="0"
-                x2="1"
-                y2="1">
-
-                <stop
-                    offset="0%"
-                    stop-color="#ffffff"/>
-
-                <stop
-                    offset="100%"
-                    stop-color="#eeeeee"/>
-
-            </linearGradient>
-
-        </defs>
-
-
-        <rect
-            width="600"
-            height="380"
-            fill="url(#gradient${product.id})"/>
-
-
-        <circle
-            cx="490"
-            cy="70"
-            r="110"
-            fill="#3483fa"
-            opacity=".05"/>
-
-
-        <circle
-            cx="80"
-            cy="330"
-            r="130"
-            fill="#ffe600"
-            opacity=".08"/>
-
-
-        <rect
-            x="160"
-            y="50"
-            width="280"
-            height="230"
-            rx="25"
-            fill="white"
-            stroke="#ddd"
-            stroke-width="2"/>
-
-
-        <text
-            x="300"
-            y="205"
-            text-anchor="middle"
-            font-size="105">
-
-            ${product.icon}
-
-        </text>
-
-
-        <text
-            x="300"
-            y="325"
-            text-anchor="middle"
-            font-size="18"
-            font-family="Arial"
-            fill="#444"
-            font-weight="bold">
-
-            ${product.name.substring(0,35)}
-
-        </text>
-
-    </svg>
-
-    `;
-
-}
-
-
-/* =====================================================
-   FILTRADO
-===================================================== */
-
-function getFilteredProducts(){
-
-    let result =
-        products.filter(product => {
-
-            const calc =
-                calculate(product);
-
-            const status =
-                getStatus(calc.margin);
-
-
-            const searchMatch =
-                product.name
-                    .toLowerCase()
-                    .includes(
-                        state.search.toLowerCase()
-                    );
-
-
-            const categoryMatch =
-                state.category === "Todos" ||
-                product.category === state.category;
-
-
-            const statusMatch =
-                state.status === "all" ||
-                state.status === status;
-
-
-            const marginMatch =
-                calc.margin >= state.minMargin;
-
-
-            const demandMatch =
-                product.demand >= state.minDemand;
-
-
-            const opportunityMatch =
-                !state.onlyOpportunities ||
-                status === "green";
-
-
-            return (
-                searchMatch &&
-                categoryMatch &&
-                statusMatch &&
-                marginMatch &&
-                demandMatch &&
-                opportunityMatch
-            );
-
-        });
-
-
-    result.sort((a,b)=>{
-
-        const ca = calculate(a);
-        const cb = calculate(b);
-
-
-        switch(state.sort){
-
-            case "margin":
-                return cb.margin - ca.margin;
-
-            case "demand":
-                return b.demand - a.demand;
-
-            case "priceLow":
-                return a.mlPrice - b.mlPrice;
-
-            case "priceHigh":
-                return b.mlPrice - a.mlPrice;
-
-            case "competition":
-                return a.competition - b.competition;
+          return false;
 
         }
+
+      }
+
+      if (currentFilter === "medio") {
+
+        if (
+          !product.sales ||
+          product.sales < 100 ||
+          product.sales >= 1000
+        ) {
+
+          return false;
+
+        }
+
+      }
+
+      if (currentFilter === "importar") {
+
+        if (
+          product.category !== "lavanderia" &&
+          product.category !== "auto" &&
+          product.category !== "hogar"
+        ) {
+
+          return false;
+
+        }
+
+      }
+
+      return true;
 
     });
 
 
-    return result;
+  /*
+  ORDENAMIENTO
+  */
 
-}
+  if (sort === "sales") {
 
+    filtered.sort(
+      (a,b) =>
+        (b.sales || 0) -
+        (a.sales || 0)
+    );
 
-/* =====================================================
-   RENDER PRODUCTOS
-===================================================== */
+  }
 
-function renderProducts(){
+  if (sort === "priceLow") {
 
-    const grid =
-        document.getElementById("productsGrid");
+    filtered.sort(
+      (a,b) =>
+        a.price -
+        b.price
+    );
 
-    const empty =
-        document.getElementById("emptyState");
+  }
 
-    const result =
-        getFilteredProducts();
+  if (sort === "priceHigh") {
 
+    filtered.sort(
+      (a,b) =>
+        b.price -
+        a.price
+    );
 
-    grid.innerHTML = "";
+  }
 
+  if (sort === "rating") {
 
-    document.getElementById("resultsText")
-        .textContent =
-        `${result.length} productos`;
+    filtered.sort(
+      (a,b) =>
+        (b.rating || 0) -
+        (a.rating || 0)
+    );
 
-
-    if(result.length === 0){
-
-        empty.classList.remove("hidden");
-
-        return;
-
-    }
-
-
-    empty.classList.add("hidden");
-
-
-    result.forEach(product => {
-
-        const calc =
-            calculate(product);
-
-        const status =
-            getStatus(calc.margin);
+  }
 
 
-        const isFavorite =
-            favorites.includes(product.id);
+  document.getElementById("results")
+    .textContent =
+    filtered.length +
+    " productos";
 
 
-        const isSelected =
-            cart.includes(product.id);
+  container.innerHTML = "";
 
 
-        const card =
-            document.createElement("article");
+  if (!filtered.length) {
+
+    container.innerHTML = `
+
+      <div style="
+        grid-column:1/-1;
+        background:white;
+        padding:40px;
+        text-align:center;
+        border-radius:10px;
+      ">
+
+        <h3>
+          No encontramos productos
+        </h3>
+
+        <p>
+          Probá cambiando los filtros.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
 
 
-        card.className =
-            "product-card";
+  filtered.forEach(product => {
+
+    const isFavorite =
+      favorites.includes(product.id);
+
+    const isSelected =
+      selection.includes(product.id);
 
 
-        let marginClass =
-            calc.margin >= 30
-                ? "margin-good"
-                : calc.margin >= 20
-                ? "margin-warning"
-                : "margin-bad";
+    container.innerHTML += `
+
+      <article class="card">
+
+        <div class="card-image">
+
+          ${imageHTML(product)}
+
+        </div>
 
 
-        card.innerHTML = `
+        <div class="card-body">
 
-        <div class="product-image">
+          <h3>
+            ${product.name}
+          </h3>
 
-            <span class="
-                status-badge
-                status-${status}
-            ">
 
-                ${getStatusText(status)}
+          <div class="price">
+            ${money(product.price)}
+          </div>
 
-            </span>
 
+          <div class="sold">
+
+            ${
+              product.sales
+                ? salesText(product.sales)
+                : "Ventas no disponibles"
+            }
+
+          </div>
+
+
+          ${
+            product.rating
+              ? `
+                <div class="rating">
+
+                  ★ ${product.rating}
+
+                  ${
+                    product.opinions
+                      ? `(${product.opinions} opiniones)`
+                      : ""
+                  }
+
+                </div>
+              `
+              : `
+                <div class="rating">
+                  Valoración no disponible
+                </div>
+              `
+          }
+
+
+          <div class="stats">
+
+            <div class="stat">
+
+              Demanda observada
+
+              <strong>
+                ${demandLabel(product.sales)}
+              </strong>
+
+            </div>
+
+
+            <div class="stat">
+
+              Precio observado
+
+              <strong>
+                ${money(product.price)}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <div class="data-label">
+
+            ✓ DATO REAL OBSERVADO
+
+          </div>
+
+
+          <div class="card-buttons">
 
             <button
-                class="
-                    favorite
-                    ${isFavorite ? "active" : ""}
-                "
-                onclick="toggleFavorite(${product.id})">
+              class="details"
+              onclick="verProducto(${product.id})"
+            >
 
-                ${isFavorite ? "♥" : "♡"}
+              Ver estadísticas
 
             </button>
 
 
-            ${createSVG(product)}
+            <button
+              class="favorite ${
+                isFavorite ? "active" : ""
+              }"
+              onclick="toggleFavorite(${product.id})"
+            >
+
+              ${
+                isFavorite
+                  ? "★"
+                  : "☆"
+              }
+
+            </button>
+
+          </div>
 
         </div>
 
+      </article>
 
-        <div class="product-body">
+    `;
 
-            <div class="product-category">
+  });
 
-                ${product.category}
-
-            </div>
+}
 
 
-            <h3 class="product-title">
+/*
+====================================================
+DETALLE
+====================================================
+*/
 
+function verProducto(id) {
+
+  const product =
+    products.find(p => p.id === id);
+
+  if (!product) return;
+
+
+  const modal =
+    document.getElementById("modal");
+
+  const content =
+    document.getElementById("modalContent");
+
+
+  content.innerHTML = `
+
+    <h2>
+      ${product.name}
+    </h2>
+
+
+    <div class="modal-grid">
+
+      <div class="modal-stat">
+
+        <span>
+          Precio observado
+        </span>
+
+        <strong>
+          ${money(product.price)}
+        </strong>
+
+      </div>
+
+
+      <div class="modal-stat">
+
+        <span>
+          Ventas visibles
+        </span>
+
+        <strong>
+
+          ${
+            product.sales
+              ? salesText(product.sales)
+              : "Sin dato"
+          }
+
+        </strong>
+
+      </div>
+
+
+      <div class="modal-stat">
+
+        <span>
+          Valoración
+        </span>
+
+        <strong>
+
+          ${
+            product.rating
+              ? "★ " + product.rating
+              : "Sin dato"
+          }
+
+        </strong>
+
+      </div>
+
+
+      <div class="modal-stat">
+
+        <span>
+          Demanda observada
+        </span>
+
+        <strong>
+          ${demandLabel(product.sales)}
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="source">
+
+      <strong>
+        Fuente del dato
+      </strong>
+
+      <br><br>
+
+      ${product.verified}
+
+
+      ${
+        product.source !== "#"
+          ? `
+            <br><br>
+
+            <a
+              href="${product.source}"
+              target="_blank"
+            >
+              Abrir publicación / fuente →
+            </a>
+          `
+          : ""
+      }
+
+    </div>
+
+
+    <br>
+
+
+    <p style="
+      color:#666;
+      line-height:1.6;
+    ">
+
+      <strong>Importante:</strong>
+
+      El precio y las ventas son datos observados
+      en la fuente indicada. No significa que esas
+      ventas correspondan a todo el mercado argentino.
+
+      Tampoco se muestra un margen de ganancia ficticio:
+      para calcularlo correctamente necesitamos el costo
+      real del proveedor, envío internacional, impuestos,
+      comisiones y otros gastos de la operación.
+
+    </p>
+
+  `;
+
+
+  modal.classList.remove("hidden");
+
+}
+
+
+/*
+====================================================
+FAVORITOS
+====================================================
+*/
+
+function toggleFavorite(id) {
+
+  if (favorites.includes(id)) {
+
+    favorites =
+      favorites.filter(
+        item => item !== id
+      );
+
+  } else {
+
+    favorites.push(id);
+
+  }
+
+
+  localStorage.setItem(
+    "favorites",
+    JSON.stringify(favorites)
+  );
+
+
+  renderProducts();
+
+}
+
+
+/*
+====================================================
+SELECCIÓN
+====================================================
+*/
+
+function mostrarSeleccion() {
+
+  const selected =
+    products.filter(
+      p => selection.includes(p.id)
+    );
+
+
+  document.getElementById("modalContent")
+    .innerHTML = `
+
+      <h2>
+        ⭐ Mi selección
+      </h2>
+
+      ${
+        selected.length === 0
+          ? `
+            <p>
+              Todavía no agregaste productos.
+            </p>
+          `
+          :
+          selected.map(product => `
+
+            <div style="
+              padding:15px;
+              border-bottom:1px solid #eee;
+            ">
+
+              <strong>
                 ${product.name}
+              </strong>
 
-            </h3>
+              <br>
 
-
-            <div class="product-price">
-
-                ${money(product.mlPrice)}
+              ${money(product.price)}
 
             </div>
 
-
-            <div class="installments">
-
-                Envío y costos calculados
-                automáticamente
-
-            </div>
-
-
-            <div class="product-divider"></div>
-
-
-            <div class="product-data">
-
-                <div class="data">
-
-                    <span>
-                        MARGEN ESTIMADO
-                    </span>
-
-                    <strong class="${marginClass}">
-                        ${calc.margin.toFixed(1)}%
-                    </strong>
-
-                </div>
-
-
-                <div class="data">
-
-                    <span>
-                        FÁBRICA 🇨🇳
-                    </span>
-
-                    <strong>
-                        US$ ${product.factory.toFixed(2)}
-                    </strong>
-
-                </div>
-
-
-                <div class="data">
-
-                    <span>
-                        DEMANDA
-                    </span>
-
-                    <strong>
-                        ${product.demand}/100
-                    </strong>
-
-                </div>
-
-
-                <div class="data">
-
-                    <span>
-                        COMPETENCIA
-                    </span>
-
-                    <strong>
-                        ${product.competition}/100
-                    </strong>
-
-                </div>
-
-            </div>
-
-
-            <div class="product-reason">
-
-                <strong>
-                    ¿Por qué?
-                </strong>
-
-                ${product.reason}
-
-            </div>
-
-
-            <div class="product-actions">
-
-                <button
-                    class="details-button"
-                    onclick="openProduct(${product.id})">
-
-                    Ver estadísticas
-
-                </button>
-
-
-                <button
-                    class="
-                        select-button
-                        ${isSelected ? "selected" : ""}
-                    "
-                    onclick="toggleCart(${product.id})">
-
-                    ${isSelected
-                        ? "✓ Seleccionado"
-                        : "+ Seleccionar"}
-
-                </button>
-
-            </div>
-
-        </div>
-
-        `;
-
-
-        grid.appendChild(card);
-
-    });
-
-
-    updateCounters();
-
-}
-
-
-/* =====================================================
-   FAVORITOS
-===================================================== */
-
-function toggleFavorite(id){
-
-    if(favorites.includes(id)){
-
-        favorites =
-            favorites.filter(
-                item => item !== id
-            );
-
-    }else{
-
-        favorites.push(id);
-
-    }
-
-
-    localStorage.setItem(
-        "cm_favorites",
-        JSON.stringify(favorites)
-    );
-
-
-    renderProducts();
-
-    updateCounters();
-
-}
-
-
-function openFavorites(){
-
-    const modal =
-        document.getElementById(
-            "favoritesModal"
-        );
-
-    const content =
-        document.getElementById(
-            "favoritesContent"
-        );
-
-
-    const favoriteProducts =
-        products.filter(
-            p => favorites.includes(p.id)
-        );
-
-
-    if(favoriteProducts.length === 0){
-
-        content.innerHTML = `
-
-            <div class="empty-list">
-
-                ♡
-
-                <br><br>
-
-                Todavía no agregaste favoritos.
-
-            </div>
-
-        `;
-
-    }else{
-
-        content.innerHTML =
-            favoriteProducts.map(product => `
-
-            <div class="list-item">
-
-                <div class="list-item-image">
-
-                    ${createSVG(product)}
-
-                </div>
-
-                <div class="list-item-info">
-
-                    <strong>
-                        ${product.name}
-                    </strong>
-
-                    <span>
-                        ${money(product.mlPrice)}
-                    </span>
-
-                </div>
-
-                <button
-                    class="remove-button"
-                    onclick="toggleFavorite(${product.id});openFavorites()">
-
-                    Eliminar
-
-                </button>
-
-            </div>
-
-        `).join("");
-
-    }
-
-
-    openModal("favoritesModal");
-
-}
-
-
-/* =====================================================
-   SELECCIÓN / CARRITO
-===================================================== */
-
-function toggleCart(id){
-
-    if(cart.includes(id)){
-
-        cart =
-            cart.filter(
-                item => item !== id
-            );
-
-    }else{
-
-        cart.push(id);
-
-    }
-
-
-    localStorage.setItem(
-        "cm_cart",
-        JSON.stringify(cart)
-    );
-
-
-    renderProducts();
-
-    updateCounters();
-
-}
-
-
-function openCart(){
-
-    const content =
-        document.getElementById(
-            "cartContent"
-        );
-
-
-    const selected =
-        products.filter(
-            p => cart.includes(p.id)
-        );
-
-
-    if(selected.length === 0){
-
-        content.innerHTML = `
-
-            <div class="empty-list">
-
-                🛒
-
-                <br><br>
-
-                No seleccionaste productos todavía.
-
-            </div>
-
-        `;
-
-    }else{
-
-        content.innerHTML =
-            selected.map(product => {
-
-                const calc =
-                    calculate(product);
-
-                return `
-
-                <div class="list-item">
-
-                    <div class="list-item-image">
-
-                        ${createSVG(product)}
-
-                    </div>
-
-                    <div class="list-item-info">
-
-                        <strong>
-                            ${product.name}
-                        </strong>
-
-                        <span>
-                            Margen:
-                            ${calc.margin.toFixed(1)}%
-                        </span>
-
-                    </div>
-
-                    <button
-                        class="remove-button"
-                        onclick="toggleCart(${product.id});openCart()">
-
-                        Quitar
-
-                    </button>
-
-                </div>
-
-                `;
-
-            }).join("");
-
-    }
-
-
-    openModal("cartModal");
-
-}
-
-
-/* =====================================================
-   MODAL PRODUCTO
-===================================================== */
-
-function openProduct(id){
-
-    const product =
-        products.find(
-            p => p.id === id
-        );
-
-
-    const calc =
-        calculate(product);
-
-
-    const status =
-        getStatus(calc.margin);
-
-
-    const content =
-        document.getElementById(
-            "modalProductContent"
-        );
-
-
-    content.innerHTML = `
-
-        <div class="modal-product">
-
-            <div class="modal-product-image">
-
-                ${createSVG(product)}
-
-            </div>
-
-
-            <div class="modal-info">
-
-                <small>
-                    ${product.category}
-                </small>
-
-                <h2>
-                    ${product.name}
-                </h2>
-
-                <div class="
-                    status-badge
-                    status-${status}
-                "
-                style="display:inline-block">
-
-                    ${getStatusText(status)}
-
-                </div>
-
-
-                <div class="modal-price">
-
-                    ${money(product.mlPrice)}
-
-                </div>
-
-
-                <div class="modal-green">
-
-                    Ganancia estimada:
-                    ${money(calc.profit)}
-
-                </div>
-
-
-                <div class="stats-list">
-
-                    <div class="stat-item">
-
-                        <span>
-                            MARGEN
-                        </span>
-
-                        <strong>
-                            ${calc.margin.toFixed(1)}%
-                        </strong>
-
-                    </div>
-
-
-                    <div class="stat-item">
-
-                        <span>
-                            PRECIO FÁBRICA
-                        </span>
-
-                        <strong>
-                            US$ ${product.factory.toFixed(2)}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="stat-item">
-
-                        <span>
-                            COSTO PRODUCTO
-                        </span>
-
-                        <strong>
-                            ${money(calc.productCost)}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="stat-item">
-
-                        <span>
-                            ENVÍO
-                        </span>
-
-                        <strong>
-                            ${money(calc.shipping)}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="stat-item">
-
-                        <span>
-                            IMPORTACIÓN
-                        </span>
-
-                        <strong>
-                            ${money(calc.importTax)}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="stat-item">
-
-                        <span>
-                            COMISIÓN ML
-                        </span>
-
-                        <strong>
-                            ${money(calc.commission)}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="stat-item">
-
-                        <span>
-                            DEMANDA
-                        </span>
-
-                        <strong>
-                            ${product.demand}/100
-                        </strong>
-
-                    </div>
-
-
-                    <div class="stat-item">
-
-                        <span>
-                            COMPETENCIA
-                        </span>
-
-                        <strong>
-                            ${product.competition}/100
-                        </strong>
-
-                    </div>
-
-
-                    <div class="stat-item">
-
-                        <span>
-                            MOQ
-                        </span>
-
-                        <strong>
-                            ${product.moq} unidades
-                        </strong>
-
-                    </div>
-
-
-                    <div class="stat-item">
-
-                        <span>
-                            INVERSIÓN MOQ
-                        </span>
-
-                        <strong>
-                            ${money(
-                                calc.productCost *
-                                product.moq
-                            )}
-                        </strong>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="explanation-box">
-
-            <strong>
-                💡 ¿Por qué podría funcionar?
-            </strong>
-
-            <br>
-
-            ${product.reason}
-
-            <br><br>
-
-            <strong>
-                ⚠️ Riesgo
-            </strong>
-
-            <br>
-
-            ${product.risk}
-
-            <br><br>
-
-            <strong>
-                📊 ¿Por qué tiene este color?
-            </strong>
-
-            <br>
-
-            ${getStatusExplanation(calc.margin)}
-
-        </div>
+          `).join("")
+      }
 
     `;
 
 
-    openModal("productModal");
+  document.getElementById("modal")
+    .classList.remove("hidden");
 
 }
 
 
-/* =====================================================
-   EXPLICACIÓN DEL COLOR
-===================================================== */
+/*
+====================================================
+CERRAR MODAL
+====================================================
+*/
 
-function getStatusExplanation(margin){
+function cerrarModal() {
 
-    if(margin >= 30){
+  document
+    .getElementById("modal")
+    .classList.add("hidden");
 
-        return `
-        El margen estimado es de ${margin.toFixed(1)}%.
-        Supera el 30%, por lo que en esta simulación
-        aparece como una oportunidad interesante.
-        `;
-
-    }
+}
 
 
-    if(margin >= 20){
+/*
+====================================================
+INFO
+====================================================
+*/
 
-        return `
-        El margen estimado es de ${margin.toFixed(1)}%.
-        Está entre 20% y 29%, por lo que conviene
-        analizar los costos reales antes de comprar.
-        `;
+function mostrarInfo() {
 
-    }
+  document.getElementById("modalContent")
+    .innerHTML = `
 
+      <h2>
+        Sobre los datos
+      </h2>
 
-    if(margin >= 10){
+      <p style="
+        line-height:1.7;
+        color:#555;
+      ">
 
-        return `
-        El margen estimado es de ${margin.toFixed(1)}%.
-        Está entre 10% y 19%, por lo que cualquier
-        gasto adicional puede afectar bastante la ganancia.
-        `;
+        Esta herramienta separa tres cosas:
 
-    }
+        <br><br>
 
+        <strong>1. Datos observados</strong><br>
+        Precio, ventas y valoraciones que aparecen
+        públicamente en la fuente.
 
-    return `
-        El margen estimado es inferior al 10%.
-        Con esta configuración sería una opción
-        poco atractiva para comenzar.
+        <br><br>
+
+        <strong>2. Cálculos</strong><br>
+        Estadísticas que se obtienen matemáticamente
+        a partir de esos datos.
+
+        <br><br>
+
+        <strong>3. Datos que requieren cotización</strong><br>
+        Precio de fábrica, transporte internacional,
+        impuestos, despacho, almacenamiento y otros
+        costos de importación.
+
+        <br><br>
+
+        Por eso no mostramos un margen falso como si
+        fuera una ganancia garantizada.
+
+      </p>
+
     `;
 
+
+  document
+    .getElementById("modal")
+    .classList.remove("hidden");
+
 }
 
 
-/* =====================================================
-   MODALES
-===================================================== */
+/*
+====================================================
+BUSCAR
+====================================================
+*/
 
-function openModal(id){
+function buscar() {
 
+  const query =
     document
-        .getElementById(id)
-        .classList.add("show");
+      .getElementById("searchInput")
+      .value
+      .toLowerCase()
+      .trim();
+
+
+  const cards =
+    document.querySelectorAll(".card");
+
+
+  cards.forEach(card => {
+
+    const text =
+      card.innerText.toLowerCase();
+
+    card.style.display =
+      text.includes(query)
+        ? ""
+        : "none";
+
+  });
 
 }
 
 
-function closeModal(id){
+/*
+====================================================
+FILTROS
+====================================================
+*/
 
-    document
-        .getElementById(id)
-        .classList.remove("show");
+function filtrar(tipo) {
+
+  currentFilter = tipo;
+
+  renderProducts();
 
 }
 
 
-document
-    .querySelectorAll("[data-close]")
-    .forEach(button => {
+function actualizarPrecio() {
 
-        button.addEventListener(
-            "click",
-            () => {
-
-                closeModal(
-                    button.dataset.close
-                );
-
-            }
-        );
-
-    });
-
-
-document
-    .querySelectorAll(".modal")
-    .forEach(modal => {
-
-        modal.addEventListener(
-            "click",
-            event => {
-
-                if(event.target === modal){
-
-                    closeModal(modal.id);
-
-                }
-
-            }
-        );
-
-    });
-
-
-/* =====================================================
-   CONFIGURACIÓN
-===================================================== */
-
-document
-    .getElementById("configButton")
-    .addEventListener(
-        "click",
-        () => {
-
-            document.getElementById(
-                "usdInput"
-            ).value = config.usd;
-
-
-            document.getElementById(
-                "shippingInput"
-            ).value = config.shipping;
-
-
-            document.getElementById(
-                "importInput"
-            ).value = config.importTax;
-
-
-            document.getElementById(
-                "commissionInput"
-            ).value = config.commission;
-
-
-            openModal("configModal");
-
-        }
+  const value =
+    Number(
+      document.getElementById("priceFilter").value
     );
 
 
-document
-    .getElementById("saveConfig")
-    .addEventListener(
-        "click",
-        () => {
+  document.getElementById("priceValue")
+    .textContent =
+    value.toLocaleString("es-AR");
 
-            config.usd =
-                Number(
-                    document.getElementById(
-                        "usdInput"
-                    ).value
-                );
 
-
-            config.shipping =
-                Number(
-                    document.getElementById(
-                        "shippingInput"
-                    ).value
-                );
-
-
-            config.importTax =
-                Number(
-                    document.getElementById(
-                        "importInput"
-                    ).value
-                );
-
-
-            config.commission =
-                Number(
-                    document.getElementById(
-                        "commissionInput"
-                    ).value
-                );
-
-
-            closeModal("configModal");
-
-            renderProducts();
-
-            updateDashboard();
-
-        }
-    );
-
-
-/* =====================================================
-   BUSCADOR
-===================================================== */
-
-document
-    .getElementById("searchInput")
-    .addEventListener(
-        "input",
-        event => {
-
-            state.search =
-                event.target.value;
-
-            renderProducts();
-
-        }
-    );
-
-
-document
-    .getElementById("searchButton")
-    .addEventListener(
-        "click",
-        () => {
-
-            state.search =
-                document.getElementById(
-                    "searchInput"
-                ).value;
-
-            renderProducts();
-
-        }
-    );
-
-
-/* ENTER EN BUSCADOR */
-
-document
-    .getElementById("searchInput")
-    .addEventListener(
-        "keydown",
-        event => {
-
-            if(event.key === "Enter"){
-
-                renderProducts();
-
-            }
-
-        }
-    );
-
-
-/* =====================================================
-   CATEGORÍAS DEL HEADER
-===================================================== */
-
-document
-    .querySelectorAll(
-        ".nav-content button[data-category]"
-    )
-    .forEach(button => {
-
-        button.addEventListener(
-            "click",
-            () => {
-
-                state.category =
-                    button.dataset.category;
-
-
-                document
-                    .querySelector(
-                        `input[name="category"][value="${state.category}"]`
-                    )
-                    ?.click();
-
-
-                renderProducts();
-
-            }
-        );
-
-    });
-
-
-/* =====================================================
-   CATEGORÍAS SIDEBAR
-===================================================== */
-
-document
-    .querySelectorAll(
-        'input[name="category"]'
-    )
-    .forEach(input => {
-
-        input.addEventListener(
-            "change",
-            event => {
-
-                state.category =
-                    event.target.value;
-
-                renderProducts();
-
-            }
-        );
-
-    });
-
-
-/* =====================================================
-   FILTROS DE COLOR
-===================================================== */
-
-document
-    .querySelectorAll(
-        ".filter"
-    )
-    .forEach(button => {
-
-        button.addEventListener(
-            "click",
-            () => {
-
-                document
-                    .querySelectorAll(
-                        ".filter"
-                    )
-                    .forEach(
-                        b => b.classList.remove("active")
-                    );
-
-
-                button.classList.add("active");
-
-
-                state.status =
-                    button.dataset.status;
-
-
-                renderProducts();
-
-            }
-        );
-
-    });
-
-
-/* =====================================================
-   ORDENAR
-===================================================== */
-
-document
-    .getElementById("sortSelect")
-    .addEventListener(
-        "change",
-        event => {
-
-            state.sort =
-                event.target.value;
-
-            renderProducts();
-
-        }
-    );
-
-
-/* =====================================================
-   MARGEN RANGE
-===================================================== */
-
-document
-    .getElementById("marginRange")
-    .addEventListener(
-        "input",
-        event => {
-
-            state.minMargin =
-                Number(event.target.value);
-
-
-            document
-                .getElementById("marginValue")
-                .textContent =
-                `${state.minMargin}%`;
-
-
-            renderProducts();
-
-        }
-    );
-
-
-/* =====================================================
-   DEMANDA RANGE
-===================================================== */
-
-document
-    .getElementById("demandRange")
-    .addEventListener(
-        "input",
-        event => {
-
-            state.minDemand =
-                Number(event.target.value);
-
-
-            document
-                .getElementById("demandValue")
-                .textContent =
-                `${state.minDemand}/100`;
-
-
-            renderProducts();
-
-        }
-    );
-
-
-/* =====================================================
-   SOLO OPORTUNIDADES
-===================================================== */
-
-document
-    .getElementById("onlyOpportunities")
-    .addEventListener(
-        "change",
-        event => {
-
-            state.onlyOpportunities =
-                event.target.checked;
-
-            renderProducts();
-
-        }
-    );
-
-
-/* =====================================================
-   LIMPIAR FILTROS
-===================================================== */
-
-function clearFilters(){
-
-    state.search = "";
-
-    state.category = "Todos";
-
-    state.status = "all";
-
-    state.minMargin = 0;
-
-    state.minDemand = 0;
-
-    state.onlyOpportunities = false;
-
-
-    document.getElementById(
-        "searchInput"
-    ).value = "";
-
-
-    document.querySelector(
-        'input[name="category"][value="Todos"]'
-    ).checked = true;
-
-
-    document.getElementById(
-        "marginRange"
-    ).value = 0;
-
-
-    document.getElementById(
-        "demandRange"
-    ).value = 0;
-
-
-    document.getElementById(
-        "marginValue"
-    ).textContent = "0%";
-
-
-    document.getElementById(
-        "demandValue"
-    ).textContent = "0/100";
-
-
-    document.getElementById(
-        "onlyOpportunities"
-    ).checked = false;
-
-
-    document
-        .querySelectorAll(".filter")
-        .forEach(
-            b => b.classList.remove("active")
-        );
-
-
-    document
-        .querySelector(".filter")
-        .classList.add("active");
-
-
-    renderProducts();
+  renderProducts();
 
 }
 
 
-document
-    .getElementById("clearFilters")
-    .addEventListener(
-        "click",
-        clearFilters
-    );
+function limpiarFiltros() {
 
+  document.getElementById("priceFilter")
+    .value = 50000;
 
-document
-    .getElementById("emptyClear")
-    .addEventListener(
-        "click",
-        clearFilters
-    );
+  document.getElementById("salesFilter")
+    .value = 0;
 
+  document.getElementById("sortFilter")
+    .value = "sales";
 
-/* =====================================================
-   HERO
-===================================================== */
+  currentFilter = "todos";
 
-document
-    .getElementById("heroButton")
-    .addEventListener(
-        "click",
-        () => {
+  document.getElementById("priceValue")
+    .textContent = "50.000";
 
-            document
-                .getElementById("productsGrid")
-                .scrollIntoView({
-                    behavior:"smooth"
-                });
+  document.getElementById("searchInput")
+    .value = "";
 
-        }
-    );
-
-
-/* =====================================================
-   FAVORITOS / CARRITO
-===================================================== */
-
-document
-    .getElementById("favoritesButton")
-    .addEventListener(
-        "click",
-        openFavorites
-    );
-
-
-document
-    .getElementById("cartButton")
-    .addEventListener(
-        "click",
-        openCart
-    );
-
-
-/* =====================================================
-   CONTADORES
-===================================================== */
-
-function updateCounters(){
-
-    document.getElementById(
-        "favoriteCount"
-    ).textContent =
-        favorites.length;
-
-
-    document.getElementById(
-        "cartCount"
-    ).textContent =
-        cart.length;
+  renderProducts();
 
 }
 
 
-/* =====================================================
-   DASHBOARD
-===================================================== */
+/*
+====================================================
+INICIALIZAR
+====================================================
+*/
 
-function updateDashboard(){
-
-    let totalMargin = 0;
-
-    let bestMargin = -Infinity;
-
-    let opportunities = 0;
+document.getElementById("totalProducts")
+  .textContent = products.length;
 
 
-    products.forEach(product => {
+document.getElementById("selectionCount")
+  .textContent = selection.length;
 
-        const calc =
-            calculate(product);
-
-
-        totalMargin += calc.margin;
-
-
-        if(calc.margin > bestMargin){
-
-            bestMargin =
-                calc.margin;
-
-        }
-
-
-        if(calc.margin >= 30){
-
-            opportunities++;
-
-        }
-
-    });
-
-
-    const average =
-        totalMargin /
-        products.length;
-
-
-    document.getElementById(
-        "heroProducts"
-    ).textContent =
-        products.length;
-
-
-    document.getElementById(
-        "heroMargin"
-    ).textContent =
-        bestMargin.toFixed(1) + "%";
-
-
-    document.getElementById(
-        "heroOpportunities"
-    ).textContent =
-        opportunities;
-
-}
-
-
-/* =====================================================
-   INICIALIZAR
-===================================================== */
 
 renderProducts();
-
-updateDashboard();
-
-updateCounters();
