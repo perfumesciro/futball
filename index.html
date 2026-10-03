@@ -1,275 +1,821 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Mercado Scout — Productos para importar</title>
+    <title>Mercado Scout | Investigación de productos</title>
 
-  <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
 
-  <link
-    rel="preconnect"
-    href="https://fonts.googleapis.com"
-  >
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet"
-  >
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
 </head>
 
 <body>
 
-<header class="topbar">
+    <!-- =========================
+         HEADER
+    ========================== -->
 
-  <div class="logo">
-    Mercado<span>Scout</span>
-  </div>
+    <header class="header">
 
-  <div class="search">
-    <input
-      id="searchInput"
-      type="text"
-      placeholder="Buscar productos..."
-    >
+        <div class="header-container">
 
-    <button onclick="buscar()">
-      🔍
-    </button>
-  </div>
-
-  <div class="header-actions">
-    <button onclick="mostrarSeleccion()">
-      ⭐ Mi selección
-      <span id="selectionCount">0</span>
-    </button>
-
-    <button onclick="mostrarInfo()">
-      ⚙️
-    </button>
-  </div>
-
-</header>
+            <a href="#" class="logo" id="logoButton">
+                <span class="logo-main">Mercado</span>
+                <span class="logo-blue">Scout</span>
+            </a>
 
 
-<nav class="nav">
+            <div class="search-container">
 
-  <button onclick="filtrar('todos')">
-    Todos
-  </button>
+                <input
+                    type="search"
+                    id="searchInput"
+                    class="search-input"
+                    placeholder="Buscar productos..."
+                    autocomplete="off"
+                >
 
-  <button onclick="filtrar('alto')">
-    🔥 Alta demanda
-  </button>
+                <button
+                    type="button"
+                    id="searchButton"
+                    class="search-button"
+                    aria-label="Buscar"
+                >
+                    🔍
+                </button>
 
-  <button onclick="filtrar('medio')">
-    📊 Demanda media
-  </button>
-
-  <button onclick="filtrar('importar')">
-    🌎 Para importar
-  </button>
-
-</nav>
-
-
-<section class="hero">
-
-  <div>
-
-    <span class="verified">
-      ● DATOS VERIFICADOS
-    </span>
-
-    <h1>
-      Encontrá productos reales
-      para vender
-    </h1>
-
-    <p>
-      Precios y ventas observadas en publicaciones
-      reales. Los cálculos de rentabilidad están
-      separados de los datos originales.
-    </p>
-
-  </div>
-
-  <div class="hero-stat">
-
-    <strong id="totalProducts">
-      10
-    </strong>
-
-    <span>
-      productos analizados
-    </span>
-
-  </div>
-
-</section>
+            </div>
 
 
-<main>
+            <div class="header-buttons">
 
-  <aside class="sidebar">
-
-    <h3>Filtros</h3>
-
-    <label>
-      Precio máximo
-    </label>
-
-    <input
-      type="range"
-      id="priceFilter"
-      min="5000"
-      max="50000"
-      value="50000"
-      oninput="actualizarPrecio()"
-    >
-
-    <div class="range-value">
-      Hasta $<span id="priceValue">50.000</span>
-    </div>
+                <button
+                    type="button"
+                    id="favoritesButton"
+                    class="header-button"
+                >
+                    ⭐
+                    <span>Favoritos</span>
+                    <b id="favoritesCount">0</b>
+                </button>
 
 
-    <label>
-      Ventas mínimas
-    </label>
+                <button
+                    type="button"
+                    id="selectionButton"
+                    class="header-button"
+                >
+                    📋
+                    <span>Mi selección</span>
+                    <b id="selectionCount">0</b>
+                </button>
 
-    <select id="salesFilter" onchange="renderProducts()">
+            </div>
 
-      <option value="0">
-        Cualquier cantidad
-      </option>
+        </div>
 
-      <option value="100">
-        +100 vendidos
-      </option>
-
-      <option value="500">
-        +500 vendidos
-      </option>
-
-      <option value="1000">
-        +1000 vendidos
-      </option>
-
-      <option value="5000">
-        +5000 vendidos
-      </option>
-
-    </select>
+    </header>
 
 
-    <label>
-      Ordenar
-    </label>
+    <!-- =========================
+         NAVIGATION
+    ========================== -->
 
-    <select id="sortFilter" onchange="renderProducts()">
+    <nav class="navigation">
 
-      <option value="sales">
-        Más vendidos
-      </option>
+        <div class="navigation-container">
 
-      <option value="priceLow">
-        Menor precio
-      </option>
+            <button
+                type="button"
+                class="nav-button active"
+                data-filter="all"
+            >
+                Todos
+            </button>
 
-      <option value="priceHigh">
-        Mayor precio
-      </option>
+            <button
+                type="button"
+                class="nav-button"
+                data-filter="high-demand"
+            >
+                🔥 Alta demanda
+            </button>
 
-      <option value="rating">
-        Mejor valoración
-      </option>
+            <button
+                type="button"
+                class="nav-button"
+                data-filter="import"
+            >
+                🇨🇳 Para importar
+            </button>
 
-    </select>
+            <button
+                type="button"
+                class="nav-button"
+                data-filter="low-price"
+            >
+                💰 Precio bajo
+            </button>
+
+            <button
+                type="button"
+                class="nav-button"
+                data-filter="verified"
+            >
+                ✓ Verificados
+            </button>
+
+        </div>
+
+    </nav>
 
 
-    <button
-      class="clear"
-      onclick="limpiarFiltros()"
-    >
-      Limpiar filtros
-    </button>
+    <!-- =========================
+         HERO
+    ========================== -->
 
-  </aside>
+    <section class="hero">
+
+        <div class="hero-container">
+
+            <div class="hero-content">
+
+                <div class="verified-label">
+                    <span class="verified-dot"></span>
+                    DATOS INVESTIGADOS
+                </div>
+
+                <h1>
+                    Encontrá productos
+                    con potencial para vender
+                </h1>
+
+                <p>
+                    Compará precios observados, ventas,
+                    valoraciones y datos de proveedores
+                    sin mezclar datos reales con estimaciones.
+                </p>
 
 
-  <section class="products-area">
+                <div class="hero-actions">
 
-    <div class="products-header">
+                    <button
+                        type="button"
+                        id="startResearchButton"
+                        class="primary-button"
+                    >
+                        🔎 Explorar productos
+                    </button>
 
-      <div>
+                    <button
+                        type="button"
+                        id="howItWorksButton"
+                        class="secondary-button"
+                    >
+                        ¿Cómo funciona?
+                    </button>
 
-        <h2>
-          Productos encontrados
-        </h2>
+                </div>
 
-        <span id="results">
-          10 productos
-        </span>
+            </div>
 
-      </div>
 
-      <span class="real-data">
-        ✓ Datos comprobados
-      </span>
+            <div class="hero-card">
 
-    </div>
+                <div class="hero-card-title">
+                    Productos analizados
+                </div>
 
+                <strong id="heroProductCount">
+                    0
+                </strong>
+
+                <span>
+                    datos cargados
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         MAIN
+    ========================== -->
+
+    <main class="main-container">
+
+
+        <!-- =====================
+             SIDEBAR
+        ====================== -->
+
+        <aside class="sidebar">
+
+            <div class="sidebar-header">
+
+                <h2>
+                    Filtros
+                </h2>
+
+                <button
+                    type="button"
+                    id="clearFiltersButton"
+                >
+                    Limpiar
+                </button>
+
+            </div>
+
+
+            <!-- PRICE -->
+
+            <div class="filter-section">
+
+                <h3>
+                    Precio máximo
+                </h3>
+
+                <input
+                    type="range"
+                    id="priceRange"
+                    min="0"
+                    max="100000"
+                    step="500"
+                    value="100000"
+                >
+
+                <div class="range-values">
+
+                    <span>
+                        Hasta
+                    </span>
+
+                    <strong id="priceRangeValue">
+                        $100.000
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- SALES -->
+
+            <div class="filter-section">
+
+                <h3>
+                    Ventas visibles
+                </h3>
+
+                <label class="select-wrapper">
+
+                    <select id="salesFilter">
+
+                        <option value="0">
+                            Todas
+                        </option>
+
+                        <option value="100">
+                            +100 vendidos
+                        </option>
+
+                        <option value="500">
+                            +500 vendidos
+                        </option>
+
+                        <option value="1000">
+                            +1.000 vendidos
+                        </option>
+
+                        <option value="5000">
+                            +5.000 vendidos
+                        </option>
+
+                    </select>
+
+                </label>
+
+            </div>
+
+
+            <!-- RATING -->
+
+            <div class="filter-section">
+
+                <h3>
+                    Valoración mínima
+                </h3>
+
+                <label class="select-wrapper">
+
+                    <select id="ratingFilter">
+
+                        <option value="0">
+                            Cualquier valoración
+                        </option>
+
+                        <option value="4">
+                            ⭐ 4,0 o más
+                        </option>
+
+                        <option value="4.5">
+                            ⭐ 4,5 o más
+                        </option>
+
+                        <option value="4.8">
+                            ⭐ 4,8 o más
+                        </option>
+
+                    </select>
+
+                </label>
+
+            </div>
+
+
+            <!-- CATEGORY -->
+
+            <div class="filter-section">
+
+                <h3>
+                    Categoría
+                </h3>
+
+                <label class="select-wrapper">
+
+                    <select id="categoryFilter">
+
+                        <option value="all">
+                            Todas
+                        </option>
+
+                        <option value="hogar">
+                            🏠 Hogar
+                        </option>
+
+                        <option value="auto">
+                            🚗 Auto
+                        </option>
+
+                        <option value="lavanderia">
+                            🧺 Lavandería
+                        </option>
+
+                        <option value="mascotas">
+                            🐱 Mascotas
+                        </option>
+
+                        <option value="organizacion">
+                            📦 Organización
+                        </option>
+
+                    </select>
+
+                </label>
+
+            </div>
+
+
+            <!-- VERIFIED -->
+
+            <div class="filter-section">
+
+                <label class="checkbox-label">
+
+                    <input
+                        type="checkbox"
+                        id="verifiedFilter"
+                    >
+
+                    <span>
+                        Mostrar solo datos verificados
+                    </span>
+
+                </label>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =====================
+             PRODUCTS AREA
+        ====================== -->
+
+        <section class="products-section">
+
+
+            <div class="products-toolbar">
+
+                <div>
+
+                    <h2>
+                        Productos
+                    </h2>
+
+                    <p id="resultsText">
+                        Cargando productos...
+                    </p>
+
+                </div>
+
+
+                <div class="sort-container">
+
+                    <label for="sortFilter">
+                        Ordenar:
+                    </label>
+
+                    <select id="sortFilter">
+
+                        <option value="sales">
+                            Más vendidos
+                        </option>
+
+                        <option value="price-low">
+                            Menor precio
+                        </option>
+
+                        <option value="price-high">
+                            Mayor precio
+                        </option>
+
+                        <option value="rating">
+                            Mejor valoración
+                        </option>
+
+                        <option value="name">
+                            Nombre
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- PRODUCT GRID -->
+
+            <div
+                id="productsGrid"
+                class="products-grid"
+            >
+
+                <!--
+                    Los productos se generan
+                    automáticamente desde script.js
+                -->
+
+            </div>
+
+
+            <!-- EMPTY STATE -->
+
+            <div
+                id="emptyState"
+                class="empty-state hidden"
+            >
+
+                <div class="empty-icon">
+                    🔎
+                </div>
+
+                <h3>
+                    No encontramos productos
+                </h3>
+
+                <p>
+                    Probá cambiando los filtros
+                    o buscando otro término.
+                </p>
+
+                <button
+                    type="button"
+                    id="emptyClearButton"
+                    class="primary-button"
+                >
+                    Limpiar filtros
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         PRODUCT MODAL
+    ========================== -->
 
     <div
-      id="products"
-      class="products"
-    ></div>
-
-  </section>
-
-</main>
-
-
-<div
-  id="modal"
-  class="modal hidden"
->
-
-  <div class="modal-box">
-
-    <button
-      class="close"
-      onclick="cerrarModal()"
+        id="productModal"
+        class="modal hidden"
     >
-      ×
-    </button>
 
-    <div id="modalContent"></div>
-
-  </div>
-
-</div>
+        <div class="modal-overlay"></div>
 
 
-<footer>
+        <div class="modal-box">
 
-  <strong>Mercado Scout</strong>
-
-  <span>
-    Herramienta de investigación de productos
-  </span>
-
-  <small>
-    Los datos de mercado corresponden a publicaciones
-    observadas. Los márgenes son cálculos orientativos
-    y no constituyen una cotización de importación.
-  </small>
-
-</footer>
+            <button
+                type="button"
+                class="modal-close"
+                data-close-modal
+            >
+                ×
+            </button>
 
 
-<script src="script.js"></script>
+            <div id="productModalContent">
+
+                <!--
+                    Contenido generado
+                    por JavaScript
+                -->
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         SELECTION MODAL
+    ========================== -->
+
+    <div
+        id="selectionModal"
+        class="modal hidden"
+    >
+
+        <div class="modal-overlay"></div>
+
+
+        <div class="modal-box selection-modal">
+
+            <button
+                type="button"
+                class="modal-close"
+                data-close-modal
+            >
+                ×
+            </button>
+
+
+            <div class="modal-heading">
+
+                <span>
+                    📋
+                </span>
+
+                <div>
+
+                    <h2>
+                        Mi selección
+                    </h2>
+
+                    <p>
+                        Productos que guardaste para investigar.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div id="selectionContent">
+
+                <!-- JavaScript -->
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    id="clearSelectionButton"
+                    class="danger-button"
+                >
+                    Vaciar selección
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         FAVORITES MODAL
+    ========================== -->
+
+    <div
+        id="favoritesModal"
+        class="modal hidden"
+    >
+
+        <div class="modal-overlay"></div>
+
+
+        <div class="modal-box selection-modal">
+
+            <button
+                type="button"
+                class="modal-close"
+                data-close-modal
+            >
+                ×
+            </button>
+
+
+            <div class="modal-heading">
+
+                <span>
+                    ⭐
+                </span>
+
+                <div>
+
+                    <h2>
+                        Favoritos
+                    </h2>
+
+                    <p>
+                        Productos que marcaste como favoritos.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div id="favoritesContent">
+
+                <!-- JavaScript -->
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         INFORMATION MODAL
+    ========================== -->
+
+    <div
+        id="infoModal"
+        class="modal hidden"
+    >
+
+        <div class="modal-overlay"></div>
+
+
+        <div class="modal-box">
+
+            <button
+                type="button"
+                class="modal-close"
+                data-close-modal
+            >
+                ×
+            </button>
+
+
+            <div class="info-content">
+
+                <div class="info-icon">
+                    📊
+                </div>
+
+                <h2>
+                    ¿Cómo funcionan los datos?
+                </h2>
+
+
+                <div class="info-card verified-info">
+
+                    <strong>
+                        ✓ Dato verificado
+                    </strong>
+
+                    <p>
+                        Información encontrada en una fuente
+                        pública, como una publicación de Mercado
+                        Libre o un proveedor.
+                    </p>
+
+                </div>
+
+
+                <div class="info-card calculated-info">
+
+                    <strong>
+                        🧮 Dato calculado
+                    </strong>
+
+                    <p>
+                        Resultado obtenido mediante una fórmula
+                        utilizando datos verificados.
+                    </p>
+
+                </div>
+
+
+                <div class="info-card unavailable-info">
+
+                    <strong>
+                        — Sin dato
+                    </strong>
+
+                    <p>
+                        No se muestra un número inventado.
+                        Cuando una fuente no proporciona un dato,
+                        queda indicado como no disponible.
+                    </p>
+
+                </div>
+
+
+                <p class="info-warning">
+
+                    ⚠️ Los precios y las estadísticas de
+                    publicaciones pueden cambiar. Los costos de
+                    importación y las ganancias finales requieren
+                    una cotización concreta.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer class="footer">
+
+        <div class="footer-container">
+
+            <div>
+
+                <div class="footer-logo">
+                    Mercado<span>Scout</span>
+                </div>
+
+                <p>
+                    Herramienta de investigación
+                    de productos.
+                </p>
+
+            </div>
+
+
+            <div class="footer-note">
+
+                <strong>
+                    Importante
+                </strong>
+
+                <p>
+                    Los datos de mercado pueden cambiar.
+                    Las estadísticas mostradas corresponden
+                    a las fuentes indicadas.
+                </p>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =========================
+         SCRIPT
+    ========================== -->
+
+    <script src="script.js"></script>
 
 </body>
 </html>
