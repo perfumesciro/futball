@@ -1,821 +1,91 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Mercado Scout | Investigación de productos</title>
-
-    <link rel="stylesheet" href="style.css">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    >
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Isla Perdida — Supervivencia</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+  <div id="loading">GENERANDO ISLA...</div>
 
-    <!-- =========================
-         HEADER
-    ========================== -->
-
-    <header class="header">
-
-        <div class="header-container">
-
-            <a href="#" class="logo" id="logoButton">
-                <span class="logo-main">Mercado</span>
-                <span class="logo-blue">Scout</span>
-            </a>
-
-
-            <div class="search-container">
-
-                <input
-                    type="search"
-                    id="searchInput"
-                    class="search-input"
-                    placeholder="Buscar productos..."
-                    autocomplete="off"
-                >
-
-                <button
-                    type="button"
-                    id="searchButton"
-                    class="search-button"
-                    aria-label="Buscar"
-                >
-                    🔍
-                </button>
-
-            </div>
-
-
-            <div class="header-buttons">
-
-                <button
-                    type="button"
-                    id="favoritesButton"
-                    class="header-button"
-                >
-                    ⭐
-                    <span>Favoritos</span>
-                    <b id="favoritesCount">0</b>
-                </button>
-
-
-                <button
-                    type="button"
-                    id="selectionButton"
-                    class="header-button"
-                >
-                    📋
-                    <span>Mi selección</span>
-                    <b id="selectionCount">0</b>
-                </button>
-
-            </div>
-
+  <div id="hud">
+    <header>
+      <div class="brand">
+        <span class="brand-icon">⌁</span>
+        <div>
+          <strong>ISLA PERDIDA</strong>
+          <small>SUPERVIVENCIA</small>
         </div>
-
+      </div>
+      <div class="day-pill">☀ DÍA <span id="day">1</span></div>
     </header>
 
-
-    <!-- =========================
-         NAVIGATION
-    ========================== -->
-
-    <nav class="navigation">
-
-        <div class="navigation-container">
-
-            <button
-                type="button"
-                class="nav-button active"
-                data-filter="all"
-            >
-                Todos
-            </button>
-
-            <button
-                type="button"
-                class="nav-button"
-                data-filter="high-demand"
-            >
-                🔥 Alta demanda
-            </button>
-
-            <button
-                type="button"
-                class="nav-button"
-                data-filter="import"
-            >
-                🇨🇳 Para importar
-            </button>
-
-            <button
-                type="button"
-                class="nav-button"
-                data-filter="low-price"
-            >
-                💰 Precio bajo
-            </button>
-
-            <button
-                type="button"
-                class="nav-button"
-                data-filter="verified"
-            >
-                ✓ Verificados
-            </button>
-
+    <section class="status">
+      <div class="stat">
+        <div class="stat-label">
+          <span>♥</span> SALUD <b id="healthText">100</b>
         </div>
-
-    </nav>
-
-
-    <!-- =========================
-         HERO
-    ========================== -->
-
-    <section class="hero">
-
-        <div class="hero-container">
-
-            <div class="hero-content">
-
-                <div class="verified-label">
-                    <span class="verified-dot"></span>
-                    DATOS INVESTIGADOS
-                </div>
-
-                <h1>
-                    Encontrá productos
-                    con potencial para vender
-                </h1>
-
-                <p>
-                    Compará precios observados, ventas,
-                    valoraciones y datos de proveedores
-                    sin mezclar datos reales con estimaciones.
-                </p>
-
-
-                <div class="hero-actions">
-
-                    <button
-                        type="button"
-                        id="startResearchButton"
-                        class="primary-button"
-                    >
-                        🔎 Explorar productos
-                    </button>
-
-                    <button
-                        type="button"
-                        id="howItWorksButton"
-                        class="secondary-button"
-                    >
-                        ¿Cómo funciona?
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <div class="hero-card">
-
-                <div class="hero-card-title">
-                    Productos analizados
-                </div>
-
-                <strong id="heroProductCount">
-                    0
-                </strong>
-
-                <span>
-                    datos cargados
-                </span>
-
-            </div>
-
+        <div class="bar"><i id="healthBar" class="health"></i></div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">
+          <span>◉</span> HAMBRE <b id="hungerText">100</b>
         </div>
-
+        <div class="bar"><i id="hungerBar" class="hunger"></i></div>
+      </div>
     </section>
 
-
-    <!-- =========================
-         MAIN
-    ========================== -->
-
-    <main class="main-container">
-
-
-        <!-- =====================
-             SIDEBAR
-        ====================== -->
-
-        <aside class="sidebar">
-
-            <div class="sidebar-header">
-
-                <h2>
-                    Filtros
-                </h2>
-
-                <button
-                    type="button"
-                    id="clearFiltersButton"
-                >
-                    Limpiar
-                </button>
-
-            </div>
-
-
-            <!-- PRICE -->
-
-            <div class="filter-section">
-
-                <h3>
-                    Precio máximo
-                </h3>
-
-                <input
-                    type="range"
-                    id="priceRange"
-                    min="0"
-                    max="100000"
-                    step="500"
-                    value="100000"
-                >
-
-                <div class="range-values">
-
-                    <span>
-                        Hasta
-                    </span>
-
-                    <strong id="priceRangeValue">
-                        $100.000
-                    </strong>
-
-                </div>
-
-            </div>
-
-
-            <!-- SALES -->
-
-            <div class="filter-section">
-
-                <h3>
-                    Ventas visibles
-                </h3>
-
-                <label class="select-wrapper">
-
-                    <select id="salesFilter">
-
-                        <option value="0">
-                            Todas
-                        </option>
-
-                        <option value="100">
-                            +100 vendidos
-                        </option>
-
-                        <option value="500">
-                            +500 vendidos
-                        </option>
-
-                        <option value="1000">
-                            +1.000 vendidos
-                        </option>
-
-                        <option value="5000">
-                            +5.000 vendidos
-                        </option>
-
-                    </select>
-
-                </label>
-
-            </div>
-
-
-            <!-- RATING -->
-
-            <div class="filter-section">
-
-                <h3>
-                    Valoración mínima
-                </h3>
-
-                <label class="select-wrapper">
-
-                    <select id="ratingFilter">
-
-                        <option value="0">
-                            Cualquier valoración
-                        </option>
-
-                        <option value="4">
-                            ⭐ 4,0 o más
-                        </option>
-
-                        <option value="4.5">
-                            ⭐ 4,5 o más
-                        </option>
-
-                        <option value="4.8">
-                            ⭐ 4,8 o más
-                        </option>
-
-                    </select>
-
-                </label>
-
-            </div>
-
-
-            <!-- CATEGORY -->
-
-            <div class="filter-section">
-
-                <h3>
-                    Categoría
-                </h3>
-
-                <label class="select-wrapper">
-
-                    <select id="categoryFilter">
-
-                        <option value="all">
-                            Todas
-                        </option>
-
-                        <option value="hogar">
-                            🏠 Hogar
-                        </option>
-
-                        <option value="auto">
-                            🚗 Auto
-                        </option>
-
-                        <option value="lavanderia">
-                            🧺 Lavandería
-                        </option>
-
-                        <option value="mascotas">
-                            🐱 Mascotas
-                        </option>
-
-                        <option value="organizacion">
-                            📦 Organización
-                        </option>
-
-                    </select>
-
-                </label>
-
-            </div>
-
-
-            <!-- VERIFIED -->
-
-            <div class="filter-section">
-
-                <label class="checkbox-label">
-
-                    <input
-                        type="checkbox"
-                        id="verifiedFilter"
-                    >
-
-                    <span>
-                        Mostrar solo datos verificados
-                    </span>
-
-                </label>
-
-            </div>
-
-        </aside>
-
-
-        <!-- =====================
-             PRODUCTS AREA
-        ====================== -->
-
-        <section class="products-section">
-
-
-            <div class="products-toolbar">
-
-                <div>
-
-                    <h2>
-                        Productos
-                    </h2>
-
-                    <p id="resultsText">
-                        Cargando productos...
-                    </p>
-
-                </div>
-
-
-                <div class="sort-container">
-
-                    <label for="sortFilter">
-                        Ordenar:
-                    </label>
-
-                    <select id="sortFilter">
-
-                        <option value="sales">
-                            Más vendidos
-                        </option>
-
-                        <option value="price-low">
-                            Menor precio
-                        </option>
-
-                        <option value="price-high">
-                            Mayor precio
-                        </option>
-
-                        <option value="rating">
-                            Mejor valoración
-                        </option>
-
-                        <option value="name">
-                            Nombre
-                        </option>
-
-                    </select>
-
-                </div>
-
-            </div>
-
-
-            <!-- PRODUCT GRID -->
-
-            <div
-                id="productsGrid"
-                class="products-grid"
-            >
-
-                <!--
-                    Los productos se generan
-                    automáticamente desde script.js
-                -->
-
-            </div>
-
-
-            <!-- EMPTY STATE -->
-
-            <div
-                id="emptyState"
-                class="empty-state hidden"
-            >
-
-                <div class="empty-icon">
-                    🔎
-                </div>
-
-                <h3>
-                    No encontramos productos
-                </h3>
-
-                <p>
-                    Probá cambiando los filtros
-                    o buscando otro término.
-                </p>
-
-                <button
-                    type="button"
-                    id="emptyClearButton"
-                    class="primary-button"
-                >
-                    Limpiar filtros
-                </button>
-
-            </div>
-
-        </section>
-
-    </main>
-
-
-    <!-- =========================
-         PRODUCT MODAL
-    ========================== -->
-
-    <div
-        id="productModal"
-        class="modal hidden"
-    >
-
-        <div class="modal-overlay"></div>
-
-
-        <div class="modal-box">
-
-            <button
-                type="button"
-                class="modal-close"
-                data-close-modal
-            >
-                ×
-            </button>
-
-
-            <div id="productModalContent">
-
-                <!--
-                    Contenido generado
-                    por JavaScript
-                -->
-
-            </div>
-
-        </div>
-
+    <div class="objective">
+      <span class="dot"></span>
+      <div>
+        <small>OBJETIVO ACTUAL</small>
+        <strong id="objective">Explorá la isla y recolectá recursos</strong>
+      </div>
     </div>
 
-
-    <!-- =========================
-         SELECTION MODAL
-    ========================== -->
-
-    <div
-        id="selectionModal"
-        class="modal hidden"
-    >
-
-        <div class="modal-overlay"></div>
-
-
-        <div class="modal-box selection-modal">
-
-            <button
-                type="button"
-                class="modal-close"
-                data-close-modal
-            >
-                ×
-            </button>
-
-
-            <div class="modal-heading">
-
-                <span>
-                    📋
-                </span>
-
-                <div>
-
-                    <h2>
-                        Mi selección
-                    </h2>
-
-                    <p>
-                        Productos que guardaste para investigar.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <div id="selectionContent">
-
-                <!-- JavaScript -->
-
-            </div>
-
-
-            <div class="modal-footer">
-
-                <button
-                    type="button"
-                    id="clearSelectionButton"
-                    class="danger-button"
-                >
-                    Vaciar selección
-                </button>
-
-            </div>
-
+    <div class="inventory">
+      <div class="inventory-title">
+        INVENTARIO <span>RECURSOS</span>
+      </div>
+      <div class="items">
+        <div class="item">
+          <span>🪵</span><b id="wood">0</b><small>MADERA</small>
         </div>
-
+        <div class="item">
+          <span>🪨</span><b id="stone">0</b><small>PIEDRA</small>
+        </div>
+        <div class="item">
+          <span>🌿</span><b id="fiber">0</b><small>FIBRA</small>
+        </div>
+      </div>
     </div>
 
-
-    <!-- =========================
-         FAVORITES MODAL
-    ========================== -->
-
-    <div
-        id="favoritesModal"
-        class="modal hidden"
-    >
-
-        <div class="modal-overlay"></div>
-
-
-        <div class="modal-box selection-modal">
-
-            <button
-                type="button"
-                class="modal-close"
-                data-close-modal
-            >
-                ×
-            </button>
-
-
-            <div class="modal-heading">
-
-                <span>
-                    ⭐
-                </span>
-
-                <div>
-
-                    <h2>
-                        Favoritos
-                    </h2>
-
-                    <p>
-                        Productos que marcaste como favoritos.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <div id="favoritesContent">
-
-                <!-- JavaScript -->
-
-            </div>
-
-        </div>
-
+    <div id="message" class="message">
+      Explorá la isla. Acercate a un recurso y presioná E.
     </div>
 
-
-    <!-- =========================
-         INFORMATION MODAL
-    ========================== -->
-
-    <div
-        id="infoModal"
-        class="modal hidden"
-    >
-
-        <div class="modal-overlay"></div>
-
-
-        <div class="modal-box">
-
-            <button
-                type="button"
-                class="modal-close"
-                data-close-modal
-            >
-                ×
-            </button>
-
-
-            <div class="info-content">
-
-                <div class="info-icon">
-                    📊
-                </div>
-
-                <h2>
-                    ¿Cómo funcionan los datos?
-                </h2>
-
-
-                <div class="info-card verified-info">
-
-                    <strong>
-                        ✓ Dato verificado
-                    </strong>
-
-                    <p>
-                        Información encontrada en una fuente
-                        pública, como una publicación de Mercado
-                        Libre o un proveedor.
-                    </p>
-
-                </div>
-
-
-                <div class="info-card calculated-info">
-
-                    <strong>
-                        🧮 Dato calculado
-                    </strong>
-
-                    <p>
-                        Resultado obtenido mediante una fórmula
-                        utilizando datos verificados.
-                    </p>
-
-                </div>
-
-
-                <div class="info-card unavailable-info">
-
-                    <strong>
-                        — Sin dato
-                    </strong>
-
-                    <p>
-                        No se muestra un número inventado.
-                        Cuando una fuente no proporciona un dato,
-                        queda indicado como no disponible.
-                    </p>
-
-                </div>
-
-
-                <p class="info-warning">
-
-                    ⚠️ Los precios y las estadísticas de
-                    publicaciones pueden cambiar. Los costos de
-                    importación y las ganancias finales requieren
-                    una cotización concreta.
-
-                </p>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- =========================
-         FOOTER
-    ========================== -->
-
-    <footer class="footer">
-
-        <div class="footer-container">
-
-            <div>
-
-                <div class="footer-logo">
-                    Mercado<span>Scout</span>
-                </div>
-
-                <p>
-                    Herramienta de investigación
-                    de productos.
-                </p>
-
-            </div>
-
-
-            <div class="footer-note">
-
-                <strong>
-                    Importante
-                </strong>
-
-                <p>
-                    Los datos de mercado pueden cambiar.
-                    Las estadísticas mostradas corresponden
-                    a las fuentes indicadas.
-                </p>
-
-            </div>
-
-        </div>
-
+    <footer>
+      <span><kbd>W A S D</kbd> MOVER</span>
+      <span><kbd>SHIFT</kbd> CORRER</span>
+      <span><kbd>E</kbd> RECOLECTAR</span>
+      <span><kbd>ESPACIO</kbd> SALTAR</span>
     </footer>
+  </div>
 
+  <div id="crosshair">+</div>
 
-    <!-- =========================
-         SCRIPT
-    ========================== -->
+  <div id="interact" class="interact hidden">
+    Presioná <kbd>E</kbd> para recolectar
+  </div>
 
-    <script src="script.js"></script>
+  <div id="help">
+    <b>ISLA PERDIDA</b><br>
+    Encontrá recursos para sobrevivir.<br>
+    La aventura recién empieza.
+  </div>
 
+  <script type="module" src="game.js"></script>
 </body>
 </html>
